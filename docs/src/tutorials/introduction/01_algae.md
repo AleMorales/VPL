@@ -65,7 +65,7 @@ For simple rules (especially if the right hand side is just a line of code) it i
 With the axiom and rules we can now create a `Graph` object that represents the algae organism. The first argument is the axiom and the second is a tuple with all the rewriting rules:
 
 ```julia
-algae = Graph(axiom, (rule1, rule2))
+algae = Graph(axiom, rules = (rule1, rule2))
 ```
 
 We can visualize the graph by using the function `draw`. This will open an external window with an interactive network representation of the current state of the graph (as indicated above, I include below a screenshot of what you should get in your local device).
