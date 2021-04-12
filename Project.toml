@@ -1,0 +1,8 @@
+name = "VPL"
+uuid = "bb250ff9-e5b1-4ad2-87ac-b577c1acaa48"
+authors = ["Alejandro Morales Sierra", "Wageningen University and Research"]
+version = "0.1.0"
+
+[deps]
+Blink = "ad839575-38b3-5650-b840-f874b8c74a25"
+Unrolled = "9602ed7d-8fef-5bc8-8597-8f21381861e8"
