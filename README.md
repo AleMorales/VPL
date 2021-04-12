@@ -7,3 +7,24 @@
 [![Codecov](https://codecov.io/gh/AleMorales/VPL.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/AleMorales/VPL.jl)
 [![Coveralls](https://coveralls.io/repos/github/AleMorales/VPL.jl/badge.svg?branch=master)](https://coveralls.io/github/AleMorales/VPL.jl?branch=master)
 
+# Installation
+
+VPL requires using Julia version 1.6 or higher. The installation of VPL is as
+easy as running the following code:
+
+```julia
+using Pkg
+Pkg.add(PackageSpec(url = "https://git.wur.nl/vpl/vpl.git", rev  = "master"))
+```
+
+# Documentation
+
+The documentation of VPL is provided as a website. Currently the website is offline but you 
+can visit it locally if you follow these steps:
+
+1. Download this repository or visit the installed version on your PC (it should be located in a
+folder such as `C:\Users\<username>\.julia\packages\VPL\<some code>`)
+
+2. Inside the repository go to to `docs/build` and double click on `index.html`. This will open
+the website on your default web browser.
+
