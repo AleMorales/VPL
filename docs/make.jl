@@ -6,8 +6,8 @@ makedocs(;
     pages=[
         "Introduction" => "index.md",
         "User Manual" => ["manual/VPL.md"],
-        "Tutorials" => ["Introduction" => ["tutorials/introduction/01_algae.md"]#,
-                        #"Advanced"     => "tutorials/advanced/relational_queries.md"],
+        "Tutorials" => ["Introduction" => ["tutorials/introduction/01_algae.md"],
+                        "Advanced"     => ["tutorials/advanced/relational_queries.md"]
                     ],
         "API" => ["Core" => "api/Core.md"],
         "Technical Notes" => []
