@@ -38,6 +38,7 @@ platforms, while being more transparent and easier to follow.
 
 VPL requires using Julia version 1.6 or higher. The installation of VPL is as
 easy as running the following code:
+
 ```julia
 using Pkg
 Pkg.add(PackageSpec(url = "https://git.wur.nl/vpl/vpl.git", rev  = "master"))

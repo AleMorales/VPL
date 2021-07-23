@@ -6,9 +6,11 @@ makedocs(;
     pages=[
         "Introduction" => "index.md",
         "User Manual" => ["manual/VPL.md"],
-        "Tutorials" => ["Introduction" => ["tutorials/introduction/01_algae.md"],
-                        "Advanced"     => ["tutorials/advanced/relational_queries.md"]
-                    ],
+        "Tutorials" => ["tutorials/algae.md",
+                        #"tutorials/cellular_growth.md", # in development (see dev)
+                        "tutorials/relational_queries.md"
+                        "tutorials/snowflakes.md"
+                        ],
         "API" => ["Core" => "api/Core.md"],
         "Technical Notes" => []
     ],

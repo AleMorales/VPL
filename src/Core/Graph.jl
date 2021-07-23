@@ -32,9 +32,9 @@ function Graph(axiom::Union{StaticGraph, Node};
                rules::Union{Nothing, Tuple, Rule} = nothing, 
                vars = nothing) 
   if rules isa Nothing
-    Graph(StaticGraph(axiom), (), deepcopy(vars))
+    Graph(StaticGraph(deepcopy(axiom)), (), deepcopy(vars))
   else
-    Graph(StaticGraph(axiom), deepcopy(Tuple(rules)), deepcopy(vars))
+    Graph(StaticGraph(deepcopy(axiom)), deepcopy(Tuple(rules)), deepcopy(vars))
   end
 end
 
@@ -92,7 +92,7 @@ function show(io::IO, g::Graph)
    nnodes = length(g.graph)
    nodetypes = collect(keys(g.graph.nodetypes))
    vars = typeof(g.vars)
-   println(io, "Dynamic graph with ", nnodes, " nodes of types ", nodetypes..., " and ", nrules, " rewriting rules.")
+   println(io, "Dynamic graph with ", nnodes, " nodes of types ", join(nodetypes, ','), " and ", nrules, " rewriting rules.")
    if vars != Nothing
      println(io, "Dynamic graph variables stored in struct of type ", vars)
    end
