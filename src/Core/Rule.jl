@@ -5,7 +5,7 @@
 ################################################################################
 
 """
-  Rule(nodetype; lhs = x -> true, rhs = x -> nothing, captures = false)
+    Rule(nodetype; lhs = x -> true, rhs = x -> nothing, captures = false)
 
 Create a replacement rule for nodes of type `nodetype` with function-like
 objects for the left-hand side (`lhs`) and right-hand side (`rhs`). If the

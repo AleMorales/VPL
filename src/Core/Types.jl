@@ -1,9 +1,9 @@
 
 """
-  Node
+    Node
 
 Abstract type from which every node in a graph should inherit. This allows using
-the graph construction DSL
+the graph construction DSL.
 
 # Example
 ```julia
@@ -36,14 +36,14 @@ end
 
 
 """
-  Context
+    Context
   
-Data structure than links a `GraphNode` to a `Graph`. Functions `data` and `vars` 
+Data structure than links a `GraphNode` to a `Graph`. Functions `data()` and `vars()` 
 give access to the data stored in the node and graph, respectively. Several 
 methods are also available to test relationships among nodes in the graph and to 
 extract these related nodes (see User Manual for details).
 
-Uses do not build `Context` objects directly but they are provided by VPL as 
+Users do not build `Context` objects directly but they are provided by VPL as 
 inputs to the user-defined functions inside rules and queries. 
 """
 mutable struct Context{N, G}

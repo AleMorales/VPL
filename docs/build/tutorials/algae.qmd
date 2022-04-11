@@ -1,3 +1,12 @@
+---
+title: "Algae growth"
+format: 
+  commonmark:
+    variant: -raw_html
+execute: 
+  enabled: false
+---
+
 # Algae growth
 
 In this first example, we learn how to create a `Graph` and update it dynamically with rewriting rules. 
@@ -12,22 +21,22 @@ using VPL
 
 The rewriting rules of the L-system are as follows:
 
-axiom:   A  
+**axiom**:   A  
 
-rule 1:  A $\rightarrow$ AB  
+**rule 1**:  A $\rightarrow$ AB  
 
-rule 2:  B $\rightarrow$ A  
+**rule 2**:  B $\rightarrow$ A  
 
-In VPL, this L-system would be implemented as a graph where the nodes can be of type A and B and inherit from the abstract type `Nodes`:
+In VPL, this L-system would be implemented as a graph where the nodes can be of type `A` or `B` and inherit from the abstract type `Node`:
 
 ```julia
 struct A <: Node end
 struct B <: Node end
 ```
 
-Note that in this very example we do not need to store any data or state inside the nodes, so types A and B do not require fields.
+Note that in this very example we do not need to store any data or state inside the nodes, so types `A` and `B` do not require fields.
 
-The axiom is simply defined as an instance of type of A:
+The axiom is simply defined as an instance of type of `A`:
 
 ```julia
 axiom = A()
@@ -52,7 +61,7 @@ rule1 = Rule(A, rhs = x -> A() + B())
 rule2 = Rule(B, rhs = x -> A())
 ```
 
-Note that in each case, the argument `rhs` is being assigned an anonymous (aka *lambda*) function. This is a function without a name that is defined directly in the assigment to the argument. That is, the Julia expression `x -> A() + B()` is equivalent to the function definition:
+Note that in each case, the argument `rhs` is being assigned an anonymous (aka *lambda*) function. This is a function without a name that is defined directly in the assigment to the argument. That is, the Julia expression `x -> A() + B()` is equivalent to the following function definition:
 
 ```julia
 function rule_1(x)
@@ -60,7 +69,7 @@ function rule_1(x)
 end
 ```
 
-For simple rules (especially if the right hand side is just a line of code) it is easier to just define the right hand side of the rule with an anonymous function rather than defining a standalone function with a meaningful name. 
+For simple rules (especially if the right hand side is just a line of code) it is easier to just define the right hand side of the rule with an anonymous function rather than creating a standalone function with a meaningful name.  However, standalone functions are easier to debug as you can call them directly from the REPL.
 
 With the axiom and rules we can now create a `Graph` object that represents the algae organism. The first argument is the axiom and the second is a tuple with all the rewriting rules:
 
@@ -68,19 +77,19 @@ With the axiom and rules we can now create a `Graph` object that represents the 
 algae = Graph(axiom, rules = (rule1, rule2))
 ```
 
-We can visualize the graph by using the function `draw`. This will open an external window with an interactive network representation of the current state of the graph (as indicated above, I include below a screenshot of what you should get in your local device).
+We can visualize the graph by using the function `draw()`. This will open an external window with an interactive network representation of the current state of the graph:
 
 ```julia
 draw(algae);
 ```
 
-You can see that at the moment the graph only contains the axiom, that is, a node of type `A`. If we apply the rewriting rules iteratively, the graph will grow, in this case representing the growth of the algae organism. The rewriting rules are applied on the graph with the function `rewrite!`:
+You can see that at the moment the graph only contains the axiom, that is, a node of type `A`. If we apply the rewriting rules iteratively, the graph will grow, in this case representing the growth of the algae organism. The rewriting rules are applied on the graph with the function `rewrite!()`:
 
 ```julia
 rewrite!(algae)
 ```
 
-Since there was only one node of type `A`, the only rule that was applied was `ruleA`, so the graph should now have two nodes of types `A` and `B`, respectively. We can confirm this by drawing the graph.
+Since there was only one node of type `A`, the only rule that was applied was `rule1`, so the graph should now have two nodes of types `A` and `B`, respectively. We can confirm this by drawing the graph.
 
 ```julia
 draw(algae);

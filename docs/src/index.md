@@ -23,11 +23,8 @@ the iterative application of graph rewriting rules. Based on this goal, what VPL
 offers mainly are data structures and algorithms that allow 
 
 1.  modelling dynamic graphs that represent plants,  
-2.  modelling the interaction between plants and their 3D environment by generating 
-3D structures from the graphs and simulating capture of different resources 
-(e.g. light) and 
-3.  modelling the interaction among elements within each plant by constructing 
-dynamic networks that represent systems of ordinary differential equations. 
+2.  modelling the interaction between plants and their 3D environment by generating 3D structures from the graphs and simulating capture of different resources (e.g. light) and 
+3.  modelling the interaction among elements within each plant by constructing  dynamic networks that represent systems of ordinary differential equations. 
 
 In terms of design, VPL gives priority to performance and simple interfaces as
 opposed to complex layers of abstraction. This implies that models in VPL may
@@ -54,15 +51,11 @@ reusable components with which models can be built.
 
 The packages currently planned include
 
-* Ecophys: Algorithms and data structures to simulate ecophysiological processes 
-including photosynthesis, transpiration, leaf energy balance, phenology, 
-respiration, nutrient and water uptake, etc.
+* Ecophys: Algorithms and data structures to simulate ecophysiological processes including photosynthesis, transpiration, leaf energy balance, phenology, respiration, nutrient and water uptake, etc.
 
-* Sky: Algorithms to simulate different sky conditions in terms of the intensity 
-of solar radiation and its spatial distribution.
+* Sky: Algorithms to simulate different sky conditions in terms of the intensity of solar radiation and its spatial distribution.
 
-* GCIM: A generic model that allows simulating multiple types of crops with an
-emphasis on interactions among crops
+* GCIM: A generic model that allows simulating multiple types of crops with an emphasis on interactions among crops
 
 ## Documentation
 

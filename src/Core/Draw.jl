@@ -1,5 +1,5 @@
 """
-  get_id(key, data)
+    get_id(key, data)
 
 Method that defines the label associated to the node `data` when drawing the
 graph. The argument `key` is the unique identifier of the node in the graph.
@@ -40,7 +40,7 @@ end
 Draw a network representation of the graph. The drawing is performed
 on a `Blink` window using the vis.js Javascript library. The function returns
 the handler to the Blink window. Access to Internet is required as the libraries
-are loaded from the cdns server.
+are loaded from a cdns server.
 """
 function draw(g::Graph; name::String = "VPL Graph") 
   draw(dotlang(g), name = name)

@@ -35,8 +35,7 @@ A simulation in VPL consists of executing rules iteratively and, within each ite
 
 * Use queries to select subset of nodes and modify their states.
 * Modify graph-level variables directly.
-* Use algorithms in VPL to simulate interactions among nodes or between
-nodes and their environment.
+* Use algorithms in VPL to simulate interactions among nodes or between nodes and their environment.
 
 In addition, VPL allows visualizing the results of a simulation by:
 * 3D rendering of the generated scenes
@@ -55,8 +54,7 @@ inside a graph:
 
 * Components of the graph.
 * Graph rewriting rules.
-* An user-defined object that characterizes the state of a graph besides its 
-nodes (i.e. graph-level variables).
+* An user-defined object that characterizes the state of a graph besides its nodes (i.e. graph-level variables).
 
 The nodes of a graph are objects created by the user that inherit from the 
 abstract type `Node`. This abstract type enables describing the relationship 
@@ -76,9 +74,9 @@ this method.
 
 The system is designed to allow rewriting of graphs in parallel, including shared
 memory approaches such as multi-threading with the `Threads.@threads` macro. This
-is ensure by deep-copying `axiom`, `rules` and `vars` so that changes in one 
+is ensured by deep-copying `axiom`, `rules` and `vars` so that changes in one 
 graph do not affect other graphs that may be built from the same axioms and rules.
-If user want some state to be shared across graphs, they should define a global 
+If the user wants some state to be shared across graphs, they should define a global 
 variable that is modified during execution of rules. If such approach is used,
 it is the responsibility of the user to ensure that updates to such global variables
 are properly locked or executed atomatically.
@@ -122,10 +120,8 @@ Rules are not executed directly by the user. Instead, they are stored in the
 graph and executed by the method `rewrite!`. A rule is made of three parts:
 
 * The type of node to be replaced.
-* A function to determine whether a candidate node is to be replaced 
-or not (**lhs** function)
-* A function that generates a node or subgraph to use as replacement 
-(**rhs** function).
+* A function to determine whether a candidate node is to be replaced  or not (**lhs** function)
+* A function that generates a node or subgraph to use as replacement (**rhs** function).
 
 The first part must always be present, as it represents the minimum information 
 required to match the rule against nodes inside a graph. This type must be 
@@ -143,8 +139,8 @@ rule without an rhs will remove any matched node and all of its children
 
 A `Context` object includes the data stored inside a node plus its relationship 
 with other nodes in the graph, as well as a reference to the graph-level 
-variables. In order to extract the data stored in the node use the method 
-`data`. In order to extract the object containing all the graph-level variables, 
+variables. In order to extract the data stored in the node use the function 
+`data()`. In order to extract the object containing all the graph-level variables, 
 use the method `vars`. The `Context` object may also be used to access other nodes 
 by walking through the graph (see below).
 
@@ -162,20 +158,22 @@ it is recommended to) use a query for better performance (see below).
 
 Sometimes the lhs function needs to check the relationships between nodes 
 inside a graph (e.g. match all leaves that belong to a particular branch of a 
-graph). In order achieve that, one can use the methods `hasParent` and `hasChildren` to 
+graph). In order achieve that, one can use the functions `hasParent()` and `hasChildren()` to 
 check for inmediate connections (i.e. effectively to check whether the node is a 
-root or a leaf in the graph) whereas `hasAncestor` and `hasDescendant` allow 
+root or a leaf in the graph) whereas `hasAncestor()` and `hasDescendant()` allow 
 traversing the graph and finding any connected node that matches a specific query. 
 If we need to extract the contents of the node, we may use the corresponding 
-functions `parent`, `children`, `ancestor` and `descendant`. Note that `children` 
+functions `parent()`, `children()`, `ancestor()` and `descendant()`. Note that `children()` 
 will return all the children nodes as a tuple, but the rest of functions only 
 return one node at a time. All these functions take a `Context` object as input 
-and return either `true` or `false` (for the functions that start with *has*) or a 
+and return either `true` or `false` (for the functions that start with `has`) or a 
 `Context` or tuple of `Context` objects for the functions that extract the actual 
 connected node. These methods may also be used inside the rhs function of rules. 
 However, to avoid code repetition (and for performance reasons), it is recommended 
-to "capture" the `Context` objects of connected in the lhs function and pass 
-them to the rhs as described below.
+to *capture* the `Context` objects of connected in the lhs function and pass 
+them to the rhs as described below (see below).
+
+ <!-- TODO: Add a table with the inputs and outputs of each graph-related method -->
 
 ## Capturing the context of a node
 
@@ -186,7 +184,7 @@ in the rhs function of a rule. In those cases, an extra argument to the construc
 additional data from the lhs to the rhs function. Then, the lhs function should 
 return a tuple, where the first element is still `true` or `false` (to indicate 
 whether the rule matches a node) and the second element is a tuple of 
-`Context` objects associated to the nodes being matched. If not match occurs, 
+`Context` objects associated to the nodes being matched. If no match occurs, 
 it is sufficient to return `(false, ())`, where `()` indicates an empty tuple. 
 The rhs function should then be a function that takes as first argument the 
 `Context` object of the node being replaced, and an additional argument for 
@@ -201,28 +199,29 @@ type in the same order in which they were added to the graph. Similarly, the rhs
 part of a rule will be applied to those nodes that matched the lhs part, in 
 the same order as in the matching.
 
+<!-- TODO: Diagram on rule execution -->
+
 The lhs part of all the rules are executed first and VPL will check that each 
 node is not matched by more than rule. In case there is more than one match, 
 an error will be generated. After all the lhs pars are executed, then the rhs parts 
 are executed on the matched nodes. Although generating an error may seem 
 restrictive, the  reasoning for this approach is as follows:
 
-* Graph rewriting is, conceptually, a parallel operation, so two rules cannot replace the same node, even if in the current version of VPL the rules are applied sequentially (future versions may run rules on different threads).
+* Graph rewriting is, conceptually, a parallel operation, so two rules cannot replace the same node as that would mean the result depends on the order in which the rules are executed.
 
-* New nodes will be generated by graph rewriting rules that could be matched by the lhs of other graph rewriting rules. To guarantee that all rules rewrite the same graph, all nodes that need to be replaced are identified before any rhs part is executed. 
+* New nodes will be generated by graph rewriting rules that could be matched by the lhs of other graph rewriting rules. To guarantee that all rules rewrite the same graph, all nodes that need to be replaced are identified before any rhs function is executed. 
 
-In essence, you need to program your model such that it does not rely on any specific 
-order of execution of the graph rewriting rules. 
+In essence, you need to program your model such that it does not rely on any specific order of execution of the graph rewriting rules.
 
 # Query and `apply`
 
-The `apply` method will apply a `Query` object to a graph and return a list of 
+The `apply()` function will apply a `Query` object to a graph and return a list of 
 nodes that match the query. The main differences between rules and queries is that queries 
 do not have an rhs part,they are not stored inside the graph and the user 
 decides when to apply them. Note that that a query does not modify a graph, 
 it simply returns a collection of nodes matched by it. Another difference is that 
 a query always return a reference to the data stored  inside the node, rather 
-than a `Context` object (so no need to use `data`). Note that if a query is used 
+than a `Context` object (so no need to use `data()`). Note that if a query is used 
 to modify the data stored in a node, then the node needs to be a mutable type.
 
 For nodes of immutable type, a graph rewriting rule must be used to replace 
@@ -239,6 +238,8 @@ the simulation, especially whether they are applied before or after a call to
 `rewrite!`. The reasoning for this is that queries are not altering the structure 
 of a graph (since they do not remove nor create nodes) and multiple queries 
 can (and often do) match the same node. For example, one query will alter 
-an internal variable than is then need as input for another query. Thus, whereas 
+an internal variable that is then need as input by another query. Thus, whereas 
 rules implicitly follow a parallel programming paradigm, queries follow a 
 sequential programming paradigm.
+
+<!-- TODO: Diagram that clarifies differences between rules and queries -->

@@ -5,18 +5,18 @@
 ################################################################################
 
 """
-  Graph(axiom; rules = nothing, vars = nothing)
+    Graph(axiom; rules = nothing, vars = nothing)
 
 Creates a dynamic graph defined by the initial node or nodes (`axiom`), one or more rules 
 (`rules`), and an object with graph-level variables (`vars`). Rules and graph-level
 variables are optional and must be assigned by keyword (see example below). 
-Rules must be an `Rule` or tuple of `Rule` objects. 
+Rules must be a `Rule` or tuple of `Rule` objects. 
 The `axiom` may be a single object inheriting from `Node` or a subgraph generated 
 with the graph construction DSL. 
 A copy of the axiom and rules is always made when constructing the graph, but if
 object containing graph-level variables is not `mutable`, the user must manually
-copy (with `copy` or `deepcopy`) or else changes within the graph will affect
-the original object (and other graphs creates from the same object).
+copy it (with `copy` or `deepcopy`) or else changes within the graph will affect
+the original object (and other graphs created from the same object).
 
 # Example
 ```julia
@@ -43,7 +43,7 @@ end
 ################################################################################
 
 """
-  rules(g::Graph)
+    rules(g::Graph)
 
 Returns a tuple with all the graph-rewriting rules stored in the graph
 

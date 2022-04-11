@@ -9,7 +9,7 @@
 node(c::Context) = c.node
 
 """
-  data(c::Context)
+    data(c::Context)
 
 Returns the data stored in the node associated to a `Context` object. This needs
 to be used inside rules and queries.
@@ -21,7 +21,7 @@ graph(c::Context) = c.graph
 sgraph(c::Context) = graph(c.graph)
 
 """
-  vars(c::Context)
+    vars(c::Context)
 
 Returns the object storing the graph-level variables in the graph associated to 
 a `Context` object. This needs to be used inside rules and queries.
@@ -83,8 +83,8 @@ isLeaf(c::Context) = !hasChildren(c)
 """
     hasDescendent(c::Context, condition, maxlevel)
 
-Check if the node passed as argument has a descendent that matches the optional condition and
-and return `true` or `false`. The `argument` maxlevel is optional and limits
+Check if the node passed as argument has a descendent that matches the optional condition 
+and return `true` or `false`. The argument `maxlevel` is optional and limits
 the number of steps that the algorithm will move through the graph (by default
 there is no limitation). The default condition returns `true` for any descendent 
 and it takes an object of type `Context`.
@@ -126,7 +126,7 @@ end
 """
     children(c::Context)
 
-Returns a tuple of `Context` objects with all the children of thew node given as 
+Returns a tuple of `Context` objects with all the children of the node given as 
 argument.
 """
 function children(c::Context)
@@ -137,7 +137,7 @@ end
     descendent(c::Context, condition, maxlevel)
 
 Returns a `Context` object associated to the first descendent of the node given as 
-argument that matches the optional condition. The `argument` maxlevel is optional and limits
+argument that matches the optional condition. The argument `maxlevel` is optional and limits
 the number of steps that the algorithm will move through the graph (by default
 there is no limitation). The matched node is returned as a `Context` object.
 The default condition returns `true` for any descendent and it takes an object of
