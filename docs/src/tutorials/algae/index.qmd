@@ -1,8 +1,10 @@
 ---
-title: "Algae growth"
+author: "Alejandro Morales"
 format: 
-  commonmark:
-    variant: -raw_html
+    commonmark:
+        variant: -raw_html
+execute: 
+  cache: true
 ---
 
 # Algae growth
@@ -14,7 +16,7 @@ The model described here is based on the non-branching model of [algae growth](h
 First, we need to load the VPL metapackage, which will automatically load all the packages in the VPL ecosystem. 
 
 ```{julia}
-using VPL
+using VPL 
 ```
 
 The rewriting rules of the L-system are as follows:
