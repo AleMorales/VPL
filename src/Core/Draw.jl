@@ -45,10 +45,9 @@ function choose_backend(backend, inline)
 end
 
 # Draw a graph using GraphMakie
-function draw(g::Graph; display = true, backend = "default", inline = false)
-    
-    # If we use inline we cannot display
-    inline && (display = false)
+function draw(g::Graph; force = false, backend = "default", inline = false)
+
+    force && inline && error("Cannot set force and inline to true at the same time")
 
     # Select backend and activate it
     choose_backend(backend, inline)
@@ -87,8 +86,9 @@ function draw(g::Graph; display = true, backend = "default", inline = false)
     end
     p.nlabels_align = nlabels_align
 
-    # Return all the objects for further processing if needed
-    display && Base.display(f)
+    # This forces the display of the figure (may be needed in some environments)
+    force && display(f)
 
-    f # Need to return only this to trigger correct display in IJulia...
+    # Return the figure object (rely on the context to display it)
+    f
 end
