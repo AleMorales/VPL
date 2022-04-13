@@ -4,7 +4,14 @@ import Base: copy, length, empty!, append!, +, getindex, setindex!, show, parent
              Tuple
 
 import Unrolled: @unroll
-import Blink
+#import Blink
+
+import Graphs as GR
+import GraphMakie as GM
+import GraphMakie.NetworkLayout as NL
+import GLMakie
+import WGLMakie
+import CairoMakie
 
 include("Types.jl")
 include("GraphNode.jl")

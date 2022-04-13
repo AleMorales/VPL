@@ -1,115 +1,87 @@
-"""
-    get_id(key, data)
 
-Method that defines the label associated to the node `data` when drawing the
-graph. The argument `key` is the unique identifier of the node in the graph.
-The default method prints the type of data stored in the node and the unique
-identifier of the node in parenthesis.
-"""
-function get_id(key, data)
-  string(typeof(data))*"("*string(key)*")"
-end
-
-# Convert a node in a graph into a series of statements in the DOT language
-function dotlang(id, label, children)
-  sid = string(id)
-  out = sid*" [label=\""*label*"\", shape = box];\n"#" ("*sid*")\", shape = box];\n"
-  for child in children
-    out *= sid*" -> "*string(child)*";\n"
-  end
-  return out
-end
-  
-# Translate a StaticGraph into DOT language
-function dotlang(g::StaticGraph)
-  out = "digraph {\n"
-  for (key, val) in g.nodes
-    out *= dotlang(key, get_id(key, val.data), childrenID(val), )
-  end
-  out *= "}"
-  return out
-end
-  
-# Translate a Graph into DOT language
-function dotlang(g::Graph)
-  dotlang(graph(g))
-end
-
-"""
-    draw(g::Graph; name::String = "VPL Graph")
-Draw a network representation of the graph. The drawing is performed
-on a `Blink` window using the vis.js Javascript library. The function returns
-the handler to the Blink window. Access to Internet is required as the libraries
-are loaded from a cdns server.
-"""
-function draw(g::Graph; name::String = "VPL Graph") 
-  draw(dotlang(g), name = name)
-end
-function draw(g::StaticGraph; name::String = "VPL Graph") 
-  draw(dotlang(g), name = name)
+function GR.DiGraph(g::Graph)
+    # Create a DiGraph structure
+    n  = length(g)
+    dg = GR.DiGraph(n)
+    # Connect ids in original graph to new ids but make sure the root
+    # node is at the beginning
+    ids = nodes(g) |> keys |> collect
+    rid = root(g)
+    posroot = findfirst(i -> i == rid, ids)
+    ids = vcat(rid, ids[1:posroot-1], ids[posroot+1:end])
+    map_ids = Dict((ids[i], i) for i in 1:n)
+    # Create label for each node (user can modify behavior)
+    node_classes = [split("$(typeof(data(g[id])))", ".")[end] for id in ids]
+    labels = ["$(node_classes[i]) - $(ids[i])" for i in 1:n]
+    # Update the digraph with information collected in the above
+    for (key, val) in nodes(g)
+        children = childrenID(val)
+        if length(children) > 0
+            for child in children
+                GR.add_edge!(dg, map_ids[key], map_ids[child])
+            end
+        end
+    end
+    # Return the DiGraph structure and the associated labels
+    return dg, labels, n
 end
 
 
-function draw(graph::String; name::String = "VPL Graph")
-    # Open window and load external requirements
-    w = Blink.Window(async=false);
-    Blink.loadjs!(w, "//cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js")
-    Blink.loadcss!(w, "//cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css")
+# Choose which Makie backend to use
+function choose_backend(backend)
+    if backend == "default"
+        GLMakie.activate!()
+    elseif backend == "native"
+        GLMakie.activate!()
+    elseif backend == "web"
+        WGLMakie.activate!()     
+    elseif backend == "static"
+        CairoMakie.activate!()           
+    else
+        error("Unknown backend, please use of the following: \"default\", \"native\", \"web\" or \"static\"")
+    end
+end
 
-    # Title
-    Blink.title(w, name)
+# Draw a graph using GraphMakie
+function draw(g::Graph; display = true, backend = "default")
+    # Select backend and activate it
+    choose_backend(backend)
 
-    # For some reason, the DOT conversion refuses DOT formats with newlines
-    graph = replace(graph, "\n" => " ")
+    # Create the digraph
+    dg, labels, n = GR.DiGraph(g)
 
-    # Script from the website
-    content = """
-    <style type="text/css">
-        #mynetwork {
-            width: 100vw;
-            height: 100vh;
-            border-style: none;
-        }
-    </style>
+    # Generate the visualization
+    nlabels_align = [(:left, :bottom) for _ in 1:n]
+    f, ax, p = GM.graphplot(dg, 
+                layout = NL.Buchheim(),
+                nlabels = labels,
+                nlabels_distance = 5,
+                nlabels_align = nlabels_align,
+                tangents=((0,-1),(0,-1)),
+                arrow_size = 15,
+                node_color = [:black for i in 1:n])
 
-    <div id="mynetwork"></div>
+    # Make it look prettier
+    GM.hidedecorations!(ax);
+    GM.hidespines!(ax);
 
-    <script type="text/javascript">
-        // string with graph description
-        var DOTstring = '$graph';
-        var parsedData = vis.network.convertDot(DOTstring);
+    # Change relative position of labels
+    for v in GR.vertices(dg)
+        if isempty(GR.inneighbors(dg, v)) # root
+            nlabels_align[v] = (:center,:bottom)
+        elseif isempty(GR.outneighbors(dg, v)) #leaf
+            nlabels_align[v] = (:center,:top)
+        else
+            self = p[:node_pos][][v]
+            parent = p[:node_pos][][GR.inneighbors(dg, v)[1]]
+            if self[1] < parent[1] # left branch
+                nlabels_align[v] = (:right,:bottom)
+            end
+        end
+    end
+    p.nlabels_align = nlabels_align
 
-        // provide the data in the vis format
-        var data = {
-            nodes: parsedData.nodes,
-            edges: parsedData.edges
-        };
-        var options = parsedData.options;
-
-        // Layout settings
-        options.layout = {
-            RandomSeed: undefined,
-            improvedLayout:true,
-            hierarchical: {
-              enabled:true,
-              levelSeparation: 150,
-              nodeSpacing: 100,
-              treeSpacing: 200,
-              blockShifting: true,
-              edgeMinimization: true,
-              parentCentralization: false,
-              direction: 'UD',        // UD, DU, LR, RL
-              sortMethod: 'directed'   // hubsize, directed
-            }};
-
-        // assemble the network and put it inside the div
-        var container = document.getElementById('mynetwork');
-        var network = new vis.Network(container, data, options);
-    </script>
-    </body>
-    """
-
-    Blink.body!(w, content, async = true)
-
-    return w
+    # Return all the objects for further processing if needed
+    display && Base.display(f)
+    f, ax, p
 end

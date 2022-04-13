@@ -18,7 +18,7 @@ using Test
 @testset "API/Core/Graph_5" begin include("api/core/test_graph_5.jl") end
 @testset "API/Core/Graph_6" begin include("api/core/test_graph_6.jl") end
 @testset "API/Core/Graph_6" begin include("api/core/test_graph_parallel.jl") end
-@testset "API/Core/Graph_1" begin include("api/core/test_draw_graph.jl") end
+#@testset "API/Core/Graph_1" begin include("api/core/test_draw_graph.jl") end
 
 
 ################################################################################
@@ -26,16 +26,16 @@ using Test
 ################################################################################
 @testset "Core/Geom/Turtle" begin include("internal/geom/test_turtle.jl") end
 
-@testset "API/Geom/ellipse" begin include("api/geom/test_ellipse.jl") end
-@testset "API/Geom/bbox" begin include("api/geom/test_bbox.jl") end
-@testset "API/Geom/rectangle" begin include("api/geom/test_rectangle.jl") end
-@testset "API/Geom/solid_cube" begin include("api/geom/test_solid_cube.jl") end
-@testset "API/Geom/hollow_cube" begin include("api/geom/test_hollow_cube.jl") end
-@testset "API/Geom/hollow_cylinder" begin include("api/geom/test_hollow_cylinder.jl") end
-@testset "API/Geom/solid_cylinder" begin include("api/geom/test_solid_cylinder.jl") end
-@testset "API/Geom/hollow_frustum" begin include("api/geom/test_hollow_frustum.jl") end
-@testset "API/Geom/solid_frustum" begin include("api/geom/test_solid_frustum.jl") end
-@testset "API/Geom/hollow_cone" begin include("api/geom/test_hollow_cone.jl") end
-@testset "API/Geom/solid_cone" begin include("api/geom/test_solid_cone.jl") end
-@testset "API/Geom/meshio" begin include("api/geom/test_meshio.jl") end
+# @testset "API/Geom/ellipse" begin include("api/geom/test_ellipse.jl") end
+# @testset "API/Geom/bbox" begin include("api/geom/test_bbox.jl") end
+# @testset "API/Geom/rectangle" begin include("api/geom/test_rectangle.jl") end
+# @testset "API/Geom/solid_cube" begin include("api/geom/test_solid_cube.jl") end
+# @testset "API/Geom/hollow_cube" begin include("api/geom/test_hollow_cube.jl") end
+# @testset "API/Geom/hollow_cylinder" begin include("api/geom/test_hollow_cylinder.jl") end
+# @testset "API/Geom/solid_cylinder" begin include("api/geom/test_solid_cylinder.jl") end
+# @testset "API/Geom/hollow_frustum" begin include("api/geom/test_hollow_frustum.jl") end
+# @testset "API/Geom/solid_frustum" begin include("api/geom/test_solid_frustum.jl") end
+# @testset "API/Geom/hollow_cone" begin include("api/geom/test_hollow_cone.jl") end
+# @testset "API/Geom/solid_cone" begin include("api/geom/test_solid_cone.jl") end
+# @testset "API/Geom/meshio" begin include("api/geom/test_meshio.jl") end
 

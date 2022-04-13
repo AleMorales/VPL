@@ -44,7 +44,6 @@ const traverse = Core.traverse
 const traverseDFS = Core.traverseDFS
 const traverseBFS = Core.traverseBFS
 const draw = Core.draw
-const get_id = Core.get_id
 
 # Geom module
 include("Geom/Module_Geom.jl")
