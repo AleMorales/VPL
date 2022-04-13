@@ -28,11 +28,13 @@ end
 
 
 # Choose which Makie backend to use
-function choose_backend(backend)
+function choose_backend(backend, inline)
     if backend == "default"
         GLMakie.activate!()
+        GLMakie.inline!(inline)
     elseif backend == "native"
         GLMakie.activate!()
+        GLMakie.inline!(inline)
     elseif backend == "web"
         WGLMakie.activate!()     
     elseif backend == "static"
@@ -43,9 +45,13 @@ function choose_backend(backend)
 end
 
 # Draw a graph using GraphMakie
-function draw(g::Graph; display = true, backend = "default")
+function draw(g::Graph; display = true, backend = "default", inline = false)
+    
+    # If we use inline we cannot display
+    inline && (display = false)
+
     # Select backend and activate it
-    choose_backend(backend)
+    choose_backend(backend, inline)
 
     # Create the digraph
     dg, labels, n = GR.DiGraph(g)
@@ -83,5 +89,6 @@ function draw(g::Graph; display = true, backend = "default")
 
     # Return all the objects for further processing if needed
     display && Base.display(f)
-    f, ax, p
+
+    f # Need to return only this to trigger correct display in IJulia...
 end
