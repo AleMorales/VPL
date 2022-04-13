@@ -7,3 +7,5 @@
 /build/
 /docs/
 
+docs/make.jl
+docs/src/api/Core.md
