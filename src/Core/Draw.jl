@@ -55,6 +55,11 @@ function draw(g::Graph; force = false, backend = "default", inline = false)
     # Create the digraph
     dg, labels, n = GR.DiGraph(g)
 
+    if n == 1
+        println("The graph only has one node, so no visualization was made")
+        return nothing
+    end
+
     # Generate the visualization
     nlabels_align = [(:left, :bottom) for _ in 1:n]
     f, ax, p = GM.graphplot(dg, 
