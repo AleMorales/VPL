@@ -12,7 +12,7 @@ function GR.DiGraph(g::StaticGraph)
     map_ids = Dict((ids[i], i) for i in 1:n)
     # Create label for each node (user can modify behavior)
     node_classes = [split("$(typeof(data(g[id])))", ".")[end] for id in ids]
-    labels = ["$(node_classes[i]) - $(ids[i])" for i in 1:n]
+    labels = ["$(node_classes[i])-$(ids[i])" for i in 1:n]
     # Update the digraph with information collected in the above
     for (key, val) in nodes(g)
         children = childrenID(val)
@@ -43,7 +43,7 @@ function choose_backend(backend, inline)
 end
 
 """
-    draw(g::Graph; force = false, backend = "native", inline = false)
+    draw(g::StaticGraph; force = false, backend = "native", inline = false)
 
 Visualize a graph as a network using different backends (`native` for OpenGL, `web` for WebGL and `vector` for Cairo
 vector graphics, see VPL documentation for details). To force an external window when using the native backend set
@@ -73,10 +73,10 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
                 layout = NL.Buchheim(),
                 nlabels = labels,
                 nlabels_distance = 5,
+                nlabels_textsize = 15,
                 nlabels_align = nlabels_align,
-                tangents=((0,-1),(0,-1)),
                 arrow_size = 15,
-                node_color = [:black for i in 1:n], 
+                node_size = 5,
                 figure = (resolution = resolution,))
 
     # Make it look prettier
@@ -84,21 +84,21 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
     GM.hidespines!(ax);
     ax.aspect = GM.DataAspect()
 
-    # Change relative position of labels
-    for v in GR.vertices(dg)
-        if isempty(GR.inneighbors(dg, v)) # root
-            nlabels_align[v] = (:center,:bottom)
-        elseif isempty(GR.outneighbors(dg, v)) #leaf
-            nlabels_align[v] = (:center,:top)
-        else
-            self = p[:node_pos][][v]
-            parent = p[:node_pos][][GR.inneighbors(dg, v)[1]]
-            if self[1] < parent[1] # left branch
-                nlabels_align[v] = (:right,:bottom)
-            end
-        end
-    end
-    p.nlabels_align = nlabels_align
+    # # Change relative position of labels
+    # for v in GR.vertices(dg)
+    #     if isempty(GR.inneighbors(dg, v)) # root
+    #         nlabels_align[v] = (:center,:bottom)
+    #     elseif isempty(GR.outneighbors(dg, v)) #leaf
+    #         nlabels_align[v] = (:center,:top)
+    #     else
+    #         self = p[:node_pos][][v]
+    #         parent = p[:node_pos][][GR.inneighbors(dg, v)[1]]
+    #         if self[1] < parent[1] # left branch
+    #             nlabels_align[v] = (:right,:bottom)
+    #         end
+    #     end
+    # end
+    # p.nlabels_align = nlabels_align
 
     # This forces the display of the figure (may be needed in some environments)
     force && display(f)
@@ -110,7 +110,7 @@ end
 draw(g::Graph; kwargs...) = draw(g.graph; kwargs...)
 
 """
-    export_graph(f, filename; px_per_unit = 1, pt_per_unit = 0.75)
+    export_graph(f, filename)
 
 Export a graph visualization (created by `draw()`) into an external file. Supported formats are
 png (if the `native` or `web` backends were used in `draw()`), pdf or svg (if the `vector` backend
