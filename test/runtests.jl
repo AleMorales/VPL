@@ -8,6 +8,7 @@ using Test
 # Internal tests
 @testset "Graph node" begin include("internal/core/test_graphnode.jl") end
 @testset "Static graph" begin include("internal/core/test_staticgraph.jl") end
+@testset "Internals draw" begin include("internal/core/test_draw_graph.jl") end
 
 # Test API of VPL
 @testset "API/Core/DSL" begin include("api/core/test_DSL.jl") end
@@ -18,7 +19,7 @@ using Test
 @testset "API/Core/Graph_5" begin include("api/core/test_graph_5.jl") end
 @testset "API/Core/Graph_6" begin include("api/core/test_graph_6.jl") end
 @testset "API/Core/Graph_6" begin include("api/core/test_graph_parallel.jl") end
-#@testset "API/Core/Graph_1" begin include("api/core/test_draw_graph.jl") end
+@testset "API/Core/Draw" begin include("api/core/test_draw_graph.jl") end
 
 
 ################################################################################
@@ -39,3 +40,6 @@ using Test
 # @testset "API/Geom/solid_cone" begin include("api/geom/test_solid_cone.jl") end
 # @testset "API/Geom/meshio" begin include("api/geom/test_meshio.jl") end
 
+
+# TODO: Add new tests on new draw method for graphs
+# TODO: Need to update the tests on geometry due to update in Makie?

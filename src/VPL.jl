@@ -6,7 +6,7 @@ module VPL
 export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        data, hasParent, hasAncestor, ancestor, isRoot,
        hasChildren, hasDescendent, children, descendent, isLeaf,
-       traverse, traverseDFS, traverseBFS, draw, 
+       traverse, traverseDFS, traverseBFS, draw, export_graph, calculate_resolution,
        area, areas, ntriangles, nvertices, loadmesh, savemesh, 
        Mesh, Rectangle, BBox, Ellipse, Ellipsoid, HollowCylinder, SolidCylinder,
        HollowCone, SolidCone, SolidCube, HollowCube, SolidFrustum, HollowFrustum,
@@ -44,6 +44,8 @@ const traverse = Core.traverse
 const traverseDFS = Core.traverseDFS
 const traverseBFS = Core.traverseBFS
 const draw = Core.draw
+const export_graph = Core.export_graph
+const calculate_resolution = Core.calculate_resolution
 
 # Geom module
 include("Geom/Module_Geom.jl")

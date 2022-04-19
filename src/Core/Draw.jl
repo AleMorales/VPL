@@ -1,5 +1,5 @@
 
-function GR.DiGraph(g::Graph)
+function GR.DiGraph(g::StaticGraph)
     # Create a DiGraph structure
     n  = length(g)
     dg = GR.DiGraph(n)
@@ -26,26 +26,33 @@ function GR.DiGraph(g::Graph)
     return dg, labels, n
 end
 
+GR.DiGraph(g::Graph) = GR.DiGraph(g.graph)
 
 # Choose which Makie backend to use
 function choose_backend(backend, inline)
-    if backend == "default"
-        GLMakie.activate!()
-        GLMakie.inline!(inline)
-    elseif backend == "native"
+    if backend == "native"
         GLMakie.activate!()
         GLMakie.inline!(inline)
     elseif backend == "web"
         WGLMakie.activate!()     
-    elseif backend == "static"
+    elseif backend == "vector"
         CairoMakie.activate!()           
     else
         error("Unknown backend, please use of the following: \"default\", \"native\", \"web\" or \"static\"")
     end
 end
 
-# Draw a graph using GraphMakie
-function draw(g::Graph; force = false, backend = "default", inline = false)
+"""
+    draw(g::Graph; force = false, backend = "native", inline = false)
+
+Visualize a graph as a network using different backends (`native` for OpenGL, `web` for WebGL and `vector` for Cairo
+vector graphics, see VPL documentation for details). To force an external window when using the native backend set
+`force = true` whereas to force to be inlined use `inline = true`. Details on the behaviour of each backend on different
+contexts of code execution can be found in the VPL documentation. For backend `native` or `web`, the user may specify the 
+resolution in pixels (by default HD is used).
+
+"""
+function draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080))
 
     force && inline && error("Cannot set force and inline to true at the same time")
 
@@ -69,11 +76,13 @@ function draw(g::Graph; force = false, backend = "default", inline = false)
                 nlabels_align = nlabels_align,
                 tangents=((0,-1),(0,-1)),
                 arrow_size = 15,
-                node_color = [:black for i in 1:n])
+                node_color = [:black for i in 1:n], 
+                figure = (resolution = resolution,))
 
     # Make it look prettier
     GM.hidedecorations!(ax);
     GM.hidespines!(ax);
+    ax.aspect = GM.DataAspect()
 
     # Change relative position of labels
     for v in GR.vertices(dg)
@@ -96,4 +105,35 @@ function draw(g::Graph; force = false, backend = "default", inline = false)
 
     # Return the figure object (rely on the context to display it)
     f
+end
+
+draw(g::Graph; kwargs...) = draw(g.graph; kwargs...)
+
+"""
+    export_graph(f, filename; px_per_unit = 1, pt_per_unit = 0.75)
+
+Export a graph visualization (created by `draw()`) into an external file. Supported formats are
+png (if the `native` or `web` backends were used in `draw()`), pdf or svg (if the `vector` backend
+was used). The file name should include the extension from which the format will be inferred.
+"""
+function export_graph(f, filename)
+    FileIO.save(filename, f) 
+end
+
+"""
+    calculate_resolution(width, height; format = "png", dpi = 300)
+
+Calculate the resolution required to achieve a specific `width` and `height` (in cm) of the exported
+image, with a particular `dpi` (for png format).
+"""
+function calculate_resolution(width, height; format = "png", dpi = 300)
+    if format == "png"
+        res_width = width/2.54*dpi
+        res_height = height/2.54*dpi
+        (res_width, res_height)
+    else
+        res_width = width/2.54*72/0.75
+        res_height = height/2.54*72/0.75
+        (res_width, res_height)
+    end
 end
