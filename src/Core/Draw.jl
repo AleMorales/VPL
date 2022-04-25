@@ -38,7 +38,7 @@ function choose_backend(backend, inline)
     elseif backend == "vector"
         CairoMakie.activate!()           
     else
-        error("Unknown backend, please use of the following: \"default\", \"native\", \"web\" or \"static\"")
+        error("Unknown backend, please use of the following: \"default\", \"native\", \"web\" or \"vector\"")
     end
 end
 

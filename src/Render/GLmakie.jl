@@ -1,16 +1,16 @@
 
 
 # Optionally add wireframe and/or arrows representing normal vectors (for debugging)
-function scene_additions!(scene, m, normals, wireframe)
+function scene_additions!(m, normals, wireframe)
     @inbounds FT = eltype(m[1][1])
     if wireframe
-        GLMakie.wireframe!(m, linewidth = FT(1.5))
+        Makie.wireframe!(m, linewidth = FT(1.5))
     end
     if normals
         pos = calc_arrows(m)
-        GLMakie.linesegments!(pos, color = :black, linewidth = FT(1.5))
+        Makie.linesegments!(pos, color = :black, linewidth = FT(1.5))
     end
-    return scene
+    return nothing
 end
 
 # Auxilliary functions to create arrows to depict Normals

@@ -12,13 +12,30 @@ function render!(m::Geom.Mesh, color; kwargs...)
 end
 
 # Basic rendering of a triangular mesh that is already in the right format
-function render(m::GeometryBasics.Mesh, color; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    scene = GLMakie.mesh(m, color = color, camera = GLMakie.cam3d!, near = 0; kwargs...)
-    scene_additions!(scene, m, normals, wireframe)
+function render(m::GeometryBasics.Mesh, color; normals::Bool = false, wireframe::Bool = false, 
+                axes::Bool = true, backend = "native", inline = false, resolution = (1920, 1080),
+                kwargs...)
+    choose_backend(backend, inline)
+    fig = Makie.mesh(m, color = color, near = 0, show_axis = axes, figure = (resolution = resolution,); kwargs...)
+    scene_additions!(m, normals, wireframe)
+    fig
 end
 function render!(m::GeometryBasics.Mesh, color; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    scene = GLMakie.mesh!(m, color = color, camera = GLMakie.cam3d!, near = 0; kwargs...)
-    scene_additions!(scene, m, normals, wireframe)
+    Makie.mesh!(m, color = color, near = 0; kwargs...)
+    scene_additions!(m, normals, wireframe)
+end
+
+
+# Choose which Makie backend to use
+function choose_backend(backend, inline)
+    if backend == "native"
+        GLMakie.activate!()
+        GLMakie.inline!(inline)
+    elseif backend == "web"
+        WGLMakie.activate!()             
+    else
+        error("Unknown or unsupported backend, please use of the following: \"default\", \"native\", \"web\"")
+    end
 end
 
 ##################

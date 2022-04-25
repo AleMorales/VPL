@@ -1,6 +1,6 @@
 module Render
 
-import GLMakie
+import GLMakie, WGLMakie, Makie
 import GeometryBasics
 import LinearAlgebra: normalize, ×
 import ColorTypes: Colorant, RGB, RGBA
@@ -11,7 +11,7 @@ import ..VPL.Core: Node, Graph, GraphNode, root, children
 
 include("Scene.jl")
 include("Render.jl")
-include("GLmakie.jl")
+include("GLMakie.jl")
 include("Turtle.jl")
 
 
