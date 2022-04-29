@@ -7,6 +7,8 @@ import Makie
 
 let
 
+    VPL.node_label(n::GT.A, id) = "A"
+    VPL.node_label(n::GT.B, id) = "B"
     axiom = GT.A()
     rule1 = Rule(GT.A, rhs = x -> GT.A() + GT.B())
     rule2 = Rule(GT.B, rhs = x -> GT.A())

@@ -1,4 +1,17 @@
 
+"""
+    node_label(n::Node, id)
+
+Function that constructs a label for a node to be used by `draw()` when visualizing the graph 
+as a network. The default method will create a label from the type of node its unique id. The
+user can specialize this method for user-defined data types to customize the label.
+"""
+function node_label(n::Node, id)
+    node_class = split("$(typeof(n))", ".")[end]
+    label = "$node_class-$(id)"
+    return label
+end
+
 function GR.DiGraph(g::StaticGraph)
     # Create a DiGraph structure
     n  = length(g)
@@ -11,8 +24,7 @@ function GR.DiGraph(g::StaticGraph)
     ids = vcat(rid, ids[1:posroot-1], ids[posroot+1:end])
     map_ids = Dict((ids[i], i) for i in 1:n)
     # Create label for each node (user can modify behavior)
-    node_classes = [split("$(typeof(data(g[id])))", ".")[end] for id in ids]
-    labels = ["$(node_classes[i])-$(ids[i])" for i in 1:n]
+    labels = [node_label(data(g[id]), id) for id in ids]
     # Update the digraph with information collected in the above
     for (key, val) in nodes(g)
         children = childrenID(val)
@@ -52,7 +64,8 @@ contexts of code execution can be found in the VPL documentation. For backend `n
 resolution in pixels (by default HD is used).
 
 """
-function draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080))
+function draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
+              nlabels_textsize = 15, arrow_size = 15, node_size = 5)
 
     force && inline && error("Cannot set force and inline to true at the same time")
 
@@ -73,32 +86,16 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
                 layout = NL.Buchheim(),
                 nlabels = labels,
                 nlabels_distance = 5,
-                nlabels_textsize = 15,
+                nlabels_textsize = nlabels_textsize,
                 nlabels_align = nlabels_align,
-                arrow_size = 15,
-                node_size = 5,
+                arrow_size = arrow_size,
+                node_size = node_size,
                 figure = (resolution = resolution,))
 
     # Make it look prettier
     GM.hidedecorations!(ax);
     GM.hidespines!(ax);
     ax.aspect = GM.DataAspect()
-
-    # # Change relative position of labels
-    # for v in GR.vertices(dg)
-    #     if isempty(GR.inneighbors(dg, v)) # root
-    #         nlabels_align[v] = (:center,:bottom)
-    #     elseif isempty(GR.outneighbors(dg, v)) #leaf
-    #         nlabels_align[v] = (:center,:top)
-    #     else
-    #         self = p[:node_pos][][v]
-    #         parent = p[:node_pos][][GR.inneighbors(dg, v)[1]]
-    #         if self[1] < parent[1] # left branch
-    #             nlabels_align[v] = (:right,:bottom)
-    #         end
-    #     end
-    # end
-    # p.nlabels_align = nlabels_align
 
     # This forces the display of the figure (may be needed in some environments)
     force && display(f)
