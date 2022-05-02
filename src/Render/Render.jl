@@ -61,6 +61,6 @@ end
 ##### Save output #####
 #######################
 
-function save_scene(filename, scene; kwargs...)
+function export_scene(scene, filename; kwargs...)
     FileIO.save(filename, scene; kwargs...)
 end

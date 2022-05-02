@@ -113,8 +113,8 @@ Export a graph visualization (created by `draw()`) into an external file. Suppor
 png (if the `native` or `web` backends were used in `draw()`), pdf or svg (if the `vector` backend
 was used). The file name should include the extension from which the format will be inferred.
 """
-function export_graph(f, filename)
-    FileIO.save(filename, f) 
+function export_graph(f, filename; kwargs...)
+    FileIO.save(filename, f; kwargs...) 
 end
 
 """

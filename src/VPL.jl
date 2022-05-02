@@ -13,7 +13,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        Rectangle!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
        HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!,
        MTurtle, T, O, SET, RU, RA, RH, F, X, Y, Z, feedgeom!, Vec,
-       render, render!, RGB, GLTurtle, feedcolor!, GLScene, save_scene, add!
+       render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!
 
 # Abstract type for turtles
 abstract type Turtle end
@@ -107,6 +107,6 @@ const RGB = Render.RGB
 const GLTurtle = Render.GLTurtle
 const GLScene = Render.GLScene
 const add! = Render.add!
-const save_scene = Render.save_scene
+const export_scene = Render.export_scene
 
 end # module
