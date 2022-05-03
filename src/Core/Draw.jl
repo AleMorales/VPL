@@ -55,14 +55,11 @@ function choose_backend(backend, inline)
 end
 
 """
-    draw(g::StaticGraph; force = false, backend = "native", inline = false)
+    draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
+nlabels_textsize = 15, arrow_size = 15, node_size = 5)
 
-Visualize a graph as a network using different backends (`native` for OpenGL, `web` for WebGL and `vector` for Cairo
-vector graphics, see VPL documentation for details). To force an external window when using the native backend set
-`force = true` whereas to force to be inlined use `inline = true`. Details on the behaviour of each backend on different
-contexts of code execution can be found in the VPL documentation. For backend `native` or `web`, the user may specify the 
-resolution in pixels (by default HD is used).
-
+Equivalent to the method `draw(g::Graph)` but useful to visualize static graphs (e.g., usually this would be 
+the axiom of a graph).
 """
 function draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
               nlabels_textsize = 15, arrow_size = 15, node_size = 5)
@@ -104,14 +101,32 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
     f
 end
 
-draw(g::Graph; kwargs...) = draw(g.graph; kwargs...)
+"""
+    draw(g::Graph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
+nlabels_textsize = 15, arrow_size = 15, node_size = 5)
+
+Visualize a graph as a network using different backends (`native` for OpenGL, `web` for WebGL and `vector` for Cairo
+vector graphics, see VPL documentation for details). To force an external window when using the native backend set
+`force = true` whereas to force to be inlined use `inline = true`. Details on the behaviour of each backend on different
+contexts of code execution can be found in the VPL documentation. For backend `native` or `web`, the user may specify the 
+resolution in pixels (by default HD is used). Additional customization is possible via `nlabels_textsize` (useful if the
+labels of the nodes are too large or small), `arrow_size` (this adjust the size of arrow heads) and `node_size` (for the
+size of the nodes).
+"""
+function draw(g::Graph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
+    nlabels_textsize = 15, arrow_size = 15, node_size = 5)
+    draw(g.graph; force = force, backend = backend, inline = inline, resolution = resolution, 
+         nlabels_textsize = nlabels_textsize, arrow_size = arrow_size, node_size = node_size)
+end
 
 """
-    export_graph(f, filename)
+    export_graph(f, filename; kwargs...)
 
 Export a graph visualization (created by `draw()`) into an external file. Supported formats are
 png (if the `native` or `web` backends were used in `draw()`), pdf or svg (if the `vector` backend
-was used). The file name should include the extension from which the format will be inferred.
+was used). The file name should include the extension from which the format will be inferred. Additional
+keyword arguments are passed along to the corresponding `save()` method defined in the *Makie* package
+(see VPL documentation for details).
 """
 function export_graph(f, filename; kwargs...)
     FileIO.save(filename, f; kwargs...) 

@@ -3,10 +3,24 @@
 ##### Meshes #####
 ##################
 
-# Basic rendering of a triangular mesh with conversion to the right format
+"""
+    render(m::Mesh, color; kwargs...)
+
+Render a mesh with a given color. This will create a new visualization (see Documentation
+for details). Keyword arguments are passed to the `render(scene::GLScene)` method and any  
+unmatched keywords will be passed along to `Makie.mesh()`.
+"""
 function render(m::Geom.Mesh, color; kwargs...)
     render(Geom.GLMesh(m), color; kwargs...)
 end
+
+"""
+    render!(m::Mesh, color; kwargs...)
+
+Add a mesh with a given color the visualization currently active. This will create a new 
+visualization (see Documentation for details). Keyword arguments are passed to the 
+`render!(scene::GLScene)` method and any unmatched keywords will be passed along to `Makie.mesh!()`.
+"""
 function render!(m::Geom.Mesh, color; kwargs...)
     render!(Geom.GLMesh(m), color; kwargs...)
 end
@@ -42,25 +56,53 @@ end
 ##### Scenes #####
 ##################
 
-# Basic rendering of a scene
+"""
+    render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, kwargs...)
+
+Render a `GLScene` object. This will create a new visualization (see Documentation
+for details). `normals = true` will draw arrows in the direction of the normal vector for
+each triangle in the mesh, `wireframe = true` will draw the edges of each triangle with 
+black lines. Keyword arguments are passed to `Makie.mesh()`.
+"""
 function render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, kwargs...)
     render(scene.mesh, scene.colors; normals = normals, wireframe = wireframe, kwargs...)
 end
 
-# Basic rendering of a graph by creating a scene
-function render(graph::Graph, ::Type{FT} = Float64; normals::Bool = false, wireframe::Bool = false, kwargs...) where FT
-    render(GLScene(graph::Graph, FT); normals = normals, wireframe = wireframe, kwargs...)
+"""
+    render(graph::Graph; normals::Bool = false, wireframe::Bool = false, kwargs...)
+
+Render the 3D mesh associated to a `Graph` object. This will create a new visualization (see Documentation
+for details). `normals = true` will draw arrows in the direction of the normal vector for
+each triangle in the mesh, `wireframe = true` will draw the edges of each triangle with 
+black lines. Keyword arguments are passed to `Makie.mesh()`.
+"""
+function render(graph::Graph; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(GLScene(graph::Graph); normals = normals, wireframe = wireframe, kwargs...)
 end
 
-# Basic rendering of a collection of graphs by creating a scene
-function render(graphs::Vector{<:Graph}, ::Type{FT} = Float64; normals::Bool = false, wireframe::Bool = false, kwargs...) where FT
-    render(GLScene(graphs, FT); normals = normals, wireframe = wireframe, kwargs...)
+"""
+    render(graphs::Vector{<:Graph}; normals::Bool = false, wireframe::Bool = false, kwargs...)
+
+Render the 3D mesh associated to an array of `Graph` objects. This will create a new visualization (see Documentation
+for details). `normals = true` will draw arrows in the direction of the normal vector for
+each triangle in the mesh, `wireframe = true` will draw the edges of each triangle with 
+black lines. Keyword arguments are passed to `Makie.mesh()`.
+"""
+function render(graphs::Vector{<:Graph}; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(GLScene(graphs); normals = normals, wireframe = wireframe, kwargs...)
 end
 
 #######################
 ##### Save output #####
 #######################
 
+"""
+    export_scene(scene, filename; kwargs...)
+
+Export a screenshot of the current visualization (stored as `scene` as output of a call to `render`) as a PNG 
+file store in the path given by `filename` (including `.png` extension). Keyword arguments will be passed along
+to the corresponding `save` method from Makie (see VPL documentation for details).
+"""
 function export_scene(scene, filename; kwargs...)
     FileIO.save(filename, scene; kwargs...)
 end

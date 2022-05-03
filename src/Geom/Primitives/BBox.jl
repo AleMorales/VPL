@@ -1,7 +1,11 @@
 
 # Axis-aligned bounding box around a mesh
 
-# First, compute the extreme vertices
+"""
+    BBox(m::Mesh)
+
+Build a tight axis-aligned bounding box around a `Mesh` object.
+"""
 function BBox(m::Mesh{VT}) where VT <: Vec{FT} where FT
     @inbounds xmin, ymin, zmin = m.vertices[1]
     xmax, ymax, zmax = xmin, ymin, zmin 
@@ -21,7 +25,11 @@ function BBox(m::Mesh{VT}) where VT <: Vec{FT} where FT
 
 end
 
-# Then, generate all the vertices
+"""
+    BBox(pmin, pmax)
+
+Build an axis-aligned bounding box given the vector of minimum (`pmin`) and maximum (`pmax`) coordinates.
+"""
 function BBox(pmin::Vec{FT}, pmax::Vec{FT}) where FT
     @inbounds begin
         h    = pmax[1] - pmin[1]

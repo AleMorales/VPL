@@ -55,7 +55,11 @@ function eltype(::Type{HollowCubeVertices{VT,TT}}) where {VT,TT}
     @inbounds VT.types[1]
 end
 
-# Scaled hollow_cube
+"""
+    HollowCube(;l = 1.0, w = 1.0, h = 1.0)
+
+Create a standard hollow cube with length `l`, width `w`, height `h` (see VPL documentation for details). 
+"""
 function HollowCube(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT)) where FT 
     HollowCube(LinearMap(SDiagonal(h/FT(2), w/FT(2), l)))
 end

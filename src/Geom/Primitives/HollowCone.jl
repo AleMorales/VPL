@@ -76,7 +76,11 @@ length(c::HollowConeVertices) = c.n + 1
 eltype(::Type{HollowConeVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
-# Scaled HollowCone
+"""
+    HollowCone(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+
+Create a standard hollow cone with length `l`, width `w`, height `h` and discretized into `n` triangles (see VPL documentation for details). 
+"""
 function HollowCone(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT <: AbstractFloat
     trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
     HollowCone(trans, n = n)

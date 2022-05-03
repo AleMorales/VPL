@@ -1,19 +1,30 @@
 
-  
-#=
-feedgeom!(turtle::MTurtle, m::Mesh)
-feedgeom!(turtle::MTurtle, node::Node)
-feedgeom!(turtle::MTurtle, G::Graph)
-feedgeom!(turtle::MTurtle, G::Tuple)
-feedgeom!(turtle::MTurtle, G::AbstractArray)
 
-Feed the turtle some geometry to make it nice and plump. `feedgeom!` should be
-especialized for each type of node in order to generate the geometry of
-a `Graph`. Functions associated to turtle operations and geometry
-primitives provide healthy food for the turtle.
-=# 
-feedgeom!(turtle::MTurtle, m::Mesh) = push!(geoms(turtle), geom)
+"""
+    feedgeom!(turtle::MTurtle, m::Mesh)
+
+General purpose method to feed a mesh to a turtle. This should be used to add any generated
+primitive to the turtle's mesh as they are all implemented as meshes
+"""
+feedgeom!(turtle::MTurtle, m::Mesh) = push!(geoms(turtle), m)
+
+"""
+    feedgeom!(turtle::MTurtle, node::Node)
+    
+Default method for `feedgeom!()` that does not do anything. Hence, the user can include nodes
+in a graph withour an associated geometry.
+"""
 feedgeom!(turtle::MTurtle, node::Node) = nothing
+
+# Traverse the graph depth-first starting at the root node and execute the feedgeom!() function at each
+# node. The state of the turtle is stored before each branching point by inserting a new SET node. This
+# allows resetting the node to the same position and orientation prior to entering each branch.
+"""
+    feedgeom!(turtle::MTurtle, g::Graph)
+
+Process a `Graph` object with a turtle and generate the corresponding 3D mesh from the turtle movement
+operations and geometry primitives or meshes defined in the graph.
+"""
 function feedgeom!(turtle::MTurtle, g::Graph)
     # Use a LIFO stack to keep track of nodes in traversal
     nodeStack = GraphNode[]
@@ -46,6 +57,12 @@ end
     return nothing
 end
 
+"""
+    feedgeom!(turtle::MTurtle, collection::AbstractArray)
+    feedgeom!(turtle::MTurtle, collection::Tuple)
+
+Feed a turtle an array or tuple of objects (`collection`) with existing `feedgeom!()` methods.
+"""
 function feedgeom!(turtle::MTurtle, collection::AbstractArray)
     for el in collection
       feedgeom!(turtle, el)

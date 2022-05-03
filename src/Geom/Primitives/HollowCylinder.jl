@@ -109,7 +109,11 @@ length(c::HollowCylinderVertices) = 2c.n
 eltype(::Type{HollowCylinderVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
-# Scaled HollowCylinder
+"""
+    HollowCylinder(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+
+Create a standard hollow cylinder with length `l`, width `w`, height `h` and discretized into `2n` triangles (see VPL documentation for details). 
+"""
 function HollowCylinder(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT <: AbstractFloat
     trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
     HollowCylinder(trans, n = n)

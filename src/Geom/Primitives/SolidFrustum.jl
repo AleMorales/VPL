@@ -108,7 +108,11 @@ length(c::SolidFrustumVertices) = 2c.n + 2
 eltype(::Type{SolidFrustumVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
-# Scaled SolidFrustum
+"""
+    SolidFrustum(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+
+Create a standard solid frustum with length `l`, width `w`, height `h` and discretized into `4n` triangles (see VPL documentation for details). 
+"""
 function SolidFrustum(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), ratio::FT = one(FT), n::Int = 20) where FT
     trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
     SolidFrustum(ratio, trans, n = n)

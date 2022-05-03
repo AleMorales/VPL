@@ -47,7 +47,11 @@ end
 #################### Constructors #######################
 #########################################################
 
-# Scaled rectangle
+"""
+    Rectangle(;l = 1.0, w = 1.0)
+
+Create a standard rectangle with length `l` and width `w` (see VPL documentation for details). 
+"""
 function Rectangle(;l::FT = one(FT), w::FT = one(FT)) where FT
     trans = LinearMap(SDiagonal(one(FT), w/FT(2), l))
     Rectangle(trans)
@@ -64,6 +68,12 @@ Rectangle!(m::Mesh, trans::AbstractAffineMap) = Primitive!(m, trans, RectangleVe
 ################# Manual constructors ###################
 #########################################################
 
+"""
+    Rectangle(v, l, w)
+
+Create a rectangle from a vertex (`v`) and vectors `l` and `w` representing the
+side of the primitive. If `l` and `w` are not orthogonal 
+"""
 function Rectangle(v1::Vec, l::Vec, w::Vec)
     v2 = v1 .+ l
     v3 = v2 .+ w

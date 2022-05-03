@@ -42,29 +42,36 @@ end
 #######################  StaticGraph construction DSL  ###############################
 ################################################################################
 
-
-"""
-    +(n1::Node, n2::Node)
-Creates a graph with two nodes where `n1` is the root and `n2` is the insertion point.
-"""
 function +(n1::GraphNode, n2::GraphNode)
     g = StaticGraph(n1)
     nID = append!(g, insertion(g), n2)
     updateInsertion!(g, nID)
     return g
 end
-+(n1::Node, n2::Node) = GraphNode(n1) + GraphNode(n2)
 
 """
-    +(g::StaticGraph, n::Node)
-Creates a graph as the result of appending the node `n` to the insertion point of graph `g`.
+    +(n1::Node, n2::Node)
+Creates a graph with two nodes where `n1` is the root and `n2` is the insertion point.
 """
++(n1::Node, n2::Node) = GraphNode(n1) + GraphNode(n2)
+
+
 function +(g::StaticGraph, n::GraphNode)
     nID = append!(g, insertion(g), n)
     updateInsertion!(g, nID)
     return g
 end
+
+"""
+    +(g::StaticGraph, n::Node)
+Creates a graph as the result of appending the node `n` to the insertion point of graph `g`.
+"""
 +(g::StaticGraph, n::Node) = g + GraphNode(n)
+
+"""
+    +(n::Node, g::StaticGraph)
+Creates a graph as the result of appending the static graph `g` to the node `n`.
+"""
 +(n::Node, g::StaticGraph) = GraphNode(n) + g
 +(n::GraphNode, g::StaticGraph) = StaticGraph(n) + g
 
@@ -79,13 +86,7 @@ function +(g1::StaticGraph, g2::StaticGraph)
     return g1
 end
 
-"""
-    +(g::StaticGraph, T::Tuple)
-    +(n::Node, T::Tuple)
-Creates a graph as the result of appending a tuple of graphs/nodes `T` to the
-insertion point of the graph `g` or the node `n`. Each graph/node in `L` becomes
-a branch.
-"""
+
 @unroll function +(g::StaticGraph, T::Tuple)
     ins = insertion(g)
     @unroll for el in T
@@ -94,5 +95,12 @@ a branch.
     end
     return g
 end
+
 +(n::GraphNode, T::Tuple) = StaticGraph(n) + T
+"""
+    +(g::StaticGraph, T::Tuple)
+    +(n::Node, T::Tuple)
+Creates a graph as the result of appending a tuple of graphs/nodes `T` to the
+insertion point of the graph `g` or node `n`. Each graph/node in `L` becomes a branch.
+"""
 +(n::Node, T::Tuple) = GraphNode(n) + T

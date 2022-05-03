@@ -104,7 +104,11 @@ length(c::SolidCylinderVertices) = 2c.n + 2
 eltype(::Type{SolidCylinderVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
-# Scaled SolidCylinder
+"""
+    SolidCylinder(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+
+Create a standard solid cylinder with length `l`, width `w`, height `h` and discretized into `4n` triangles (see VPL documentation for details). 
+"""
 function SolidCylinder(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT
     trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
     SolidCylinder(trans, n = n)

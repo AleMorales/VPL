@@ -12,7 +12,9 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        HollowCone, SolidCone, SolidCube, HollowCube, SolidFrustum, HollowFrustum,
        Rectangle!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
        HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!,
-       MTurtle, T, O, SET, RU, RA, RH, F, X, Y, Z, feedgeom!, Vec,
+       MTurtle, feedgeom!, head, up, arm, pos, geoms, 
+       T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
+       O, X, Y, Z,  Vec,
        render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!
 
 # Abstract type for turtles
@@ -82,19 +84,31 @@ const HollowFrustum! = Geom.HollowFrustum!
 const SolidFrustum! = Geom.SolidFrustum!
 const Ellipsoid! = Geom.Ellipsoid!
 const T = Geom.T
-const O = Geom.O
+const t! = Geom.t!
+const OR = Geom.OR
+const or! = Geom.or!
 const SET = Geom.SET
+const set! = Geom.set!
 const RU = Geom.RU
+const ru! = Geom.ru!
 const RA = Geom.RA
+const ra! = Geom.ra!
 const RH = Geom.RH
+const rh! = Geom.rh!
 const F = Geom.F
+const f! = Geom.f!
 const feedgeom! = Geom.feedgeom!
 const MTurtle = Geom.MTurtle
 const Vec = Geom.Vec
+const O = Geom.O
 const X = Geom.X
 const Y = Geom.Y
 const Z = Geom.Z
-
+const head = Geom.head
+const up = Geom.up
+const arm = Geom.arm
+const pos = Geom.pos
+const geoms = Geom.geoms
 
 
 # Render module

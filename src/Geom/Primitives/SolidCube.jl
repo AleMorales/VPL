@@ -60,7 +60,11 @@ end
 
 
 
-# Scaled solid_cube
+"""
+    SolidCube(;l = 1.0, w = 1.0, h = 1.0)
+
+Create a standard solid cube with length `l`, width `w`, height `h` (see VPL documentation for details). 
+"""
 SolidCube(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT)) where FT = SolidCube(LinearMap(SDiagonal(h/FT(2), w/FT(2), l)))
 
 # Create a solid_cube from affine transformation

@@ -68,7 +68,11 @@ length(c::SolidConeVertices) = c.n + 2
 eltype(::Type{SolidConeVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
-# Scaled SolidCone
+"""
+    SolidCone(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+
+Create a standard solid cone with length `l`, width `w`, height `h` and discretized into `2n` triangles (see VPL documentation for details). 
+"""
 function SolidCone(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT
     trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
     SolidCone(trans, n = n)
