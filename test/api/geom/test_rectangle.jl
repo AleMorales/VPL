@@ -59,12 +59,12 @@ VPL.render(m2, :green, wireframe = true, normals = true)
 
 # Construct rectangles using a turtle
 r = G.Rectangle(l = 2.0, w = 2.0);
-t = G.MTurtle{Float64}()
+t = G.MTurtle(Float64)
 G.Rectangle!(t; l = 2.0, w = 2.0, move = true) 
 @test G.geoms(t) == r
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
-t = G.MTurtle{Float64}()
+t = G.MTurtle(Float64)
 G.Rectangle!(t; l = 2.0, w = 2.0, move = false);
 @test G.geoms(t) == r
 @test G.pos(t) == G.Vec{Float64}(0,0,0)

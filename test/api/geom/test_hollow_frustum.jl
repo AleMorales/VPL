@@ -61,12 +61,12 @@ VPL.render(m2, :green, wireframe = true, normals = true)
 
 # Construct hollow frustums using a turtle
 hf = G.HollowFrustum(l = 2.0, w = 1.0, h = 1.0, ratio = 0.5, n = 10);
-t = G.MTurtle{Float64}()
+t = G.MTurtle(Float64)
 G.HollowFrustum!(t; l = 2.0, w = 1.0, h = 1.0, ratio = 0.5, n = 10, move = true) 
 @test G.geoms(t) == hf
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
-t = G.MTurtle{Float64}()
+t = G.MTurtle(Float64)
 G.HollowFrustum!(t; l = 2.0, w = 1.0, h = 1.0, ratio = 0.5, n = 10, move = false);
 @test G.geoms(t) == hf
 @test G.pos(t) == G.Vec{Float64}(0,0,0)

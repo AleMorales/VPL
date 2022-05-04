@@ -8,12 +8,12 @@ import CoordinateTransformations: SDiagonal, LinearMap
 let
 
 # Create turtles with different floating point precisions
-t64 = G.MTurtle{Float64}()
+t64 = G.MTurtle(Float64)
 @test t64 isa G.MTurtle{Float64}
 @test G.pos(t64) isa G.Vec{Float64}
 @test G.geoms(t64) isa G.Mesh{G.Vec{Float64}}
 
-t32 = G.MTurtle{Float32}()
+t32 = G.MTurtle(Float32)
 @test t32 isa G.MTurtle{Float32}
 @test G.pos(t32) isa G.Vec{Float32}
 @test G.geoms(t32) isa G.Mesh{G.Vec{Float32}}
@@ -35,8 +35,8 @@ function test_t(t::G.MTurtle{FT}) where FT
     @test G.up(nt)   == G.up(t)
 end
 
-test_t(G.MTurtle{Float64}())
-test_t(G.MTurtle{Float32}())
+test_t(G.MTurtle(Float64))
+test_t(G.MTurtle(Float32))
 
 # Orientation command
 function test_or(t::G.MTurtle{FT}) where FT
@@ -51,8 +51,8 @@ function test_or(t::G.MTurtle{FT}) where FT
     @test G.up(nt)   == up
 end
 
-test_or(G.MTurtle{Float64}())
-test_or(G.MTurtle{Float32}())
+test_or(G.MTurtle(Float64))
+test_or(G.MTurtle(Float32))
 
 # Set command
 function test_set(t::G.MTurtle{FT}) where FT
@@ -68,8 +68,8 @@ function test_set(t::G.MTurtle{FT}) where FT
     @test G.up(nt)   == up
 end
 
-test_set(G.MTurtle{Float64}())
-test_set(G.MTurtle{Float32}())
+test_set(G.MTurtle(Float64))
+test_set(G.MTurtle(Float32))
 
 # Rotation around "up" direction
 function test_ru(t::G.MTurtle{FT}) where FT
@@ -81,8 +81,8 @@ function test_ru(t::G.MTurtle{FT}) where FT
     @test G.up(nt) == G.up(t)
 end
 
-test_ru(G.MTurtle{Float64}())
-test_ru(G.MTurtle{Float32}())
+test_ru(G.MTurtle(Float64))
+test_ru(G.MTurtle(Float32))
 
 function test_ru(t::G.MTurtle{FT}) where FT
     nt = deepcopy(t)
@@ -93,8 +93,8 @@ function test_ru(t::G.MTurtle{FT}) where FT
     @test G.up(nt) == G.up(t)
 end
 
-test_ru(G.MTurtle{Float64}())
-test_ru(G.MTurtle{Float32}())
+test_ru(G.MTurtle(Float64))
+test_ru(G.MTurtle(Float32))
 
 # Rotation around "arm" direction
 function test_ra(t::G.MTurtle{FT}, angle::FT) where FT
@@ -106,8 +106,8 @@ function test_ra(t::G.MTurtle{FT}, angle::FT) where FT
     @test G.up(nt) ≈ G.Z(FT)
 end
 
-test_ra(G.MTurtle{Float64}(), 90.0)
-test_ra(G.MTurtle{Float32}(), 90f0)
+test_ra(G.MTurtle(Float64), 90.0)
+test_ra(G.MTurtle(Float32), 90f0)
 
 # Rotation around "head" direction
 function test_rh(t::G.MTurtle{FT}, angle::FT) where FT
@@ -119,8 +119,8 @@ function test_rh(t::G.MTurtle{FT}, angle::FT) where FT
     @test G.up(nt) ≈ G.Y(FT)
 end
 
-test_rh(G.MTurtle{Float64}(), 90.0)
-test_rh(G.MTurtle{Float32}(), 90f0)
+test_rh(G.MTurtle(Float64), 90.0)
+test_rh(G.MTurtle(Float32), 90f0)
 
 
 # Move forward
@@ -133,17 +133,17 @@ function test_f(t::G.MTurtle{FT}, dist::FT) where FT
     @test G.up(nt)   == G.up(t)
 end
 
-test_f(G.MTurtle{Float64}(), 1.0)
-test_f(G.MTurtle{Float32}(), 1f0)
+test_f(G.MTurtle(Float64), 1.0)
+test_f(G.MTurtle(Float32), 1f0)
 
 # Check transformations
-trans = G.transform(G.MTurtle{Float64}())
+trans = G.transform(G.MTurtle(Float64))
 @test trans isa CoordinateTransformations.AffineMap
 trans.translation == G.Vec{Float64}(0,0,0)
 trans.linear == SDiagonal(1.0,1.0,1.0)
 
 
-trans = G.transform(G.MTurtle{Float64}(), (2.0, 2.0, 2.0))
+trans = G.transform(G.MTurtle(Float64), (2.0, 2.0, 2.0))
 @test trans isa CoordinateTransformations.AffineMap
 trans.translation == G.Vec{Float64}(0,0,0)
 trans.linear == SDiagonal(2.0,2.0,2.0)
