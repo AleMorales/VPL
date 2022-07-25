@@ -15,7 +15,5 @@ include("Render.jl")
 include("GLMakie.jl")
 include("Turtle.jl")
 
-
 end
 
-# TODO: Sync the interface for saving rendered scenes with export_graph (as described in the documentation)

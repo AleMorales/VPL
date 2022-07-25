@@ -42,3 +42,10 @@ using Test
 @testset "API/Geom/hollow_cone" begin include("api/geom/test_hollow_cone.jl") end
 @testset "API/Geom/solid_cone" begin include("api/geom/test_solid_cone.jl") end
 @testset "API/Geom/meshio" begin include("api/geom/test_meshio.jl") end
+
+
+################################################################################
+########################## Test Ray Tracer #####################################
+################################################################################
+
+@testset "Internal/Raytracer/raytracer_basics" begin include("internal/raytracer/raytracer_basics.jl") end

@@ -103,7 +103,7 @@ end
 """
     areas(m::Mesh)
 
-A vector with the areas of ythe different triangles in a mesh.
+A vector with the areas of the different triangles in a mesh.
 """
 areas(m::Mesh) = [@inbounds area_triangle(m.vertices[face]...) for face in m.faces]
 
