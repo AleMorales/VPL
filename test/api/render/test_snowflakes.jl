@@ -28,7 +28,7 @@ let
        feedcolor!(turtle, RGB(rand(), rand(), rand()))
        return nothing
     end
-    render(Koch, show_axis = false)
+    render(Koch, axes = false)
     rewrite!(Koch)
-    render(Koch, show_axis = false)
+    render(Koch, axes = false)
 end

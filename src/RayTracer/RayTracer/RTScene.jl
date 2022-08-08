@@ -8,9 +8,9 @@ This method will generally not be used by the author unless
 the components of an `RTScene` were generated manually.
 """
 struct RTScene{T, M}
-    triangles::T
+    triangles::Vector{T}
     ids::Vector{Int}
-    materials::M
+    materials::Vector{M}
 end
 
 
@@ -22,7 +22,7 @@ triangle on the mesh to a material object and the vector with those `materials`.
 documentation for further details.
 """
 function RTScene(mesh::Mesh, ids, materials)
-    RTScene(Triangle(mesh), ids, materials(rtt))
+    RTScene(Triangle(mesh), ids, materials)
 end
 
 """

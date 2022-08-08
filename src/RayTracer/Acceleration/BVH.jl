@@ -69,6 +69,7 @@ end
 
 # Some methods for convenience
 Base.size(v::GVector) = size(v.data)
+Base.length(v::GVector) = length(v.data)
 
 ###############################################################################
 ######################### Bounded Volume Hierarchy ############################
@@ -98,7 +99,7 @@ nsplits(::SAH{K}) where K = K
 
 # Structure that contains the acceleration structure of a ray tracer scene
 # Parameterized in terms of floating-point precisions and the method for creating new nodes
-struct BVH{FT, K} <: Acceleration
+struct BVH{FT, K} <: Acceleration{FT}
     gbox::AABB{FT}
     nodes::GVector{AccNode{FT}}
     tris::Vector{Vector{Triangle{FT}}}
@@ -301,7 +302,7 @@ function Base.intersect(ray::Ray{FT}, acc::BVH, nodestack, dstack, dmin) where F
             if node.leaf && dnode < dmin
                 # Bug that needs to be fixed (is it a problem in the creation of the BVH or the tracing?)
                 if node.tris > length(acc.tris)
-                    @error "I reached a node that is not initialized: $nodecur"
+                    @error "I reached a leaf node that points to non-existing triangles: $nodecur"
                     nodestack = Int[]
                     break
                 end
@@ -315,10 +316,10 @@ function Base.intersect(ray::Ray{FT}, acc::BVH, nodestack, dstack, dmin) where F
                     end
                 end
             # If the node is inner, compute the index of the first child and update nodestack
-            else
+            elseif !node.leaf
                 childid = 2*nodecur + 1
                 # Bug that needs to be fixed (is it a problem in the creation of the BVH or the tracing?)
-                if childid[2] > length(acc.tris)
+                if childid > length(acc.nodes)
                     @error "I reached a node that should be a leaf as it points to non-existent children: $nodecur"
                     break
                 end

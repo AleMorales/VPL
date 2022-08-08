@@ -5,8 +5,8 @@ Create a 3D scene for rendering from a `Mesh` object (`m`) and colors associated
 primitives (`colors`). This method is useful when the user has generated separately the 3D mesh and
 array with colors, as otherwise other methods of `GLScene()` will be more useful.
 """
-struct GLScene{C}
-    mesh::Geom.Mesh{Float32}
+struct GLScene{C, FT}
+    mesh::Geom.Mesh{FT}
     colors::Vector{C}
 end
 
@@ -15,9 +15,9 @@ end
 
 Create a 3D scene for rendering from a `Graph` object (`g`).
 """
-function GLScene(g::Graph)
+function GLScene(g::Graph{T, S, FT}) where {T, S, FT}
     # Retrieve the mesh of triangles
-    mt = Geom.MTurtle(Float32)
+    mt = Geom.MTurtle(FT)
     Geom.feedgeom!(mt, g);
     # Retrieve the colors of each primitive
     glt = GLTurtle()

@@ -86,7 +86,7 @@ end
 # Function to arrange a RayTracer object, run it and extract the information
 function test_ray_tracer(;mat_type = :Lambertian, nw = 1, nmat = 1, source_type = :Directional, 
                           nsource = 1, MT = false, nrays = 100_000, maxiter = 3, pkill = 0.5,
-                          nx = 0, ny = 0, dx = 1.0, dy = 1.0)
+                          nx = 0, ny = 0, dx = 1.0, dy = 1.0, acceleration = BVH)
     # Simple mesh representing a soil tile
     triangles, ids = create_tile(nmat)
     # Create the material
@@ -97,7 +97,7 @@ function test_ray_tracer(;mat_type = :Lambertian, nw = 1, nmat = 1, source_type 
     # Create the settings
     settings = create_settings(MT; maxiter = maxiter, pkill = pkill, nx = nx, ny = ny, dx = dx, dy = dy)
     # Build the ray tracer object
-    rtobj = RayTracer(scene, source; settings = settings)
+    rtobj = RayTracer(scene, source; settings = settings, acceleration = acceleration)
     # Run the ray tracer and return the power stored in the material(s)
     ntraces = trace!(rtobj)
     return rtobj, [mat.power for mat in materials], ntraces
@@ -386,10 +386,35 @@ power = vcat(vcat(sim_sensor_RT.power...)...);
 @test all(power[145:288] .> power[1:144]);
 @test 144 - sum(power[289:end] .> power[145:288]) == 144/8;
 
+
+###############################################################################################################
+################################## Sensor - Ray caster - Naive accceleration ##################################
+###############################################################################################################
+
+sim_sensor_RC_Naive = DataFrame(
+                 nsources = repeat(1:2, inner = 2^5),
+                 nmats    = repeat(1:2, outer = 2, inner = 2^4),
+                 nws      = repeat(1:2, outer = 2^2, inner = 2^3),
+                 mts      = repeat([false, true], outer = 2^3, inner = 2^2),
+                 stypes   = repeat([:Directional, :Point, :Line, :Area], outer = 2^4));
+
+
+function test_sim_sensor_RC_naive(r)
+    test_ray_tracer(mat_type = :Sensor, source_type = r.stypes, nw = r.nws, 
+                    nmat = r.nmats, MT = r.mts, nsource = r.nsources, nrays = 100_000,
+                    maxiter = 1, pkill = 1.0, nx = 0, ny = 0, dx = 1.0, dy = 1.0, acceleration = Naive)
 end
 
+sims_RC = [test_sim_sensor_RC_naive(sim_sensor_RC_Naive[i,:])[2:3] for i in 1:nrow(sim_sensor_RC_Naive)];
+sim_sensor_RC_Naive[:,:power] = getindex.(sims_RC, 1);
+sim_sensor_RC_Naive[:,:ntraces] = getindex.(sims_RC, 2);
 
+sensor_RC_power = vcat(vcat(sim_sensor_RC.power...)...);
+sensor_RC_power_naive = vcat(vcat(sim_sensor_RC_Naive.power...)...);
 
-# TODO: Test that Naive and SAH acceleration structures yield the same result (only affect performance)
+@test all(sensor_RC_power .== sensor_RC_power_naive)
+
 # TODO: Test double point light source inside sphere (should yield uniform distribution of irradiance)
 # TODO: Multiple slabs + vertical light should yield exponential distribution (need large grid cloner?)
+
+end

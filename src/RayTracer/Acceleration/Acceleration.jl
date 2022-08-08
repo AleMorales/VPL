@@ -20,7 +20,7 @@ end
 Methods that need to be implemented for Acceleration types:
     - intersect(a::Acceleration, ray, nodestack) -> return whether there is a hit and Intersection object
 =#
-abstract type Acceleration end
+abstract type Acceleration{FT} end
 
 include("Naive.jl")
 include("BVH.jl")

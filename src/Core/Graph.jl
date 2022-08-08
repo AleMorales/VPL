@@ -30,11 +30,11 @@ rules_graph = Graph(axiom, rules = rule)
 """
 function Graph(axiom::Union{StaticGraph, Node}; 
                rules::Union{Nothing, Tuple, Rule} = nothing, 
-               vars = nothing) 
+               vars = nothing, FT = Float64) 
   if rules isa Nothing
-    Graph(StaticGraph(deepcopy(axiom)), (), deepcopy(vars))
+    Graph(StaticGraph(deepcopy(axiom)), (), deepcopy(vars), FT)
   else
-    Graph(StaticGraph(deepcopy(axiom)), deepcopy(Tuple(rules)), deepcopy(vars))
+    Graph(StaticGraph(deepcopy(axiom)), deepcopy(Tuple(rules)), deepcopy(vars), FT)
   end
 end
 

@@ -16,7 +16,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
        O, X, Y, Z,  Vec,
        render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!,
-       RTScene, RayTracer, RTSettings, trace!, Triangle,
+       RTScene, RayTracer, RTSettings, trace!, BVH, Naive, Triangle,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
        tau, rho, Lambertian, Phong, Sensor, Black
 
@@ -141,6 +141,7 @@ const Phong = RT.Phong
 const Sensor = RT.Sensor
 const Black = RT.Black
 const Naive = RT.Naive
+const BVH = RT.BVH
 const Source = RT.Source
 const LambertianSource = RT.LambertianSource
 const PointSource = RT.PointSource

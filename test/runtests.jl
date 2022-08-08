@@ -45,7 +45,16 @@ using Test
 
 
 ################################################################################
+######################### Test 3D rendering ####################################
+################################################################################
+
+@testset "API/render/snowflake" begin include("api/render/test_snowflakes.jl") end
+@testset "API/render/binary_tree" begin include("api/render/test_binarytree.jl") end
+
+################################################################################
 ########################## Test Ray Tracer #####################################
 ################################################################################
 
-@testset "Internal/Raytracer/raytracer_basics" begin include("internal/raytracer/raytracer_basics.jl") end
+@testset "Internal/Raytracer/raytracer_basics" begin include("internal/raytracer/test_raytracer_basics.jl") end
+@testset "Internal/Raytracer/raytracer_slabs" begin include("internal/raytracer/test_raytracer_slabs.jl") end
+

@@ -52,7 +52,7 @@ end
 
 Create a standard rectangle with length `l` and width `w` (see VPL documentation for details). 
 """
-function Rectangle(;l::FT = one(FT), w::FT = one(FT)) where FT
+function Rectangle(;l::FT = one(Float64), w::FT = one(Float64)) where FT
     trans = LinearMap(SDiagonal(one(FT), w/FT(2), l))
     Rectangle(trans)
 end

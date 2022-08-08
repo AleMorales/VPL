@@ -21,7 +21,7 @@ end
 
 # Create a grid cloner around an acceleration structure
 # Create (2*n + 1) clones in each x or y direction -> symmetry enforced by odd numbers
-function GridCloner(acc::BVH{FT}; nx = 0, ny = 0, dx = zero(FT), dy = zero(FT)) where {FT}
+function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, dx = zero(FT), dy = zero(FT)) where {FT}
     # Special case when the global box is empty
     gbox = acc.gbox
     isempty(acc.gbox) || nx == ny == 0 && (return GridCloner(GVector([TNODE(gbox, true, Vec{FT}(0,0,0))])))
@@ -137,7 +137,8 @@ end
 
 
 # Traverse the grid cloner (if a leaf TNODE is hit, update the ray and traverse the scene)
-function Base.intersect(ray::Ray{FT}, grid::GridCloner, acc::BVH, tnodestack, tdstack, nodestack, dstack) where FT
+function Base.intersect(ray::Ray{FT}, grid::GridCloner, acc::Acceleration{FT}, tnodestack, 
+                        tdstack, nodestack, dstack) where FT
     #@inbounds begin
     begin
         # Initialize solution state

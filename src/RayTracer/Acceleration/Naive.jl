@@ -3,7 +3,7 @@
 
 # This is effectively providing no acceleration -> the ray will be tested
 # against all triangles in the scene
-struct Naive{FT} <: Acceleration
+struct Naive{FT} <: Acceleration{FT}
     gbox::AABB{FT}
     triangles::Vector{Triangle{FT}}
     id::Vector{Int}
@@ -17,7 +17,7 @@ end
 
 # Return closest hit (if any)
 # Nodestack is not actually needed
-function intersect(acc::Naive, ray::Ray{FT}, nodestack) where FT
+function intersect(ray::Ray{FT}, acc::Naive, nodestack, dstack, dmin) where FT
     @inbounds begin
         dmin = Inf
         frontmin = true
@@ -32,13 +32,14 @@ function intersect(acc::Naive, ray::Ray{FT}, nodestack) where FT
             end
         end
         if posmin == -1
-            return false, Intersection(FT)
+            return false, Intersection(FT), dmin
         else
             triangle = acc.triangles[posmin]
-            return true, Intersection(ray.o .+ dmin.*ray.dir, # pint
-                                    axes(triangle),         # axes
-                                    frontmin,               # front
-                                    acc.id[posmin])         # material
+            intersection = Intersection(ray.o .+ dmin.*ray.dir, # pint
+                                        axes(triangle),         # axes
+                                        frontmin,               # front
+                                        acc.id[posmin])         # material
+            return true, intersection, dmin
         end
     end
 end

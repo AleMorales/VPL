@@ -14,7 +14,7 @@ end
 Create a black material object to store power for `nw` wavelengths. See VPL documentation for
 details.
 """
-Black(nw::Int) = Black(MVector{nw, Float64}(0.0 for _ in 1:nw))
+Black(nw::Int = 1) = Black(MVector{nw, Float64}(0.0 for _ in 1:nw))
 
 ###############################################################################
 ################################## API ########################################

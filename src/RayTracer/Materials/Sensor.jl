@@ -14,7 +14,7 @@ end
 Create a sensor material object to store power for `nw` wavelengths. See VPL documentation for
 details.
 """
-Sensor(nw::Int) = Sensor(MVector{nw, Float64}(0.0 for _ in 1:nw)) #Sensor(SArray{Tuple{nw},Threads.Atomic{Float64},1,nw}(Threads.Atomic{Float64}(0.0) for i in 1:nw))
+Sensor(nw::Int = 1) = Sensor(MVector{nw, Float64}(0.0 for _ in 1:nw)) #Sensor(SArray{Tuple{nw},Threads.Atomic{Float64},1,nw}(Threads.Atomic{Float64}(0.0) for i in 1:nw))
 
 ###############################################################################
 ################################## API ########################################
@@ -27,6 +27,7 @@ function calculate_interaction(material::Sensor, power, ray, intersection, rng)
     return (mode = :sensor, coef = 1.0, θ = 1.0, Φ = 1.0)
 end
 
+# TODO: A sensor should always distinguish front and back
 #=
     Add all the power to the material but do not affect the power of the ray
 =#

@@ -76,10 +76,14 @@ end
   All rules are stored in a dictionary which keys are the unique identifiers of the rules
   The field vars contains a struct with variables that are accesible in queries and production rules
 =#
-mutable struct Graph{T, S <: Tuple}
+mutable struct Graph{T, S <: Tuple, FT}
     graph::StaticGraph
     rules::S
     vars::T
+end
+
+function Graph(graph::StaticGraph, rules::S, vars::T, ::Type{FT} = Float64) where {T, S<:Tuple, FT} 
+  Graph{T, S, FT}(graph, rules, vars)
 end
 
 # Docstring is included in the constructor in Rule.jl

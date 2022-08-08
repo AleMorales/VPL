@@ -30,12 +30,12 @@ function render(m::GeometryBasics.Mesh, color; normals::Bool = false, wireframe:
                 axes::Bool = true, backend = "native", inline = false, resolution = (1920, 1080),
                 kwargs...)
     choose_backend(backend, inline)
-    fig = Makie.mesh(m, color = color, near = 0, figure = (resolution = resolution,show_axis = axes); kwargs...)
+    fig = Makie.mesh(m, color = color, near = 0, figure = (resolution = resolution, show_axis = axes); kwargs...)
     scene_additions!(m, normals, wireframe)
     fig
 end
 function render!(m::GeometryBasics.Mesh, color; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    Makie.mesh!(m, color = color, near = 0; kwargs...)
+    Makie.mesh!(m, color = color, near = 0, figure = (resolution = resolution, show_axis = axes); kwargs...)
     scene_additions!(m, normals, wireframe)
 end
 
