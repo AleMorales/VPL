@@ -1,6 +1,6 @@
 # VPL
 
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://alemorales.github.io/VPLsite/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](http://virtualplantlab.com/)
 [![Build Status](https://travis-ci.com/AleMorales/VPL.svg?branch=master)](https://travis-ci.com/AleMorales/VPL)
 [![Build Status](https://ci.appveyor.com/api/projects/status/github/AleMorales/VPL?svg=true)](https://ci.appveyor.com/project/AleMorales/VPL)
 [![Codecov](https://codecov.io/gh/AleMorales/VPL/branch/master/graph/badge.svg)](https://codecov.io/gh/AleMorales/VPL)
