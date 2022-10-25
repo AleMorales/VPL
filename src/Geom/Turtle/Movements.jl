@@ -5,7 +5,8 @@
 """
     t!(turtle; to)
 
-Translate a turtle to the new position `to`.
+Translate a turtle to the new position `to`. The argument `to` should be of type 
+`Vec` and be passed as a keyword argument.
 """
 function t!(turtle::MTurtle; to)
     update!(turtle, to = to, head = head(turtle), up = up(turtle), arm = arm(turtle))
@@ -23,9 +24,11 @@ feedgeom!(turtle::MTurtle, node::T) = t!(turtle, to = node.to)
 
 
 """
-    or!(turtle, head, up, arm)
+    or!(turtle; head, up, arm)
 
 Orient a turtle to a new direction by re-defining the local reference system.
+The arguments `head`, `up` and `arm` should be of type `Vec` and be passed as keyword
+arguments.
 """
 function or!(turtle::MTurtle; head, up, arm)
     update!(turtle, head = head, up = up, arm = arm, to = pos(turtle))
@@ -44,9 +47,10 @@ end
 feedgeom!(turtle::MTurtle, node::OR) = or!(turtle, head = node.head, up = node.up, arm = node.arm)
 
 """
-    set!(turtle, to, head, up, arm)
+    set!(turtle; to, head, up, arm)
 
-Set position and orientation of a turtle.
+Set position and orientation of a turtle. The arguments `to`, `head`, `up` and `arm` 
+should be of type `Vec` and be passed as keyword arguments.
 """
 function set!(turtle::MTurtle; to, head, up, arm)
     update!(turtle, head = head, up = up, arm = arm, to = to)
