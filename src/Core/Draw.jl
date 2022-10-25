@@ -44,7 +44,7 @@ GR.DiGraph(g::Graph) = GR.DiGraph(g.graph)
 function choose_backend(backend, inline)
     if backend == "native"
         GLMakie.activate!()
-        GLMakie.inline!(inline)
+#        GLMakie.inline!(inline)
     elseif backend == "web"
         WGLMakie.activate!()     
     elseif backend == "vector"

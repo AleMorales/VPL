@@ -56,5 +56,5 @@ using Test
 ################################################################################
 
 @testset "Internal/Raytracer/raytracer_basics" begin include("internal/raytracer/test_raytracer_basics.jl") end
-@testset "Internal/Raytracer/raytracer_slabs" begin include("internal/raytracer/test_raytracer_slabs.jl") end
+#@testset "Internal/Raytracer/raytracer_canopies" begin include("internal/raytracer/test_raytracer_canopies.jl") end
 
