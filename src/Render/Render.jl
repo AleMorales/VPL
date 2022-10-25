@@ -50,7 +50,7 @@ function choose_backend(backend, inline)
     elseif backend == "web"
         WGLMakie.activate!()             
     else
-        error("Unknown or unsupported backend, please use of the following: \"default\", \"native\", \"web\"")
+        error("Unknown or unsupported backend, please use of the following: \"native\" or \"web\"")
     end
 end
 
