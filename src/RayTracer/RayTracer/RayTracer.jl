@@ -202,8 +202,10 @@ function trace!(r::Ray{FT}, rt::RayTracer, materials, tnodestack::Vector{Int}, t
         roulette!(power, rt.settings, iteration, rng) && (return iteration)
         # Generate new ray
         r = generate_ray(material, r, disp, intersection, interaction, rng)
-        # TODO: A sensor should not increase the iteration counter
-        iteration += 1
+        # Increase iteration counter (unless it is a Sensor)
+        if !isa(material, Sensor)
+            iteration += 1
+        end
     end
     return iteration
 end
