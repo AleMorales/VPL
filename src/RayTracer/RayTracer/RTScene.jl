@@ -34,16 +34,18 @@ by using `Float32` as the third argument. This will speed up the computations at
 numerical accuracy. See VPL documentation for further details.
 """
 function RTScene(graph::Graph, ::Type{FT} = Float64) where FT
-    # Retrieve the mesh of triangles
-    mt = Geom.MTurtle(FT)
-    Geom.feedgeom!(mt, graph);
-
-    # Convert Mesh to array og Triangle
+    # Retrieve a vector of meshes
+    mt = MTurtle(FT)
+    feedgeom!(mt, graph)
     mesh = geoms(mt)
-    ids = vcat(fill.(1:length(mesh.ntriangles), mesh.ntriangles)...)
+
+    # Assign to each triangle an id related to the geom it belongs to
+    ids = vcat(fill.(1:length(mt.ntriangles), mt.ntriangles)...)
+    @assert ntriangles(mesh) == length(ids)
 
     # Retrieve the materials of each primitive in the graph
-    # This assumes the user define da feedmaterial! for every feedgeom!
+    # This assumes the user defined a feedmaterial! for every feedgeom!
+    # One material object per geometry fed (not per triangle!)
     rtt = RTTurtle()
     feedmaterial!(rtt, graph);
 
@@ -93,22 +95,22 @@ end
 
 
 """
-    add!(scene, mesh, materials)
+    add!(scene, mesh, material)
 
-Add a 3D mesh with corresponding materials (`mesh` and `materials`) to an existing `RTScene` object (`scene`).
+Add a 3D mesh with a corresponding material (`mesh` and `material`) to an existing `RTScene` object (`scene`).
 """
-function add!(scene, mesh, materials)
+function add!(scene::RTScene, mesh, material)
 
     # Convert mesh to array of triangles with barycentric coordinates
     triangles = Triangle(mesh)
 
     # Vector to material ids updated by current scene
-    ids = length(scene.materials) .+ vcat(fill.(1:length(mesh.ntriangles), mesh.ntriangles)...)
+    ids = length(scene.materials) .+ ones(Int, ntriangles(mesh))
 
     # Add elements to the scene
     append!(scene.triangles, triangles)
     append!(scene.ids, ids)
-    append!(scene.materials, materials)
+    push!(scene.materials, material)
 
     return nothing
 end

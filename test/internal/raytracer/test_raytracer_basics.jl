@@ -414,7 +414,4 @@ sensor_RC_power_naive = vcat(vcat(sim_sensor_RC_Naive.power...)...);
 
 @test all(sensor_RC_power .== sensor_RC_power_naive)
 
-# TODO: Test double point light source inside sphere (should yield uniform distribution of irradiance)
-# TODO: Multiple slabs + vertical light should yield exponential distribution (need large grid cloner?)
-
 end

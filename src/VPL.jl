@@ -18,10 +18,13 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!,
        RTScene, RayTracer, RTSettings, trace!, BVH, Naive, Triangle,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
-       tau, rho, Lambertian, Phong, Sensor, Black
+       tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle, SAH
 
 # Abstract type for turtles
 abstract type Turtle end
+
+# Function to be overloaded by other modules
+add!(x::Any) = error("Method of add! not implemented")
 
 # Core module (graph rewriting)
 include("Core/Module_Core.jl")
@@ -123,7 +126,6 @@ const feedcolor! = Render.feedcolor!
 const RGB = Render.RGB
 const GLTurtle = Render.GLTurtle
 const GLScene = Render.GLScene
-const add! = Render.add!
 const export_scene = Render.export_scene
 
 # RayTracer module
@@ -148,5 +150,8 @@ const PointSource = RT.PointSource
 const LineSource = RT.LineSource
 const AreaSource = RT.AreaSource
 const DirectionalSource = RT.DirectionalSource
+const feedmaterial! = RT.feedmaterial!
+const RTTurtle = RT.RTTurtle
+const SAH = RT.SAH
 
 end # module

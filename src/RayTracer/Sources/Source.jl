@@ -36,8 +36,8 @@ wavelength simultaneously, a tuple of power values should be given, of the same 
 in the materials used in the scene. See VPL documentation for details on source geometries 
 and source angles.
 """
-Source(geom, angle, power::Number, nrays) = Source(geom, angle, SVector{1, Float64}(power), nrays)
-Source(geom, angle, power::Tuple, nrays) = Source(geom, angle, SVector{length(power), Float64}(power...), nrays)
+Source(geom, angle, power::Number, nrays::Integer) = Source(geom, angle, SVector{1, Float64}(power), nrays)
+Source(geom, angle, power::Tuple, nrays::Integer) = Source(geom, angle, SVector{length(power), Float64}(power...), nrays)
 
 """
     get_nw(s::Source)

@@ -14,9 +14,10 @@ Base.@kwdef struct RTSettings{RNG, FT}
     sampler::RNG = Random.Xoshiro(123456789)
     nx::Int = 0
     ny::Int = 0
-    dx::FT = FT(0.0)
-    dy::FT = FT(0.0)
+    dx::FT = Float64(0.0)
+    dy::FT = Float64(0.0)
 end
+
 
 
 """
@@ -34,13 +35,16 @@ struct RayTracer{A, G, M, S, RT}
     settings::RT
 end
 
+# TODO: Need to allow for RayTracer() constructor to work with a single source (avoid 1-element tuples)
+# TODO: Remove the warning regarding BVH once it is fixed
 """
-    RayTracer(scene, sources; settings, acceleration = BVH, rule = SAH{3}(2,10))
+    RayTracer(scene, sources; settings = RTSettings(), acceleration = Naive, rule = SAH{3}(2,10))
 
 Create a `RayTracer` object from a scene, sources, settings and acceleration function (choose from `Naive` or  `BVH`).
 The argument `rule` is only required for `BVH`, it can be ignore for the `Naive` accelerator.
 """
-function RayTracer(scene::RTScene, sources; settings = RTSettings(), acceleration = BVH, rule = SAH{3}(2,10))
+function RayTracer(scene::RTScene, sources; settings = RTSettings(), acceleration = Naive, rule = SAH{3}(2,10))
+    acceleration == BVH && println("The BVH acceleration is not working properly yet")
     acc = acceleration(scene.triangles, scene.ids, rule)
     grid = GridCloner(acc; nx = settings.nx, ny = settings.ny, dx = settings.dx, dy = settings.dy)
     RayTracer(acc, grid, scene.materials, sources, settings)

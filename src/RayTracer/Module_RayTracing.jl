@@ -15,9 +15,9 @@ import Rotations: RotX, RotY, RotZ
 import StatsBase: sample, Weights
 
 # Internal dependencies
-import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas
+import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, MTurtle, feedgeom!, ntriangles
 import ..VPL.Core: Node, Graph, GraphNode, root, children
-import ..VPL: Turtle
+import ..VPL: Turtle, add!
 
 # Helpers and auxilliary functions
 include("utils.jl")

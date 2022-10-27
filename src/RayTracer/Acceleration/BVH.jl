@@ -42,7 +42,7 @@ end
 ################################## GVector ####################################
 ###############################################################################
 
-# Vector wrapper that automatically growers the internal vector when indexing
+# Vector wrapper that automatically grows the internal vector when indexing
 # out-of bounds. Useful when inserting elements out-of-order as in the flat
 # dense representation of a n-arity tree
 const chunk = 15

@@ -6,7 +6,11 @@
 General purpose method to feed a mesh to a turtle. This should be used to add any generated
 primitive to the turtle's mesh as they are all implemented as meshes
 """
-feedgeom!(turtle::MTurtle, m::Mesh) = push!(geoms(turtle), m)
+function feedgeom!(turtle::MTurtle, m::Mesh) 
+    push!(geoms(turtle), m)
+    push!(nvertices(turtle), nvertices(m))
+    push!(ntriangles(turtle), ntriangles(m))
+end
 
 """
     feedgeom!(turtle::MTurtle, node::Node)
