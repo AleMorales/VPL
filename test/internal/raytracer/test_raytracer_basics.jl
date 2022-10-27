@@ -186,7 +186,7 @@ sim_sensor_RT[:,:power] = getindex.(sims_RT, 1);
 sim_sensor_RT[:,:ntraces] = getindex.(sims_RT, 2);
 
 # Check that secondary rays were traced once (but not all as the light sources missed some)
-@test all(sim_sensor_RT.ntraces .> 100_000 .&& sim_sensor_RT.ntraces .< 200_000);
+@test all(sim_sensor_RT.ntraces .>= 1e5 .&& sim_sensor_RT.ntraces .<= 2e5);
 
 # Check that the power stored in the material is still the same as in the ray caster
 sensor_RT_power = vcat(vcat(sim_sensor_RT.power...)...);
