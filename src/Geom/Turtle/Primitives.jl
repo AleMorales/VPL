@@ -1,6 +1,5 @@
 # Construct primitives using a turtle to define translation and rotation.
 # All primitives allow for optionally moving the turtle forward to update its position
-
 """
     Ellipse!(turtle; l = 1.0, w = 1.0, n = 20, move = false)
 
@@ -59,7 +58,7 @@ side of the generated hollow cube (see VPL documentation for for more details).
 """
 function HollowCube!(turtle::MTurtle{FT}; l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), move = false) where FT <: AbstractFloat
     push!(nvertices(turtle), 8)
-    push!(ntriangles(turtle), 4) 
+    push!(ntriangles(turtle), 8) 
     trans = transform(turtle, (h/FT(2), w/FT(2), l))
     HollowCube!(turtle.geoms, trans)
     move && f!(turtle, l)
@@ -126,7 +125,7 @@ side of the generated solid cube (see VPL documentation for for more details).
 """
 function SolidCube!(turtle::MTurtle{FT}; l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), move = false) where FT <: AbstractFloat
     push!(nvertices(turtle), 8)
-    push!(ntriangles(turtle), 6) 
+    push!(ntriangles(turtle), 12) 
     trans = transform(turtle, (h/FT(2), w/FT(2), l))
     SolidCube!(turtle.geoms, trans)
     move && f!(turtle, l)
