@@ -1,6 +1,12 @@
 
-
 # Fixed angle (to be used with directional light sources)
+"""
+    FixedSource(dir)
+    FixedSource(θ, Φ)
+
+Create a fixed irradiance source by given a vector with the direction of the
+rays (dir) or zenith (θ) and azimuth (Φ) angles.
+"""
 struct FixedSource{FT} <: SourceAngle
     dir::Vec{FT}
 end
@@ -10,7 +16,6 @@ end
 generate_direction(a::FixedSource, rng) = a.dir
 
 # Emission of diffuser (to be used with general light sources and for thermal radiation)
-
 """
     LambertianSource(x, y, z)
     LambertianSource(axes)

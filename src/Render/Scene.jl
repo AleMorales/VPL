@@ -63,7 +63,7 @@ end
 
 
 """
-    add!(; scene, mesh, color)
+    add!(scene, mesh, color)
 
 Manually add a 3D mesh with corresponding colors (`mesh` and `color`) to an existing `GLScene` object (`scene`).
 """

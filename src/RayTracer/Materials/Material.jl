@@ -24,9 +24,11 @@ abstract type SideSwitcher end
 # Implementations of sideswitcher
 include("Sideswitcher.jl")
 
-#= 
-    Reset materials
-=#
+"""
+    reset!(material::Material)
+
+Reset the power stored inside a material back to zero
+"""
 function reset!(material::Material)
     for i in eachindex(material.power)
         @inbounds material.power[i] = 0.0#.value = 0.0
@@ -40,9 +42,11 @@ function reset!(materials::Vector{<:Material})
 end
 
 
-#= 
-    Extract power stored in a Material or SideSwitcher
-=#
+"""
+    power(material::Material)
+
+Extract the power stored inside a material.
+"""
 function power(material::Material)
     return SVector(Tuple(pow.value for pow in material.power))
 end
