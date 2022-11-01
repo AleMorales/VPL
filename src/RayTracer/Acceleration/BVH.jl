@@ -202,10 +202,8 @@ function split(bvh::BVH{FT}, box, indices, scene, rule::AvgSplit) where FT
         # Choose the axis that is longest
         axis = findmax(box.max .- box.min)[2]
         pos  = sum(scene.centers[axis][indices])/length(indices)
-        @show axis, pos, box.min[axis], box.max[axis]
         # Distribute triangles between the two children
         newindices = distribute(axis, pos, indices, scene)
-        @show newindices
         # Sometimes all centers have the same axis coordinate so we cannot cut through there
         any(length.(newindices) .== 0) && (return Inf, (scene.boxes[1], scene.boxes[1]), newindices)
         # Compute the new boxes
