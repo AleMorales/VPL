@@ -85,7 +85,7 @@ function RTScene(scenes::Vector{<:RTScene})
     triangles = vcat(getproperty.(scenes, :triangles)...)
     materials = vcat(getproperty.(scenes, :materials)...)
     @inbounds ids = scenes[1].ids
-    if length(scenes > 1)
+    if length(scenes) > 1
         for i in 2:length(scenes)
             @inbounds append!(ids, ids[end] .+ scenes[i].ids)
         end
