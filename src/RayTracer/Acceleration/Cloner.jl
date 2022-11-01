@@ -21,12 +21,13 @@ end
 
 # Create a grid cloner around an acceleration structure
 # Create (2*n + 1) clones in each x or y direction -> symmetry enforced by odd numbers
-function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, dx = zero(FT), dy = zero(FT)) where {FT}
+# Create n in z direction (always go up)
+function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, nz = 0, dx = zero(FT), dy = zero(FT), dz = zero(FT)) where {FT}
     # Special case when the global box is empty
     gbox = acc.gbox
-    isempty(acc.gbox) || nx == ny == 0 && (return GridCloner(GVector([TNODE(gbox, true, Vec{FT}(0,0,0))])))
+    isempty(acc.gbox) || nx == ny == nz == 0 && (return GridCloner(GVector([TNODE(gbox, true, Vec{FT}(0,0,0))])))
     # Create all the leaf TNODES, their centers and indices
-    scene = create_tnodes(nx, ny, dx, dy, gbox)
+    scene = create_tnodes(nx, ny, nz, dx, dy, dz, gbox)
     indices = [i for i in 1:length(scene.nodes)]
     # Create empty grid structure with the two arrays
     grid = GridCloner(GVector(TNODE{FT}[]))
@@ -38,9 +39,9 @@ function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, dx = zero(FT), dy = z
 end
 
 # Create all the transformation nodes in the grid
-function create_tnodes(nx, ny, dx::FT, dy::FT, box) where FT
+function create_tnodes(nx, ny, nz, dx::FT, dy::FT, dz::FT, box) where FT
     # Total number of tnodes in the grid
-    nnodes = (2*nx + 1)*(2*ny + 1)
+    nnodes = (2*nx + 1)*(2*ny + 1)*nz
 
     # Special case when only one node in the grid cloner
     if nnodes == 1
@@ -57,12 +58,14 @@ function create_tnodes(nx, ny, dx::FT, dy::FT, box) where FT
     counter = 0
     for i in -nx:1:nx
         for j in -ny:1:ny
-            counter += 1
-            disp = Vec{FT}(i*dx, j*dy, FT(0))
-            nbox = AABB(box.min .+ disp, box.max .+ disp)
-            nodes[counter] = TNODE(nbox, true, disp)
-            boxes[counter] = nbox
-            centers[counter,:] = p0 .+ disp
+            for k in 0:nz-1
+                counter += 1
+                disp = Vec{FT}(i*dx, j*dy, k*dz)
+                nbox = AABB(box.min .+ disp, box.max .+ disp)
+                nodes[counter] = TNODE(nbox, true, disp)
+                boxes[counter] = nbox
+                centers[counter,:] = p0 .+ disp
+            end
         end
     end
     return (nodes = nodes, centers = centers, boxes = boxes)
