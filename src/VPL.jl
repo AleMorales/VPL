@@ -18,7 +18,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!,
        RTScene, RayTracer, RTSettings, trace!, BVH, Naive, Triangle,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
-       tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle, SAH
+       tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle, SAH, AvgSplit
 
 # Abstract type for turtles
 abstract type Turtle end
@@ -153,5 +153,8 @@ const DirectionalSource = RT.DirectionalSource
 const feedmaterial! = RT.feedmaterial!
 const RTTurtle = RT.RTTurtle
 const SAH = RT.SAH
+const AvgSplit = RT.AvgSplit
+
+
 
 end # module
