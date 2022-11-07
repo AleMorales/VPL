@@ -8,7 +8,7 @@ import Unrolled: @unroll
 # External libraries for drawing interactive graph networks
 import Graphs as GR
 import GraphMakie as GM
-import GraphMakie.NetworkLayout as NL
+import NetworkLayout as NL
 import GLMakie
 import WGLMakie
 import CairoMakie
