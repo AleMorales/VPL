@@ -50,11 +50,3 @@ using Test
 
 @testset "API/render/snowflake" begin include("api/render/test_snowflakes.jl") end
 @testset "API/render/binary_tree" begin include("api/render/test_binarytree.jl") end
-
-################################################################################
-########################## Test Ray Tracer #####################################
-################################################################################
-
-@testset "Internal/Raytracer/raytracer_basics" begin include("internal/raytracer/test_raytracer_basics.jl") end
-#@testset "Internal/Raytracer/raytracer_canopies" begin include("internal/raytracer/test_raytracer_canopies.jl") end
-
