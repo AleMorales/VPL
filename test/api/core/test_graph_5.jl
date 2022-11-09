@@ -9,7 +9,7 @@ let
 # This should prune the graph
 prune = Rule(GT.B, rhs = x -> nothing)
 axiom = GT.A() + GT.A() + GT.B() + GT.A()
-pop = Graph(axiom, rules = prune)
+pop = Graph(axiom = axiom, rules = prune)
 
 @test length(pop) == 4
 

@@ -12,7 +12,7 @@ axiom = GT.A() + (GT.A() + (GT.A() + GT.BCell(1), GT.A() + GT.BCell(2), GT.A() +
         GT.A() + (GT.A() + (GT.A() + GT.BCell(5), GT.A() + GT.BCell(6), GT.A() + GT.BCell(7)) , GT.A() + GT.A() + GT.BCell(8)) +
         GT.A() + (GT.A() + (GT.A() + GT.BCell(9), GT.A() + GT.BCell(10), GT.A() + GT.BCell(11)), GT.A() + GT.BCell(12)) + 
         GT.A() + GT.A() + GT.BCell(13)
-graph = Graph(axiom)           
+graph = Graph(axiom = axiom)           
 
 # Query 1: Retrieve all nodes of type B
 Q1 = Query(GT.BCell)
@@ -27,14 +27,14 @@ Criteria:
 =#
 function Q2_fun(n)
     # Condition 1
-    check, steps = hasAncestor(n, isRoot)
+    check, steps = hasAncestor(n, condition = isRoot)
     steps != 5 && return false
     # Condition 2
-    p2 = parent(n, 2)
+    p2 = parent(n, nsteps = 2)
     length(children(p2)) == 1
 end
 
-Q2 = Query(GT.BCell, Q2_fun)
+Q2 = Query(GT.BCell, condition = Q2_fun)
 A2 = apply(graph, Q2)
 @test A2 == [GT.BCell(13)]
 
@@ -46,14 +46,14 @@ Criteria:
 =#
 function Q3_fun(n)
     # Condition 1
-    check, steps = hasAncestor(n, isRoot)
+    check, steps = hasAncestor(n, condition = isRoot)
     steps != 3 && return false
     # Condition 2
-    p2 = parent(n, 2)
+    p2 = parent(n, nsteps = 2)
     length(children(p2)) == 3
 end
 
-Q3 = Query(GT.BCell, Q3_fun)
+Q3 = Query(GT.BCell, condition = Q3_fun)
 A3 = apply(graph, Q3)
 @test isempty(setdiff(A3, [GT.BCell(1), GT.BCell(2), GT.BCell(3)]))
 
@@ -66,16 +66,16 @@ Criteria:
 =#
 function Q4_fun(n)
     # Condition 1
-    check, steps = hasAncestor(n, isRoot)
+    check, steps = hasAncestor(n, condition = isRoot)
     steps != 4 && return false
     # Condition 2
-    p2 = parent(n, 2)
+    p2 = parent(n, nsteps = 2)
     length(children(p2)) != 1 && return false
     # Condition 3
-    p3 = parent(n, 3)
+    p3 = parent(n, nsteps = 3)
     length(children(p3)) == 1    
 end
-Q4 = Query(GT.BCell, Q4_fun)
+Q4 = Query(GT.BCell, condition = Q4_fun)
 A4 = apply(graph, Q4)
 @test A4 == [GT.BCell(4)]
 

@@ -1,40 +1,54 @@
-### This file contains public API (Graph -> Graph) ###
+### This file contains public API ###
 
 ################################################################################
 ###########################  Graph constructors  ###############################
 ################################################################################
 
 """
-    Graph(axiom; rules = nothing, vars = nothing)
+    Graph(;axiom, rules = nothing, vars = nothing)
 
-Creates a dynamic graph defined by the initial node or nodes (`axiom`), one or more rules 
-(`rules`), and an object with graph-level variables (`vars`). Rules and graph-level
-variables are optional and must be assigned by keyword (see example below). 
-Rules must be a `Rule` or tuple of `Rule` objects. 
-The `axiom` may be a single object inheriting from `Node` or a subgraph generated 
-with the graph construction DSL. 
-A copy of the axiom and rules is always made when constructing the graph, but if
-object containing graph-level variables is not `mutable`, the user must manually
-copy it (with `copy` or `deepcopy`) or else changes within the graph will affect
-the original object (and other graphs created from the same object).
+Create a dynamic graph from an axiom, one or more rules and, optionally, 
+graph-level variables.
 
-# Example
+## Arguments
+- `axiom`: A single object inheriting from `Node` or a subgraph generated  with 
+the graph construction DSL. It should represent the initial state of the dynamic
+graph. 
+- `rules`:  A single `Rule` object or a tuple of `Rule` objects (optional). It 
+should include all graph-rewriting rules of the graph. 
+- `vars`: A single object of any user-defined type (optional). This will be the 
+graph-level variable accessible from any rule or query applied to the graph.
+- `FT`: Floating-point precision to be used when generating the 3D geometry 
+associated to a graph. 
+
+## Details
+All arguments are assigned by keyword. The axiom and rules are deep-copied when 
+creating the graph but the graph-level variables (if a copy is needed due to
+mutability, the user needs to care of that).
+
+## Return
+An object of type `Graph` representing a dynamic graph. Printing this object
+results in a human-readable description of the type of data stored in the graph.
+
+## Examples
 ```julia
-struct A <: Node end
-struct B <: Node end
-axiom = A() + B()
-no_rules_graph = Graph(axiom)
-rule = Rule(A, rhs = x -> A() + B())
-rules_graph = Graph(axiom, rules = rule)
+let
+    struct A0 <: Node end
+    struct B0 <: Node end
+    axiom = A0() + B0()
+    no_rules_graph = Graph(axiom = axiom)
+    rule = Rule(A, rhs = x -> A0() + B0())
+    rules_graph = Graph(axiom = axiom, rules = rule)
+end
 ```
 """
-function Graph(axiom::Union{StaticGraph, Node}; 
+function Graph(;axiom::Union{StaticGraph, Node},
                rules::Union{Nothing, Tuple, Rule} = nothing, 
-               vars = nothing, FT = Float64) 
+               vars = nothing) 
   if rules isa Nothing
-    Graph(StaticGraph(deepcopy(axiom)), (), deepcopy(vars), FT)
+    Graph(StaticGraph(deepcopy(axiom)), (), deepcopy(vars))
   else
-    Graph(StaticGraph(deepcopy(axiom)), deepcopy(Tuple(rules)), deepcopy(vars), FT)
+    Graph(StaticGraph(deepcopy(axiom)), deepcopy(Tuple(rules)), deepcopy(vars))
   end
 end
 
@@ -45,9 +59,9 @@ end
 """
     rules(g::Graph)
 
-Returns a tuple with all the graph-rewriting rules stored in the graph
+Returns a tuple with all the graph-rewriting rules stored in a dynamic graph
 
-# Example
+## Examples
 ```julia
 struct A <: Node end
 struct B <: Node end
@@ -62,9 +76,9 @@ rules(g::Graph) = g.rules
 """
   vars(g::Graph)
 
-Returns the object storing the graph-level variables
+Returns the graph-level variables.
 
-# Example
+## Example
 ```julia
 struct A <: Node end
 axiom = A()
@@ -76,7 +90,7 @@ vars(g::Graph) = g.vars
 
 #= 
 Returns the StaticGraph stored inside the Graph object (users are not supposed
-to operate directly with the StaticGraph)
+to interact directly with the StaticGraph)
 =#
 graph(g::Graph) = g.graph
 
@@ -85,7 +99,9 @@ graph(g::Graph) = g.graph
 ################################################################################
 
 #=
-  Print humand-friendly description of a Graph
+  Print humand-friendly description of a Graph. Users will not call this one
+  explictly, it is used by Julia to determine what happens when the object is
+  printed.
 =#
 function show(io::IO, g::Graph)
    nrules = length(g.rules)
@@ -103,7 +119,7 @@ end
 ##############################  Forward methods  ###############################
 ################################################################################
 
-# Forward several methods from StaticGraph
+# Forward several methods from StaticGraph to Graph
 macro forwardgraph(method)
    esc(:($method(g::Graph) = $method(graph(g))))
 end

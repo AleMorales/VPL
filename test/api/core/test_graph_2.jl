@@ -19,7 +19,7 @@ rule = Rule(GT.Cell{Int}, lhs = transfer, rhs = (context, father) ->
 @test VPL.Core.captures(rule)
 
 axiom = GT.Cell(1) + GT.Cell(0) + GT.Cell(0)
-pop = Graph(axiom, rules = rule)
+pop = Graph(axiom = axiom, rules = rule)
 
 getStates(pop) = [data(n).state for n in values(VPL.Core.nodes(pop))]
 @test sum(getStates(pop)) == 1
@@ -42,7 +42,7 @@ ruleUp = Rule(GT.Cell{Int}, lhs = transferUp,
           rhs = (context, child) -> GT.Cell(data(child).state), captures = true)
 
 axiomUp = GT.Cell(0) + GT.Cell(0) + GT.Cell(1)
-pop = Graph(axiomUp, rules = ruleUp)
+pop = Graph(axiom = axiomUp, rules = ruleUp)
 
 @test sum(getStates(pop)) == 1
 rewrite!(pop)

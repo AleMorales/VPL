@@ -17,7 +17,7 @@ rule2 = Rule(GT.B, rhs = x -> GT.A())
 @test !VPL.Core.captures(rule1) && !VPL.Core.captures(rule2)
 
 # Initialize a dynamic graph
-algae = Graph(axiom, rules = (rule1, rule2))
+algae = Graph(axiom = axiom, rules = (rule1, rule2))
 
 # Check the Graph at the axiom stage
 @test algae isa Graph

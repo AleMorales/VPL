@@ -21,7 +21,7 @@ let
     axiom = GT.A()
     rule1 = Rule(GT.A, rhs = x -> GT.A() + GT.B())
     rule2 = Rule(GT.B, rhs = x -> GT.A())
-    algae = Graph(axiom, rules = (rule1, rule2))
+    algae = Graph(axiom = axiom, rules = (rule1, rule2))
     rewrite!(algae)
     digraph, labels, n = VPL.Core.GR.DiGraph(algae)
     @test digraph isa Graphs.SimpleGraphs.SimpleDiGraph

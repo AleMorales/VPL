@@ -22,7 +22,7 @@ printed = @capture_out @show rule
 @test printed == "rule = Rule replacing nodes of type Main.GT.Cell{Rational{$(typeof(1))}} without context capturing.\n\n"
 
 # Create organism
-organism = Graph(axiom, rules = rule, vars = GT.G3pars(1//3, 5//4))
+organism = Graph(axiom = axiom, rules = rule, vars = GT.G3pars(1//3, 5//4))
 printed = @capture_out @show organism
 @test printed == "organism = Dynamic graph with 1 nodes of types Main.GT.Cell{Rational{$(typeof(1))}} and 1 rewriting rules.\nDynamic graph variables stored in struct of type Main.GT.G3pars\n\n"
 
@@ -45,17 +45,17 @@ grow!(organism)
 
 # Extract states from the organism using breadth-first traversal
 states = Rational{Int}[]
-traverseBFS(organism, x -> push!(states, x.state))
+traverseBFS(organism, fun = x -> push!(states, x.state))
 @test states == [10//1*5//4*1//3, 10//1*5//4*2//3]
 
 # Extract states from the organism using depth-first traversal
 states = Rational{Int}[]
-traverseDFS(organism, x -> push!(states, x.state))
+traverseDFS(organism, fun = x -> push!(states, x.state))
 @test states == [10//1*5//4*1//3, 10//1*5//4*2//3]
 
 # Extract organism using traversal with arbitrary order
 states = Rational{Int}[]
-traverse(organism, x -> push!(states, x.state))
+traverse(organism, fun = x -> push!(states, x.state))
 @test sum(states) == sum([10//1*5//4*1//3, 10//1*5//4*2//3])
 
 # Second generation
@@ -63,12 +63,12 @@ grow!(organism)
 
 # Extract states from the organism using breadth-first traversal
 states = Rational{Int}[]
-traverseBFS(organism, x -> push!(states, x.state))
+traverseBFS(organism, fun = x -> push!(states, x.state))
 @test states == [125//72, 125//36, 125//36, 125//18]
 
 # Extract states from the organism using depth-first traversal
 states = Rational{Int}[]
-traverseDFS(organism, x -> push!(states, x.state))
+traverseDFS(organism, fun = x -> push!(states, x.state))
 @test sort(states) == [125//72, 125//36, 125//36, 125//18]
 
 
@@ -87,7 +87,8 @@ ruleDeath = Rule(GT.Cell{Rational{Int}}, lhs = dying)
 ruleGrowth = Rule(GT.Cell{Rational{Int}}, lhs = growing, rhs = growth)
 
 # Create organism
-organism = Graph(axiom, rules = (ruleGrowth, ruleDeath), vars = GT.G3pars(1//3, 10//9))
+organism = Graph(axiom = axiom, rules = (ruleGrowth, ruleDeath), 
+                 vars = GT.G3pars(1//3, 10//9))
 
 # Grow six steps
 for i = 1:5

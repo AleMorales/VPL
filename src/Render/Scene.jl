@@ -15,9 +15,9 @@ end
 
 Create a 3D scene for rendering from a `Graph` object (`g`).
 """
-function GLScene(g::Graph{T, S, FT}) where {T, S, FT}
+function GLScene(g::Graph)
     # Retrieve the mesh of triangles
-    mt = Geom.MTurtle(FT)
+    mt = Geom.MTurtle(Float64)
     Geom.feedgeom!(mt, g);
     # Retrieve the colors of each primitive
     glt = GLTurtle()

@@ -7,12 +7,14 @@ the graph construction DSL.
 
 # Example
 ```julia
-struct bar <: Node
-  x::Int
+let
+  struct bar <: Node
+    x::Int
+  end
+  b1 = bar(1)
+  b2 = bar(2)
+  b1 + b2
 end
-b1 = bar(1)
-b2 = bar(2)
-b1 + b2
 ```
 """
 abstract type Node end
@@ -38,10 +40,17 @@ end
 """
     Context
   
-Data structure than links a `GraphNode` to a `Graph`. Functions `data()` and `vars()` 
-give access to the data stored in the node and graph, respectively. Several 
-methods are also available to test relationships among nodes in the graph and to 
-extract these related nodes (see User Manual for details).
+Data structure than links a node to the rest of the graph.
+
+## Fields
+- `graph`: Dynamic graph that contains the node.  
+- `node`: Node inside the graph. 
+
+## Details
+A `Context` object wraps references to a node and its associated graph. The
+purpose of this structure is to be able to test relationships among nodes within
+a graph (from with a query or rule), as well as access the data stored in a node
+(with `data()`) or the graph (with `vars()`).
 
 Users do not build `Context` objects directly but they are provided by VPL as 
 inputs to the user-defined functions inside rules and queries. 
@@ -51,6 +60,8 @@ mutable struct Context{N, G}
   node::N
 end
 
+# Special constructor to propagate missing nodes
+Context(graph, node::Missing) = missing
 
 #=
   StaticGraph
@@ -76,14 +87,14 @@ end
   All rules are stored in a dictionary which keys are the unique identifiers of the rules
   The field vars contains a struct with variables that are accesible in queries and production rules
 =#
-mutable struct Graph{T, S <: Tuple, FT}
+mutable struct Graph{T, S <: Tuple}
     graph::StaticGraph
     rules::S
     vars::T
 end
 
-function Graph(graph::StaticGraph, rules::S, vars::T, ::Type{FT} = Float64) where {T, S<:Tuple, FT} 
-  Graph{T, S, FT}(graph, rules, vars)
+function Graph(graph::StaticGraph, rules, vars)
+  Graph(graph, rules, vars)
 end
 
 # Docstring is included in the constructor in Rule.jl

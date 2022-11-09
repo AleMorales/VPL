@@ -7,19 +7,35 @@
 """
     Rule(nodetype; lhs = x -> true, rhs = x -> nothing, captures = false)
 
-Create a replacement rule for nodes of type `nodetype` with function-like
-objects for the left-hand side (`lhs`) and right-hand side (`rhs`). If the
-rule captures nodes in the context of the replacement node this must be indicated
-by the argument `captures`.
+Create a replacement rule for nodes of type `nodetype`.
 
-# Example
+## Arguments
+- `nodetype`: Type of node to be matched.  
+- `lhs`: Function or function-like object that takes a `Context` object and 
+returns whether the node should be replaced or not (with `true` or `false`).
+- `rhs`: Function or function-like object that takes one or more `Context`
+objects and returns a replacement graph or `nothing`. If it takes several 
+inputs, the first one will correspond to the node being replaced.  
+- `captures`: Either `false` or `true` to indicate whether the left-hand side
+of the rule is capturing nodes in the context of the replacement node to be
+used for the construction of the replace graph.
+
+## Details
+See VPL documentation for details on rule-based graph rewriting.
+
+## Return
+An object of type `Rule`.
+
+## Examples
 ```julia
-struct A <: Node end
-struct B <: Node end
-axiom = A() + B()
-rule = Rule(A, rhs = x -> A() + B())
-rules_graph = Graph(axiom, rules = rule)
-rewrite!(rules_graph)
+let
+    struct A <: Node end
+    struct B <: Node end
+    axiom = A() + B()
+    rule = Rule(A, rhs = x -> A() + B())
+    rules_graph = Graph(axiom = axiom, rules = rule)
+    rewrite!(rules_graph)
+end
 ```
 """
 Rule(nodetype::DataType; lhs = x -> true, rhs = x -> nothing, captures::Bool = false) =
@@ -142,20 +158,35 @@ end
 """
     rewrite!(g::Graph)
 
-Apply the graph-rewriting rules stored in the graph. This function will match
-the left-hand sides of the rules against the graph and then replace and/or prune
-the graph at every location where the left-hand sides matched by the result
-of executing the right hand side of each rule. The modification is performed
-in-place, so this function returns `nothing`.
+Apply the graph-rewriting rules stored in the graph.
+
+## Arguments
+- `g::Graph`: The graph to be rewritten. It will be modified in-place.
+
+## Details
+This function will match the left-hand sides of all the rules in a graph. If any
+node is matched by more than one rule this will result in an error. The rules
+are then applied in order to replaced the matched nodes with the result of
+executing the right hand side of the rules. The rules are applied in the order
+in which they are stored in the graph but the order in which the nodes are 
+processed is not defined. Since graph rewriting is semantically a parallel
+process, the rules should not be rely on any particular order for their 
+functioning.
+
+## Returns
+This function returns `nothing`, but the graph passed as input will be modified
+by the execution of the rules.
 
 # Example
 ```julia
-struct A <: Node end
-struct B <: Node end
-axiom = A() + B()
-rule = Rule(A, rhs = x -> A() + B())
-rules_graph = Graph(axiom, rules = rule)
-rewrite!(rules_graph)
+let
+    struct A <: Node end
+    struct B <: Node end
+    axiom = A() + B()
+    rule = Rule(A, rhs = x -> A() + B())
+    g = Graph(axiom = axiom, rules = rule)
+    rewrite!(g)
+end
 ```
 """
 rewrite!(g::Graph) = rewrite!(g, g.rules)

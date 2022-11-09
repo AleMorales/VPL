@@ -2,9 +2,10 @@
 """
     node_label(n::Node, id)
 
-Function that constructs a label for a node to be used by `draw()` when visualizing the graph 
-as a network. The default method will create a label from the type of node its unique id. The
-user can specialize this method for user-defined data types to customize the label.
+Function to construct a label for a node to be used by `draw()` when visualizing.
+The user can specialize this method for user-defined data types to customize the 
+labels. By default, the type of data stored in the node and the unique ID of the
+node are used as labels.
 """
 function node_label(n::Node, id)
     node_class = split("$(typeof(n))", ".")[end]
@@ -12,6 +13,11 @@ function node_label(n::Node, id)
     return label
 end
 
+#=
+Translate a static graph in a DiGraph to be used by GraphMakie. Nodes are 
+labelled, edges are not. The translation extracts the topological relationships 
+among nodes and the result of applying `node_label` to each node.
+=#
 function GR.DiGraph(g::StaticGraph)
     # Create a DiGraph structure
     n  = length(g)
@@ -38,13 +44,16 @@ function GR.DiGraph(g::StaticGraph)
     return dg, labels, n
 end
 
+# Forward the DiGraph method of StaticGraph onto Graph
 GR.DiGraph(g::Graph) = GR.DiGraph(g.graph)
 
-# Choose which Makie backend to use
+# Choose which Makie backend to use for the visualization
+# Note November 2022: The inline! option has been turned off in Makie, but a new
+# solution may be available in the future
 function choose_backend(backend, inline)
     if backend == "native"
         GLMakie.activate!()
-#        GLMakie.inline!(inline)
+#       GLMakie.inline!(inline)
     elseif backend == "web"
         WGLMakie.activate!()     
     elseif backend == "vector"
@@ -55,11 +64,12 @@ function choose_backend(backend, inline)
 end
 
 """
-    draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
-nlabels_textsize = 15, arrow_size = 15, node_size = 5)
+    draw(g::StaticGraph; force = false, backend = "native", inline = false, 
+         resolution = (1920, 1080), nlabels_textsize = 15, arrow_size = 15, 
+         node_size = 5)
 
-Equivalent to the method `draw(g::Graph)` but useful to visualize static graphs (e.g., usually this would be 
-the axiom of a graph).
+Equivalent to the method `draw(g::Graph; kwargs...)` but  to visualize static 
+graphs (e.g., the axiom of a graph).
 """
 function draw(g::StaticGraph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
               nlabels_textsize = 15, arrow_size = 15, node_size = 5)
@@ -102,16 +112,59 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
 end
 
 """
-    draw(g::Graph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
-nlabels_textsize = 15, arrow_size = 15, node_size = 5)
+    draw(g::Graph; force = false, backend = "native", inline = false, 
+         resolution = (1920, 1080), nlabels_textsize = 15, arrow_size = 15, 
+         node_size = 5)
 
-Visualize a graph as a network using different backends (`native` for OpenGL, `web` for WebGL and `vector` for Cairo
-vector graphics, see VPL documentation for details). To force an external window when using the native backend set
-`force = true` whereas to force to be inlined use `inline = true`. Details on the behaviour of each backend on different
-contexts of code execution can be found in the VPL documentation. For backend `native` or `web`, the user may specify the 
-resolution in pixels (by default HD is used). Additional customization is possible via `nlabels_textsize` (useful if the
-labels of the nodes are too large or small), `arrow_size` (this adjust the size of arrow heads) and `node_size` (for the
-size of the nodes).
+Visualize a graph as network diagram.
+
+## Arguments
+All arguments are assigned by keywords except the graph `g`.  
+- `g::Graph`: The graph to be visualized.  
+- `force = false`: Force the creation of a new window to store the network 
+diagram.  
+- `backend = "native"`: The graphics backend to render the network diagram. It
+can have the values `"native"`, `"web"` and `"vector"`. See VPL documentation
+for details.  
+- `inline = false`: Currently this argument does not do anything (will change in
+future versions of VPL).  
+- `resolution = (1920, 1080)`: The resolution of the image to be rendered, in
+pixels (online relevant for native and web backends). Default resolution is HD. 
+- `nlabels_textsize = 15`: Customize the size of the labels in the diagram.  
+- `arrow_size = 15`: Customize the size of the arrows representing edges in the
+diagram.  
+- `node_size = 5`: Customize the size of the nodes in the diagram.  
+
+## Details
+
+By default, nodes are labelled with the type of data stored and their unique ID.
+See function `node_label()` to customize the label for different types of data.
+
+See `export_graph()` to export the network diagram as a raster or vector image
+(depending on the backend). The function `calculate_resolution()` can be useful
+to ensure a particular dpi of the exported image (assuming some physical size).
+
+The graphics backend will interact with the environment where the Julia code is
+being executed (i.e., terminal, IDE such as VS Code, interactive notebook such
+as Jupyter or Pluto). These interactions are all controlled by the graphics 
+package Makie that VPL relies on. Some details on the expected behavior specific
+to `draw()` can be found in the general VPL documentation as www.virtualplantlab.com
+
+## Return
+This function returns a Makie `Figure` object, while producing the visualization
+as a side effect.
+
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + (B1(1) + A1(3), B1(4))
+    g = Graph(axiom = axiom)
+    draw(g)
+end
+```
 """
 function draw(g::Graph; force = false, backend = "native", inline = false, resolution = (1920, 1080),
     nlabels_textsize = 15, arrow_size = 15, node_size = 5)
@@ -120,26 +173,53 @@ function draw(g::Graph; force = false, backend = "native", inline = false, resol
 end
 
 """
-    export_graph(f, filename; kwargs...)
+    export_graph(f; filename, kwargs...)
 
-Export a graph visualization (created by `draw()`) into an external file. Supported formats are
-png (if the `native` or `web` backends were used in `draw()`), pdf or svg (if the `vector` backend
-was used). The file name should include the extension from which the format will be inferred. Additional
-keyword arguments are passed along to the corresponding `save()` method defined in the *Makie* package
-(see VPL documentation for details).
+Save a network diagram generated by `draw()` to an external file.
+
+## Arguments
+- `f`: Object of type `Figure` return by `draw()`.
+- `filename`: Name of the file where the diagram will be stored. The extension 
+will be used to determined the format of the image (see example below).
+
+## Details
+Internally, `export_graph()` calls the `save()` method from the ImageIO package
+and its dependencies. Any keyword argument supported by the relevant save method 
+will be passed along by `export_graph()`. For example, exporting diagrams as PNG 
+allows defining the compression level as `compression_level` (see PNGFiles 
+package for details).
+
+## Return
+The function returns nothing but, if successful, it will generate a new file
+containing the network diagram in the appropiate format.
+
+## Examples
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + (B1(1) + A1(3), B1(4))
+    g = Graph(axiom = axiom)
+    f = draw(g);
+    export_graph(f, filename = "test.png")
+end
+```
 """
-function export_graph(f, filename; kwargs...)
+function export_graph(f; filename, kwargs...)
     FileIO.save(filename, f; kwargs...) 
 end
 
 """
-    calculate_resolution(width, height; format = "png", dpi = 300)
+    calculate_resolution(;width = 1024/300*2.54, height = 768/300*2.54, 
+                          format = "raster", dpi = 300)
 
-Calculate the resolution required to achieve a specific `width` and `height` (in cm) of the exported
-image, with a particular `dpi` (for png format).
+Calculate the resolution required to achieve a specific `width` and `height` 
+(in cm) of the exported image, with a particular `dpi` (for raster formats).
 """
-function calculate_resolution(width, height; format = "png", dpi = 300)
-    if format == "png"
+function calculate_resolution(;width = 1024/300*2.54, height = 768/300*2.54, 
+                              format = "png", dpi = 300)
+    if format == "raster"
         res_width = width/2.54*dpi
         res_height = height/2.54*dpi
         (res_width, res_height)

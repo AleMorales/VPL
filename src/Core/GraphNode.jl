@@ -85,7 +85,8 @@ end
  Retrieve the parent GraphNode or an ancestor that fits a query with optional
  recursive search (with maximum depth)
 =#
-function parent(n::GraphNode, g::Graph, nsteps::Int = 1) 
+function parent(n::GraphNode, g::Graph, nsteps::Int = 1)
+    isRoot(n) && (return missing) 
     if(nsteps == 1)
         g[parentID(n)]
     else
@@ -100,6 +101,7 @@ end
 
 function ancestor(node::GraphNode, g::Graph, condition, maxlevel::Int,
                   level::Int = 1)
+    isRoot(node) && (return missing)
     par = parent(node, g)
     if condition(Context(g, par))
         return par
@@ -125,7 +127,7 @@ function descendent(node::GraphNode, g::Graph, condition, maxlevel::Int,
                 return descendent(child, g, condition, maxlevel, level + 1)
         end
     end
-    return node # This should never be reached...it is included for type stability
+    return missing # This means we tested on a leaf node
 end
 
 

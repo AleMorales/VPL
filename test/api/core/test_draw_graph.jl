@@ -12,7 +12,7 @@ let
     axiom = GT.A()
     rule1 = Rule(GT.A, rhs = x -> GT.A() + GT.B())
     rule2 = Rule(GT.B, rhs = x -> GT.A())
-    organism = Graph(axiom, rules = (rule1, rule2))
+    organism = Graph(axiom = axiom, rules = (rule1, rule2))
     rewrite!(organism)
 
     # Test the backends run 
@@ -24,20 +24,23 @@ let
     @test fv isa Makie.Figure
 
     # Export as png
-    export_graph(fn, "api/core/test/f.png")
+    export_graph(fn, filename = "api/core/test/f.png")
     fnref = read("api/core/reference/f.png")
     fntest = read("api/core/test/f.png")
+    # for some reason, external files are not reproducible? something random?
     fnref == fntest
 
     # Export as pdf
-    export_graph(fv, "api/core/test/f.pdf")
+    export_graph(fv, filename = "api/core/test/f.pdf")
     fpref = read("api/core/reference/f.pdf")
     fptest = read("api/core/test/f.pdf")
+    # for some reason, external files are not reproducible? something random?
     fpref == fptest    
 
     # Export as svg
-    export_graph(fv, "api/core/test/f.svg")
+    export_graph(fv, filename = "api/core/test/f.svg")
     fsref = read("api/core/reference/f.svg")
     fstest = read("api/core/test/f.svg")
+    # for some reason, external files are not reproducible? something random?
     fsref == fstest    
 end

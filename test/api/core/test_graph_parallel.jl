@@ -17,8 +17,8 @@ let
     @test !VPL.Core.captures(rule1) && !VPL.Core.captures(rule2)
     
     # Initialize two graphs
-    algae_serial = [Graph(axiom, rules = (rule1, rule2)) for i in 1:20]
-    algae_parallel = [Graph(axiom, rules = (rule1, rule2)) for i in 1:20]
+    algae_serial = [Graph(axiom = axiom, rules = (rule1, rule2)) for i in 1:20]
+    algae_parallel = [Graph(axiom = axiom, rules = (rule1, rule2)) for i in 1:20]
    
     # Run in series
     for i in 1:10

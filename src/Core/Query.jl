@@ -5,11 +5,27 @@
 ################################################################################
 
 """
-    Query(nodetype::DataType, query = x -> true)
+    Query(nodetype::DataType; condition = x -> true)
 
-  Create a query that matches nodes of type `nodetype` and the conditions specified
-in the argument `query` (must be a function that returns `true`). It returns an
-object of type `Query` that can be applied to a graph with the function `apply`.
+Create a query that matches nodes of type `nodetype` and a `condition`.
+
+## Arguments
+- `nodetype::DataType`: Type of node to be matched.  
+- `condition`: Function or function-like object that checks if a node should be
+selected. It is assigned as a keyword argument.
+
+## Details
+If the `nodetype` should refer to a concrete type and match one of the types
+stored inside the graph. Abstract types or types that are not contained in the
+graph are allowed but the query will never return anything.
+
+The `condition` must be a function or function-like object that takes a 
+`Context` as input and returns `true` or `false`. The default `condition` always
+return `true` such that the query will
+
+## Return
+It returns an object of type `Query`. Use `apply()` to execute the query on a 
+dynamic graph.
 
 # Example
 ```julia
@@ -21,7 +37,7 @@ query = Query(A)
 apply(graph, query)
 ```
 """
-Query(nodetype::DataType, query = x -> true) = Query{nodetype, typeof(query)}(query)
+Query(nodetype::DataType; condition = x -> true) = Query{nodetype, typeof(condition)}(condition)
 
 # Helper function for type propagation
 nodetype(query::Query{N,Q}) where {N,Q} = N

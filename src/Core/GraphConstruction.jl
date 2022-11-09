@@ -51,7 +51,18 @@ end
 
 """
     +(n1::Node, n2::Node)
+
 Creates a graph with two nodes where `n1` is the root and `n2` is the insertion point.
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + B1(1)
+    draw(axiom)
+end
+```
 """
 +(n1::Node, n2::Node) = GraphNode(n1) + GraphNode(n2)
 
@@ -64,21 +75,58 @@ end
 
 """
     +(g::StaticGraph, n::Node)
+
 Creates a graph as the result of appending the node `n` to the insertion point of graph `g`.
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + B1(1)
+    axiom = axiom + A1(2)
+    draw(axiom)
+end
+```
 """
 +(g::StaticGraph, n::Node) = g + GraphNode(n)
 
 """
     +(n::Node, g::StaticGraph)
+
 Creates a graph as the result of appending the static graph `g` to the node `n`.
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + B1(1)
+    axiom = A1(2) + axiom
+    draw(axiom)
+end
+```
 """
 +(n::Node, g::StaticGraph) = GraphNode(n) + g
 +(n::GraphNode, g::StaticGraph) = StaticGraph(n) + g
 
 """
     +(g1::StaticGraph, g2::StaticGraph)
-Creates a graph as the result of appending `g2` to the insertion point of `g1`. The
-insertion point of the final graph corresponds to the insertion point of `g2`
+    
+Creates a graph as the result of appending `g2` to the insertion point of `g1`. 
+The insertion point of the final graph corresponds to the insertion point of `g2`.
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom1 = A1(1) + B1(1)
+    axiom2 = A1(2) + B1(2)
+    axiom = axiom1 + axiom2
+    draw(axiom)
+end
+```
 """
 function +(g1::StaticGraph, g2::StaticGraph)
     nID = append!(g1, insertion(g1), g2)
@@ -97,10 +145,23 @@ end
 end
 
 +(n::GraphNode, T::Tuple) = StaticGraph(n) + T
+
 """
     +(g::StaticGraph, T::Tuple)
     +(n::Node, T::Tuple)
+
 Creates a graph as the result of appending a tuple of graphs/nodes `T` to the
-insertion point of the graph `g` or node `n`. Each graph/node in `L` becomes a branch.
+insertion point of the graph `g` or node `n`. Each graph/node in `L` becomes a 
+branch.
+
+## Examples
+```julia
+let
+    struct A1 <: Node val::Int end
+    struct B1 <: Node val::Int end
+    axiom = A1(1) + (B1(1) + A1(3), B1(4))
+    draw(axiom)
+end
+```
 """
 +(n::Node, T::Tuple) = GraphNode(n) + T
