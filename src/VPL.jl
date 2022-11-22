@@ -21,7 +21,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
 abstract type Turtle end
 
 # Function to be overloaded by other modules
-add!(x::Any) = error("Method of add! not implemented")
+add!() = error("Method of add! not implemented")
 
 # Core module (graph rewriting)
 include("Core/Module_Core.jl")
@@ -124,7 +124,6 @@ const RGB = Render.RGB
 const GLTurtle = Render.GLTurtle
 const GLScene = Render.GLScene
 const export_scene = Render.export_scene
-
 
 
 end # module
