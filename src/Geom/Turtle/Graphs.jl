@@ -1,10 +1,12 @@
-
+### This file contains public API ###
 
 """
     feedgeom!(turtle::MTurtle, m::Mesh)
 
-General purpose method to feed a mesh to a turtle. This should be used to add any generated
-primitive to the turtle's mesh as they are all implemented as meshes
+General purpose method to feed a mesh to a turtle. Note that all primitives 
+provided by VPL are implemented as meshes, but this is a generic method for 
+meshes that are constructed directly by the user or imported from external
+software.
 """
 function feedgeom!(turtle::MTurtle, m::Mesh) 
     push!(geoms(turtle), m)
@@ -15,19 +17,23 @@ end
 """
     feedgeom!(turtle::MTurtle, node::Node)
     
-Default method for `feedgeom!()` that does not do anything. Hence, the user can include nodes
-in a graph withour an associated geometry.
+Default method for `feedgeom!()` that does not do anything. This allows the user
+to include nodes in a graph without an associated geometry.
 """
 feedgeom!(turtle::MTurtle, node::Node) = nothing
 
-# Traverse the graph depth-first starting at the root node and execute the feedgeom!() function at each
-# node. The state of the turtle is stored before each branching point by inserting a new SET node. This
-# allows resetting the node to the same position and orientation prior to entering each branch.
+#=
+# Traverse the graph depth-first starting at the root node and execute the 
+feedgeom!() function at each node. The state of the turtle is stored before each
+branching point by inserting a new SET node. This allows resetting the turtle to 
+the same position and orientation prior to entering each branch.
+=#
 """
     feedgeom!(turtle::MTurtle, g::Graph)
 
-Process a `Graph` object with a turtle and generate the corresponding 3D mesh from the turtle movement
-operations and geometry primitives or meshes defined in the graph.
+Process a `Graph` object with a turtle and generate the corresponding 3D mesh 
+from executing the different `feedgeom!()` methods associated to the nodes in 
+the graph.
 """
 function feedgeom!(turtle::MTurtle, g::Graph)
     # Use a LIFO stack to keep track of nodes in traversal
@@ -65,7 +71,8 @@ end
     feedgeom!(turtle::MTurtle, collection::AbstractArray)
     feedgeom!(turtle::MTurtle, collection::Tuple)
 
-Feed a turtle an array or tuple of objects (`collection`) with existing `feedgeom!()` methods.
+Feed a turtle an array or tuple of objects (`collection`) with existing 
+`feedgeom!()` methods.
 """
 function feedgeom!(turtle::MTurtle, collection::AbstractArray)
     for el in collection

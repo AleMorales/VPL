@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 # cylinder_faces_hollow(n) = Face[Tuple(Face(i, i + n + 1, i + n + 2) for i in 2:n)...,
 #                                  Tuple(Face(i, i + n + 2, i + 1) for i in 2:n)...,
@@ -110,24 +111,32 @@ eltype(::Type{HollowCylinderVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
 """
-    HollowCylinder(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+    HollowCylinder(;length = 1.0, width = 1.0, height = 1.0, n = 40)
 
-Create a standard hollow cylinder with length `l`, width `w`, height `h` and discretized into `2n` triangles (see VPL documentation for details). 
+Create a hollow cylinder with dimensions given by `length`, `width` and `height`,
+ discretized into `n` triangles (must be even) and standard location and orientation.
 """
-function HollowCylinder(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT <: AbstractFloat
-    trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
+function HollowCylinder(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0, 
+                        n::Int = 40) where FT
+    trans = LinearMap(SDiagonal(height/FT(2), width/FT(2), length))
     HollowCylinder(trans, n = n)
 end
 
 # Create a HollowCylinder from affine transformation
-function HollowCylinder(trans::AbstractAffineMap; n::Int = 20)
-    Primitive(trans, x -> HollowCylinderVertices(n, x), x -> HollowCylinderNormals(n,x), 
-              () -> HollowCylinderFaces(n))
+function HollowCylinder(trans::AbstractAffineMap; n::Int = 40)
+    @assert iseven(n)
+    n = div(n,2)
+    Primitive(trans, x -> HollowCylinderVertices(n, x), 
+                     x -> HollowCylinderNormals(n,x), 
+                    () -> HollowCylinderFaces(n))
 end
 
 # Create a HollowCylinder from affine transformation and add it in-place to existing mesh
-function HollowCylinder!(m::Mesh, trans::AbstractAffineMap; n::Int = 20) 
-    Primitive!(m, trans, x -> HollowCylinderVertices(n, x), x -> HollowCylinderNormals(n, x), 
-               () -> HollowCylinderFaces(n))
+function HollowCylinder!(m::Mesh, trans::AbstractAffineMap; n::Int = 40) 
+    @assert iseven(n)
+    n = div(n,2)
+    Primitive!(m, trans, x -> HollowCylinderVertices(n, x), 
+                         x -> HollowCylinderNormals(n, x), 
+                         () -> HollowCylinderFaces(n))
 end
         

@@ -1,3 +1,4 @@
+### This file does NOT contains public API ###
 
 # Create a primitive from affine transformation
 function Primitive(trans::AbstractAffineMap, vertices, normals, faces)

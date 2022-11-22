@@ -5,33 +5,33 @@ import CoordinateTransformations: SDiagonal, LinearMap
 let
 
 # Standard cube primitive
-c = VPL.HollowCube(l = 1.0, w = 1.0, h = 1.0);
+c = VPL.HollowCube(length = 1.0, width = 1.0, height = 1.0);
 @test c isa VPL.Mesh
 @test VPL.area(c) === 4.0
 @test VPL.nvertices(c) == 8
 @test VPL.ntriangles(c) == 8
-VPL.render(c, :green, wireframe = true, normals = true)
+VPL.render(c, wireframe = true, normals = true)
 
 # Check a different precision works 
-c = VPL.HollowCube(l = 1f0, w = 1f0, h = 1f0);
+c = VPL.HollowCube(length = 1f0, width = 1f0, height = 1f0);
 @test c isa VPL.Mesh
 @test VPL.area(c) === 4f0
 @test VPL.nvertices(c) == 8
 @test VPL.ntriangles(c) == 8
-VPL.render(c, :green, wireframe = true, normals = true)
+VPL.render(c, wireframe = true, normals = true)
 
 # Mergin two meshes
-c2 = VPL.HollowCube(l = 0.5, w = 0.5, h = 3.0);
+c2 = VPL.HollowCube(length = 0.5, width = 0.5, height = 3.0);
 function foo()
-    c2 = VPL.HollowCube(l = 0.5, w = 0.5, h = 3.0)    
-    c = VPL.HollowCube(l = 1.0, w = 1.0, h = 1.0)
+    c2 = VPL.HollowCube(length = 0.5, width = 0.5, height = 3.0)    
+    c = VPL.HollowCube(length = 1.0, width = 1.0, height = 1.0)
     VPL.Mesh([c,c2])
 end
 m = foo();
 @test VPL.nvertices(m) == VPL.nvertices(c) + VPL.nvertices(c2)
 @test VPL.ntriangles(m) == VPL.ntriangles(c) + VPL.ntriangles(c2)
 @test VPL.area(m) == VPL.area(c) + VPL.area(c2)
-VPL.render(m, :green, wireframe = true, normals = true)
+VPL.render(m, wireframe = true, normals = true)
 
 # Create a box using affine maps
 scale = LinearMap(SDiagonal(3/2, 0.5/2, 0.5));
@@ -53,18 +53,18 @@ m2 = foo2();
 @test m2.vertices == m.vertices
 @test m2.normals == m.normals
 @test m2.faces == m.faces
-VPL.render(m2, :green, wireframe = true, normals = true)
+VPL.render(m2, wireframe = true, normals = true)
 
 
 # Construct hollow cones using a turtle
-hc = G.HollowCube(l = 2.0, w = 1.0, h = 1.0);
+hc = G.HollowCube(length = 2.0, width = 1.0, height = 1.0);
 t = G.MTurtle(Float64)
-G.HollowCube!(t; l = 2.0, w = 1.0, h = 1.0, move = true) 
+G.HollowCube!(t; length = 2.0, width = 1.0, height = 1.0, move = true) 
 @test G.geoms(t) == hc
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
 t = G.MTurtle(Float64)
-G.HollowCube!(t; l = 2.0, w = 1.0, h = 1.0, move = false);
+G.HollowCube!(t; length = 2.0, width = 1.0, height = 1.0, move = false);
 @test G.geoms(t) == hc
 @test G.pos(t) == G.Vec{Float64}(0,0,0)
 

@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 struct SolidFrustumFaces
     n::Int
@@ -109,23 +110,31 @@ eltype(::Type{SolidFrustumVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
 """
-    SolidFrustum(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+    SolidFrustum(;length = 1.0, width = 1.0, height = 1.0, n = 40)
 
-Create a standard solid frustum with length `l`, width `w`, height `h` and discretized into `4n` triangles (see VPL documentation for details). 
+Create a solid frustum with dimensions given by `length`, `width` and `height`, 
+discretized into `n` triangles and standard location and orientation. 
 """
-function SolidFrustum(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), ratio::FT = one(FT), n::Int = 20) where FT
-    trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
+function SolidFrustum(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0, 
+                       ratio::FT = 1.0, n::Int = 40) where FT
+    trans = LinearMap(SDiagonal(height/FT(2), width/FT(2), length))
     SolidFrustum(ratio, trans, n = n)
 end
 
 # Create a SolidFrustum from affine transformation
-function SolidFrustum(ratio, trans::AbstractAffineMap; n::Int = 20)
-    Primitive(trans, x -> SolidFrustumVertices(ratio, n, x), x -> SolidFrustumNormals(ratio,n,x), 
-              () -> SolidFrustumFaces(n))
+function SolidFrustum(ratio, trans::AbstractAffineMap; n::Int = 40)
+    @assert iseven(n)
+    n = div(n,4)
+    Primitive(trans, x -> SolidFrustumVertices(ratio, n, x), 
+                     x -> SolidFrustumNormals(ratio,n,x), 
+                    () -> SolidFrustumFaces(n))
 end
 
 # Create a SolidFrustum from affine transformation and add it in-place to existing mesh
-function SolidFrustum!(m::Mesh, ratio, trans::AbstractAffineMap; n::Int = 20) 
-    Primitive!(m, trans, x -> SolidFrustumVertices(ratio, n, x), x -> SolidFrustumNormals(ratio,n, x), 
-               () -> SolidFrustumFaces(n))
+function SolidFrustum!(m::Mesh, ratio, trans::AbstractAffineMap; n::Int = 40) 
+    @assert iseven(n)
+    n = div(n,4)
+    Primitive!(m, trans, x -> SolidFrustumVertices(ratio, n, x), 
+                         x -> SolidFrustumNormals(ratio,n, x), 
+                        () -> SolidFrustumFaces(n))
 end

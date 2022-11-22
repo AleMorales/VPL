@@ -1,5 +1,4 @@
-
-# Axis-aligned bounding box around a mesh
+### This file contains public API ###
 
 """
     BBox(m::Mesh)
@@ -26,9 +25,10 @@ function BBox(m::Mesh{VT}) where VT <: Vec{FT} where FT
 end
 
 """
-    BBox(pmin, pmax)
+    BBox(pmin::Vec, pmax::Vec)
 
-Build an axis-aligned bounding box given the vector of minimum (`pmin`) and maximum (`pmax`) coordinates.
+Build an axis-aligned bounding box given the vector of minimum (`pmin`) and 
+maximum (`pmax`) coordinates.
 """
 function BBox(pmin::Vec{FT}, pmax::Vec{FT}) where FT
     @inbounds begin
@@ -45,7 +45,7 @@ function BBox(pmin::Vec{FT}, pmax::Vec{FT}) where FT
     end
 end
 
-# Finally, create the mesh
+# Create the mesh associated to a bbox from the list of vertices
 function BBox(v1, v2, v3, v4, v5, v6, v7, v8)
     vertices = [v1, v2, v3, v4, v5, v6, v7, v8]
     faces = [Face(1,4,3), Face(1,3,2), Face(1,5,8), 

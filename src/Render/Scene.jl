@@ -63,11 +63,12 @@ end
 
 
 """
-    add!(scene, mesh, color)
+    add!(scene; mesh, color)
 
-Manually add a 3D mesh with corresponding colors (`mesh` and `color`) to an existing `GLScene` object (`scene`).
+Manually add a 3D mesh with corresponding colors (`mesh` and `color`) to an 
+existing `GLScene` object (`scene`).
 """
-function add!(scene, mesh, color)
+function add!(scene; mesh, color)
     # Add colors to scene
     colors = fill(color, Geom.nvertices(mesh))
     append!(scene.colors, colors)

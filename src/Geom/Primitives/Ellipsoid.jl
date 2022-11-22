@@ -1,3 +1,5 @@
+### This file contains public API ###
+
 function equal_solid_angles(n)
     # Distribution sectors along zenith angles
     Δθ = π/2/n

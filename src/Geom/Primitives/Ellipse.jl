@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 struct EllipseFaces
     nt::Int
@@ -59,12 +60,13 @@ eltype(::Type{EllipseVertices{FT}}) where FT = Vec{FT}
 
 
 """
-    Ellipse(;l = 1.0, w = 1.0, n = 20)
+    Ellipse(;length = 1.0, width = 1.0, n = 20)
 
-Create a standard ellipse with length `l`, width `w` and discretized into `n` triangles (see VPL documentation for details). 
+Create an  ellipse with dimensions given by `length` and `width`, discretized 
+into `n` triangles (must be even) and standard location and orientation. 
 """
-function Ellipse(;l::FT = one(FT), w::FT = one(FT) , n::Int = 20) where FT <: AbstractFloat
-    trans = LinearMap(SDiagonal(one(FT), w/FT(2), l/FT(2)))
+function Ellipse(;length::FT = 1.0, width::FT = 1.0 , n::Int = 20) where FT
+    trans = LinearMap(SDiagonal(one(FT), width/FT(2), length/FT(2)))
     Ellipse(trans; n = n)
 end
 

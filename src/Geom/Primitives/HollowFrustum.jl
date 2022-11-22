@@ -1,5 +1,7 @@
+### This file contains public API ###
 
-# Note: The compiler was struggling to infer the return type of the iterators, so I annotated them
+# Note: The compiler was struggling to infer the return type of the iterators, 
+# so I annotated them
 
 struct HollowFrustumFaces
     n::Int
@@ -105,23 +107,29 @@ eltype(::Type{HollowFrustumVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
 """
-    HollowFrustum(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+    HollowFrustum(;length = 1.0, width = 1.0, height = 1.0, n = 40)
 
-Create a standard hollow frustum with length `l`, width `w`, height `h` and discretized into `2n` triangles (see VPL documentation for details). 
+Create a hollow frustum with dimensions given by `length`, `width` and `height`, 
+discretized into `n` triangles (must be even) and standard location and orientation. 
 """
-function HollowFrustum(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), ratio::FT = one(FT), n::Int = 20) where FT
-    trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
+function HollowFrustum(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0, 
+                        ratio::FT = 1.0, n::Int = 40) where FT
+    trans = LinearMap(SDiagonal(height/FT(2), width/FT(2), length))
     HollowFrustum(ratio, trans, n = n)
 end
 
 # Create a HollowFrustum from affine transformation
-function HollowFrustum(ratio, trans::AbstractAffineMap; n::Int = 20)
+function HollowFrustum(ratio, trans::AbstractAffineMap; n::Int = 40)
+    @assert iseven(n)
+    n = div(n,2)
     Primitive(trans, x -> HollowFrustumVertices(ratio, n, x), x -> HollowFrustumNormals(ratio,n,x), 
               () -> HollowFrustumFaces(n))
 end
 
 # Create a HollowFrustum from affine transformation and add it in-place to existing mesh
-function HollowFrustum!(m::Mesh, ratio, trans::AbstractAffineMap; n::Int = 20) 
+function HollowFrustum!(m::Mesh, ratio, trans::AbstractAffineMap; n::Int = 40) 
+    @assert iseven(n)
+    n = div(n,2)
     Primitive!(m, trans, x -> HollowFrustumVertices(ratio, n, x), x -> HollowFrustumNormals(ratio,n, x), 
                () -> HollowFrustumFaces(n))
 end

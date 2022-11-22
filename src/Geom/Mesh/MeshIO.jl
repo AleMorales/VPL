@@ -1,4 +1,11 @@
+### This file contains public API ###
 
+#= 
+Need to document:
+    loadmesh
+    savemesh
+    
+=#
 # Convert to format used in GeometryBasics
 function GLMesh(m::Mesh{VT}) where VT <: Vec{FT} where FT <: AbstractFloat
     verts = convert(Vector{GeometryBasics.Point{3, FT}}, m.vertices)
@@ -15,8 +22,14 @@ function Mesh(m::GeometryBasics.Mesh)
    Mesh(verts, norms, faces)
 end
 
-# Load a mesh from a file and transform it
-# Supports: STL_BINARY, PLY, OBJ, MSH
+"""
+    loadmesh(filename)
+
+Import a mesh from a file given by `filename`. Supported formats include stl,
+ply, obj and msh. By default, this will generate a `Mesh` object that uses
+double floating-point precision. However, a lower precision can be specified by
+passing the relevant data type as in `loadmesh(filename, Float32)`.
+"""
 function loadmesh(filename, ::Type{FT} = Float64) where FT
     check_aply = findfirst(".aply",filename)
     if isnothing(check_aply)
@@ -27,9 +40,24 @@ function loadmesh(filename, ::Type{FT} = Float64) where FT
     Mesh(m)
 end
 
-# Save a mesh to external format after transformation
-# Supports: STL_BINARY, STL_ASCII, PLY_BINARY, PLY_ASCII, OBJ
-# Note that the file format must be passed as a symbol not as a string!
-function savemesh(m, fileformat, filename)
-    FileIO.save(FileIO.File(FileIO.DataFormat{fileformat}, filename), GLMesh(m))
+"""
+    savemesh(mesh; fileformat = STL_BINARY, filename)
+
+Save a mesh into an external file using a variety of formats.
+
+## Arguments
+- `mesh`: Object of type `Mesh`.  
+- `fileformat`: Format to store the mesh. This is a keyword argument. 
+- `filename`: Name of the file in which to store the mesh. 
+
+## Details
+The `fileformat` should take one of the following arguments: `STL_BINARY`,
+`STL_ASCII`, `PLY_BINARY`, `PLY_ASCII` or `OBJ`. Note that these names should
+not be quoted as strings.
+
+## Return
+This function does not return anything, it is executed for its side effect.
+"""
+function savemesh(mesh; fileformat = STL_BINARY, filename)
+    FileIO.save(FileIO.File(FileIO.DataFormat{fileformat}, filename), GLMesh(mesh))
 end

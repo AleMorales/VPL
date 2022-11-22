@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 struct HollowConeFaces
     n::Int
@@ -77,12 +78,13 @@ eltype(::Type{HollowConeVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
 """
-    HollowCone(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+    HollowCone(;length = 1.0, width = 1.0, height = 1.0, n = 20)
 
-Create a standard hollow cone with length `l`, width `w`, height `h` and discretized into `n` triangles (see VPL documentation for details). 
+Create a hollow cone with dimensions given by `length`, `width` and `height`, 
+discretized into `n` triangles (must be even) and standard location and orientation. 
 """
-function HollowCone(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT <: AbstractFloat
-    trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
+function HollowCone(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0, n::Int = 20) where FT
+    trans = LinearMap(SDiagonal(height/FT(2), width/FT(2), length))
     HollowCone(trans, n = n)
 end
 

@@ -1,3 +1,4 @@
+### This file does NOT contains public API ###
 
 # Construction a mesh from a series of vertices and connectivity of the different faces
 function construct_mesh(vertices, faces)

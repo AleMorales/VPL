@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 struct SolidCylinderFaces
     n::Int
@@ -105,23 +106,31 @@ eltype(::Type{SolidCylinderVertices{FT,TT}}) where {FT,TT} = Vec{FT}
 
 
 """
-    SolidCylinder(;l = 1.0, w = 1.0, h = 1.0, n = 20)
+    SolidCylinder(;length = 1.0, width = 1.0, height = 1.0, n = 80)
 
-Create a standard solid cylinder with length `l`, width `w`, height `h` and discretized into `4n` triangles (see VPL documentation for details). 
+Create a solid cylinder with dimensions given by `length`, `width` and `height`, 
+discretized into `n` triangles (must be even) and standard location and orientation. 
 """
-function SolidCylinder(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT), n::Int = 20) where FT
-    trans = LinearMap(SDiagonal(h/FT(2), w/FT(2), l))
+function SolidCylinder(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0, 
+                        n::Int = 80) where FT
+    trans = LinearMap(SDiagonal(height/FT(2), width/FT(2), length))
     SolidCylinder(trans, n = n)
 end
 
 # Create a SolidCylinder from affine transformation
-function SolidCylinder(trans::AbstractAffineMap; n::Int = 20)
-    Primitive(trans, x -> SolidCylinderVertices(n, x), x -> SolidCylinderNormals(n,x), 
-              () -> SolidCylinderFaces(n))
+function SolidCylinder(trans::AbstractAffineMap; n::Int = 80)
+    @assert iseven(n)
+    n = div(n,4)
+    Primitive(trans, x -> SolidCylinderVertices(n, x), 
+                     x -> SolidCylinderNormals(n,x), 
+                    () -> SolidCylinderFaces(n))
 end
 
 # Create a SolidCylinder from affine transformation and add it in-place to existing mesh
-function SolidCylinder!(m::Mesh, trans::AbstractAffineMap; n::Int = 20) 
-    Primitive!(m, trans, x -> SolidCylinderVertices(n, x), x -> SolidCylinderNormals(n, x), 
-               () -> SolidCylinderFaces(n))
+function SolidCylinder!(m::Mesh, trans::AbstractAffineMap; n::Int = 80) 
+    @assert iseven(n)
+    n = div(n,4)
+    Primitive!(m, trans, x -> SolidCylinderVertices(n, x), 
+                         x -> SolidCylinderNormals(n, x), 
+                        () -> SolidCylinderFaces(n))
 end

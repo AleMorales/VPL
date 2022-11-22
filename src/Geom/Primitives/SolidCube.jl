@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 const all_solid_cube_faces = (Face(1,4,3), Face(1,3,2), Face(1,5,8), 
                         Face(1,8,4), Face(4,8,7), Face(4,7,3),
@@ -61,11 +62,14 @@ end
 
 
 """
-    SolidCube(;l = 1.0, w = 1.0, h = 1.0)
+    SolidCube(;length = 1.0, width = 1.0, height = 1.0)
 
-Create a standard solid cube with length `l`, width `w`, height `h` (see VPL documentation for details). 
+Create a solid cube with dimensions given by `length`, `width` and `height`, 
+standard location and orientation. 
 """
-SolidCube(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT)) where FT = SolidCube(LinearMap(SDiagonal(h/FT(2), w/FT(2), l)))
+function SolidCube(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0) where FT
+    SolidCube(LinearMap(SDiagonal(height/FT(2), width/FT(2), length)))
+end
 
 # Create a solid_cube from affine transformation
 SolidCube(trans::AbstractAffineMap) = Primitive(trans, SolidCubeVertices, SolidCubeNormals, SolidCubeFaces)

@@ -19,9 +19,9 @@ let
         sn.E(L/3) + RU(-60.0) + sn.E(L/3) + RU(120.0) + sn.E(L/3) + RU(-60.0) + sn.E(L/3)
     end
     rule = Rule(sn.E, rhs = Kochsnowflake)
-    Koch = Graph(axiom, rules = Tuple(rule))
+    Koch = Graph(axiom = axiom, rules = Tuple(rule))
     function VPL.feedgeom!(turtle::MTurtle, e::sn.E)
-       HollowCylinder!(turtle, l = e.length, w = e.length/10, h = e.length/10, move = true)
+       HollowCylinder!(turtle, length = e.length, width = e.length/10, height = e.length/10, move = true)
        return nothing
     end
     function VPL.feedcolor!(turtle::GLTurtle, e::sn.E)

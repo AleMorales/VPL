@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 const all_hollow_cube_faces = 
                         (Face(1,5,8), Face(1,8,4), Face(4,8,7), Face(4,7,3),
@@ -56,12 +57,13 @@ function eltype(::Type{HollowCubeVertices{VT,TT}}) where {VT,TT}
 end
 
 """
-    HollowCube(;l = 1.0, w = 1.0, h = 1.0)
+    HollowCube(;length = 1.0, width = 1.0, height = 1.0)
 
-Create a standard hollow cube with length `l`, width `w`, height `h` (see VPL documentation for details). 
+Create a hollow cube with dimensions given by `length`, `width` and `height,  
+standard location and orientation. 
 """
-function HollowCube(;l::FT = one(FT), w::FT = one(FT), h::FT = one(FT)) where FT 
-    HollowCube(LinearMap(SDiagonal(h/FT(2), w/FT(2), l)))
+function HollowCube(;length::FT = 1.0, width::FT = 1.0, height::FT = 1.0) where FT 
+    HollowCube(LinearMap(SDiagonal(height/FT(2), width/FT(2), length)))
 end
 
 # Create a hollow_cube from affine transformation

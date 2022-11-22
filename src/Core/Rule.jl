@@ -1,4 +1,4 @@
-### This file contains public API (Rule, rewrite) ###
+### This file contains public API ###
 
 ################################################################################
 ################## Constructors and other rule methods  ########################

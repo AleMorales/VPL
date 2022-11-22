@@ -1,3 +1,4 @@
+### This file contains public API ###
 
 #########################################################
 ##################### Iterators #########################
@@ -48,12 +49,13 @@ end
 #########################################################
 
 """
-    Rectangle(;l = 1.0, w = 1.0)
+    Rectangle(;length = 1.0, width = 1.0)
 
-Create a standard rectangle with length `l` and width `w` (see VPL documentation for details). 
+Create a rectangle with dimensions given by `length` and width, standard location 
+and orientation. 
 """
-function Rectangle(;l::FT = one(Float64), w::FT = one(Float64)) where FT
-    trans = LinearMap(SDiagonal(one(FT), w/FT(2), l))
+function Rectangle(;length::FT = 1.0, width::FT = 1.0) where FT
+    trans = LinearMap(SDiagonal(one(FT), width/FT(2), length))
     Rectangle(trans)
 end
 
@@ -69,14 +71,14 @@ Rectangle!(m::Mesh, trans::AbstractAffineMap) = Primitive!(m, trans, RectangleVe
 #########################################################
 
 """
-    Rectangle(v, l, w)
+    Rectangle(;v = O(), length = 1.0, width = 1.0)
 
-Create a rectangle from a vertex (`v`) and vectors `l` and `w` representing the
-side of the primitive. If `l` and `w` are not orthogonal 
+Create a rectangle from a vertex (`v`) and vectors `length` and `width` 
+representing the side of the primitive. 
 """
-function Rectangle(v1::Vec, l::Vec, w::Vec)
-    v2 = v1 .+ l
-    v3 = v2 .+ w
-    v4 = v1 .+ w
-    construct_mesh([v1, v2, v3, v4], [Face(1,2,3), Face(1,3,4)])
+function Rectangle(v::Vec{FT}; length::Vec{FT} = 1.0, width::Vec{FT} = 1.0) where FT
+    v2 = v .+ length
+    v3 = v2 .+ width
+    v4 = v .+ width
+    construct_mesh([v, v2, v3, v4], [Face(1,2,3), Face(1,3,4)])
 end

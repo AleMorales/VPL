@@ -1,4 +1,4 @@
-### This file contains public API (DSL) ###
+### This file contains public API ###
 
 ################################################################################
 ################  Add/Append methods for graph construction  ###################

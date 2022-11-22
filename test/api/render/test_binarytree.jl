@@ -21,15 +21,16 @@ end
 let 
     import .btree
     function VPL.feedgeom!(turtle::MTurtle, i::btree.Internode)
-        HollowCube!(turtle, l = i.length, h = i.length/10, w = i.length/10, move = true)
+        HollowCube!(turtle, length = i.length, height = i.length/10, width = i.length/10, move = true)
         return nothing
     end
     function VPL.feedcolor!(turtle::GLTurtle, i::btree.Internode)
         feedcolor!(turtle, RGB(0,1,0))
         return nothing
     end
-    rule = Rule(btree.Meristem, rhs = mer -> btree.Node() + (RU(-60.0) + btree.Internode(0.1) + RH(90.0) + btree.Meristem(), 
-                                                   RU(60.0)  + btree.Internode(0.1) + RH(90.0) + btree.Meristem()))
+    rule = Rule(btree.Meristem, rhs = mer -> btree.Node() + 
+                (RU(-60.0) + btree.Internode(0.1) + RH(90.0) + btree.Meristem(), 
+                 RU(60.0)  + btree.Internode(0.1) + RH(90.0) + btree.Meristem()))
     axiom = btree.Internode(0.1) + btree.Meristem()
     tree = Graph(axiom, Tuple(rule), btree.treeparams(0.5))
     getInternode = Query(btree.Internode)
