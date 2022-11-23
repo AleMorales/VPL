@@ -8,9 +8,9 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        hasChildren, hasDescendent, children, descendent, isLeaf,
        traverse, traverseDFS, traverseBFS, draw, export_graph, calculate_resolution,
        area, areas, ntriangles, nvertices, loadmesh, savemesh, 
-       Mesh, Rectangle, BBox, Ellipse, Ellipsoid, HollowCylinder, SolidCylinder,
+       Mesh, Rectangle, Trapezoid, BBox, Ellipse, Ellipsoid, HollowCylinder, SolidCylinder,
        HollowCone, SolidCone, SolidCube, HollowCube, SolidFrustum, HollowFrustum,
-       Rectangle!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
+       Rectangle!, Trapezoid!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
        HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!,
        MTurtle, feedgeom!, head, up, arm, pos, geoms, 
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
@@ -64,6 +64,7 @@ const nvertices = Geom.nvertices
 const loadmesh = Geom.loadmesh
 const savemesh = Geom.savemesh
 const Rectangle = Geom.Rectangle
+const Trapezoid = Geom.Trapezoid
 const SolidCube = Geom.SolidCube
 const HollowCube = Geom.HollowCube
 const BBox = Geom.BBox
@@ -76,6 +77,7 @@ const HollowFrustum = Geom.HollowFrustum
 const SolidFrustum = Geom.SolidFrustum
 const Ellipsoid = Geom.Ellipsoid
 const Rectangle! = Geom.Rectangle!
+const Trapezoid! = Geom.Trapezoid!
 const SolidCube! = Geom.SolidCube!
 const HollowCube! = Geom.HollowCube!
 const Ellipse! = Geom.Ellipse!

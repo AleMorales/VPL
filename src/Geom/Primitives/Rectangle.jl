@@ -76,7 +76,7 @@ Rectangle!(m::Mesh, trans::AbstractAffineMap) = Primitive!(m, trans, RectangleVe
 Create a rectangle from a vertex (`v`) and vectors `length` and `width` 
 representing the side of the primitive. 
 """
-function Rectangle(v::Vec{FT}; length::Vec{FT} = 1.0, width::Vec{FT} = 1.0) where FT
+function Rectangle(v::Vec{FT}; length::FT = 1.0, width::FT = 1.0) where FT
     v2 = v .+ length
     v3 = v2 .+ width
     v4 = v .+ width

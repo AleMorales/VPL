@@ -33,6 +33,7 @@ using Test
 @testset "API/Geom/ellipse" begin include("api/geom/test_ellipse.jl") end
 @testset "API/Geom/bbox" begin include("api/geom/test_bbox.jl") end
 @testset "API/Geom/rectangle" begin include("api/geom/test_rectangle.jl") end
+@testset "API/Geom/rectangle" begin include("api/geom/test_trapezoid.jl") end
 @testset "API/Geom/solid_cube" begin include("api/geom/test_solid_cube.jl") end
 @testset "API/Geom/hollow_cube" begin include("api/geom/test_hollow_cube.jl") end
 @testset "API/Geom/hollow_cylinder" begin include("api/geom/test_hollow_cylinder.jl") end
