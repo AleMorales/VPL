@@ -98,6 +98,7 @@ include("Mesh/MeshIO.jl")
 # Primitive constructors
 include("Primitives/BBox.jl")
 include("Primitives/Generic.jl")
+include("Primitives/Triangle.jl")
 include("Primitives/Rectangle.jl")
 include("Primitives/Trapezoid.jl")
 include("Primitives/Ellipse.jl")
