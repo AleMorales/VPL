@@ -6,3 +6,5 @@
 /dev/
 /build/
 /docs/
+/.vscode/
+.gitignore
