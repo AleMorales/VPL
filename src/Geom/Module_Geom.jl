@@ -118,5 +118,3 @@ include("Turtle/Primitives.jl")
 include("Turtle/Graphs.jl")
 
 end
-
-# TODO: Add Box, Triangle and finish Ellipsoid
