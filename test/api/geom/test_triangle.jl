@@ -2,7 +2,7 @@ import VPL
 using Test
 import CoordinateTransformations: SDiagonal, LinearMap
 
-#let
+let
 
 # Standard triangle primitive
 r = VPL.Triangle(length = 2.0, width = 2.0);
@@ -70,4 +70,4 @@ VPL.Triangle!(t; length = 2.0, width = 2.0, move = false);
 @test VPL.pos(t) == VPL.Vec{Float64}(0,0,0)
 
 
-#end
+end

@@ -8,10 +8,11 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        hasChildren, hasDescendent, children, descendent, isLeaf,
        traverse, traverseDFS, traverseBFS, draw, export_graph, calculate_resolution,
        area, areas, ntriangles, nvertices, loadmesh, savemesh, 
+       scale!, rotatex!, rotatey!, rotatez!, rotate!, translate!,
        Mesh, Triangle, Rectangle, Trapezoid, BBox, Ellipse, Ellipsoid, HollowCylinder, SolidCylinder,
        HollowCone, SolidCone, SolidCube, HollowCube, SolidFrustum, HollowFrustum,
        Triangle!, Rectangle!, Trapezoid!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
-       HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!,
+       HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!, Mesh!,
        MTurtle, feedgeom!, head, up, arm, pos, geoms, 
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
        O, X, Y, Z,  Vec,
@@ -56,66 +57,73 @@ const node_label = Core.node_label
 # Geom module
 include("Geom/Module_Geom.jl")
 import .Geom
-const area = Geom.area
-const areas = Geom.areas
-const Mesh = Geom.Mesh
+const area       = Geom.area
+const areas      = Geom.areas
+const Mesh       = Geom.Mesh
 const ntriangles = Geom.ntriangles
-const nvertices = Geom.nvertices
-const loadmesh = Geom.loadmesh
-const savemesh = Geom.savemesh
-const Triangle = Geom.Triangle
-const Rectangle = Geom.Rectangle
-const Trapezoid = Geom.Trapezoid
-const SolidCube = Geom.SolidCube
+const nvertices  = Geom.nvertices
+const loadmesh   = Geom.loadmesh
+const savemesh   = Geom.savemesh
+const scale!     = Geom.scale!
+const rotatex!   = Geom.rotatex!
+const rotatey!   = Geom.rotatey!
+const rotatez!   = Geom.rotatez!
+const rotate!    = Geom.rotate!
+const translate! = Geom.translate!
+const Triangle   = Geom.Triangle
+const Rectangle  = Geom.Rectangle
+const Trapezoid  = Geom.Trapezoid
+const SolidCube  = Geom.SolidCube
 const HollowCube = Geom.HollowCube
-const BBox = Geom.BBox
-const Ellipse = Geom.Ellipse
-const HollowCylinder = Geom.HollowCylinder
-const SolidCylinder = Geom.SolidCylinder
-const HollowCone = Geom.HollowCone
-const SolidCone = Geom.SolidCone
-const HollowFrustum = Geom.HollowFrustum
-const SolidFrustum = Geom.SolidFrustum
-const Ellipsoid = Geom.Ellipsoid
-const Triangle! = Geom.Triangle!
-const Rectangle! = Geom.Rectangle!
-const Trapezoid! = Geom.Trapezoid!
-const SolidCube! = Geom.SolidCube!
-const HollowCube! = Geom.HollowCube!
-const Ellipse! = Geom.Ellipse!
+const BBox       = Geom.BBox
+const Ellipse    = Geom.Ellipse
+const HollowCylinder  = Geom.HollowCylinder
+const SolidCylinder   = Geom.SolidCylinder
+const HollowCone      = Geom.HollowCone
+const SolidCone       = Geom.SolidCone
+const HollowFrustum   = Geom.HollowFrustum
+const SolidFrustum    = Geom.SolidFrustum
+const Ellipsoid       = Geom.Ellipsoid
+const Triangle!       = Geom.Triangle!
+const Rectangle!      = Geom.Rectangle!
+const Trapezoid!      = Geom.Trapezoid!
+const SolidCube!      = Geom.SolidCube!
+const Ellipse!        = Geom.Ellipse!
+const HollowCube!     = Geom.HollowCube!
 const HollowCylinder! = Geom.HollowCylinder!
-const SolidCylinder! = Geom.SolidCylinder!
-const HollowCone! = Geom.HollowCone!
-const SolidCone! = Geom.SolidCone!
-const HollowFrustum! = Geom.HollowFrustum!
-const SolidFrustum! = Geom.SolidFrustum!
-const Ellipsoid! = Geom.Ellipsoid!
-const T = Geom.T
-const t! = Geom.t!
-const OR = Geom.OR
-const or! = Geom.or!
-const SET = Geom.SET
-const set! = Geom.set!
-const RU = Geom.RU
-const ru! = Geom.ru!
-const RA = Geom.RA
-const ra! = Geom.ra!
-const RH = Geom.RH
-const rh! = Geom.rh!
-const F = Geom.F
-const f! = Geom.f!
+const SolidCylinder!  = Geom.SolidCylinder!
+const HollowCone!     = Geom.HollowCone!
+const SolidCone!      = Geom.SolidCone!
+const HollowFrustum!  = Geom.HollowFrustum!
+const SolidFrustum!   = Geom.SolidFrustum!
+const Ellipsoid!      = Geom.Ellipsoid!
+const Mesh!     = Geom.Mesh!
+const T         = Geom.T
+const t!        = Geom.t!
+const OR        = Geom.OR
+const or!       = Geom.or!
+const SET       = Geom.SET
+const set!      = Geom.set!
+const RU        = Geom.RU
+const ru!       = Geom.ru!
+const RA        = Geom.RA
+const ra!       = Geom.ra!
+const RH        = Geom.RH
+const rh!       = Geom.rh!
+const F         = Geom.F
+const f!        = Geom.f!
 const feedgeom! = Geom.feedgeom!
-const MTurtle = Geom.MTurtle
-const Vec = Geom.Vec
-const O = Geom.O
-const X = Geom.X
-const Y = Geom.Y
-const Z = Geom.Z
-const head = Geom.head
-const up = Geom.up
-const arm = Geom.arm
-const pos = Geom.pos
-const geoms = Geom.geoms
+const MTurtle   = Geom.MTurtle
+const Vec       = Geom.Vec
+const O         = Geom.O
+const X         = Geom.X
+const Y         = Geom.Y
+const Z         = Geom.Z
+const head      = Geom.head
+const up        = Geom.up
+const arm       = Geom.arm
+const pos       = Geom.pos
+const geoms     = Geom.geoms
 
 
 # Render module

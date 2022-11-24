@@ -64,21 +64,3 @@ Rectangle(trans::AbstractAffineMap) = Primitive(trans, RectangleVertices, Rectan
 
 # Create a rectangle from affine transformation and add it in-place to existing mesh
 Rectangle!(m::Mesh, trans::AbstractAffineMap) = Primitive!(m, trans, RectangleVertices, RectangleNormals, RectangleFaces)
-
-
-#########################################################
-################# Manual constructors ###################
-#########################################################
-
-"""
-    Rectangle(;v = O(), length = 1.0, width = 1.0)
-
-Create a rectangle from a vertex (`v`) and vectors `length` and `width` 
-representing the side of the primitive. 
-"""
-function Rectangle(v::Vec{FT}; length::FT = 1.0, width::FT = 1.0) where FT
-    v2 = v .+ length
-    v3 = v2 .+ width
-    v4 = v .+ width
-    construct_mesh([v, v2, v3, v4], [Face(1,2,3), Face(1,3,4)])
-end

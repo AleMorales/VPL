@@ -94,6 +94,7 @@ end
 include("Mesh/Mesh.jl")
 include("Mesh/MeshConstruction.jl")
 include("Mesh/MeshIO.jl")
+include("Mesh/Transformations.jl")
 
 # Primitive constructors
 include("Primitives/BBox.jl")
@@ -111,6 +112,7 @@ include("Primitives/SolidCone.jl")
 include("Primitives/HollowFrustum.jl")
 include("Primitives/SolidFrustum.jl")
 include("Primitives/Ellipsoid.jl")
+
 
 # Geometry turtle
 include("Turtle/Turtle.jl")

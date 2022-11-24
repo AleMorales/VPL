@@ -439,3 +439,44 @@ function Ellipsoid!(turtle::MTurtle{FT}; length::FT = one(FT),
     @error "Ellipsoid not implemented yet"
     return nothing
 end
+
+
+"""
+    Mesh!(turtle, m::Mesh; scale = Vec(1.0, 1.0, 1.0), move = false)
+
+Feed a pre-existing mesh to a turtle after scaling.
+
+## Arguments
+- `turtle`: The turtle that we feed the mesh to. 
+- `m`: The pre-existing unscaled mesh in standard position and orientation. 
+- `scale`: Vector with scaling factors for the x, y and z axes. 
+- `move`: Whether to move the turtle forward or not (`true` or `false`). 
+
+## Details
+A pre-existing mesh will be scaled (acccording to `scale`), rotate so that it is
+oriented in the same direction as the turtle and translated so that the mesh is
+generated in front of the turtle. A deep copy of the original mesh is made prior
+to any transformation.
+
+When `move = true`, the turtle will be moved forward by a distance equal to `height`.
+
+## Return
+Returns `nothing` but modifies the `turtle` as a side effect.
+"""
+function Mesh!(turtle::MTurtle{FT}, m::Mesh; scale::Vec{FT} = Vec{FT}(1.0,1.0,1.0),
+               move = false) where FT
+    # Transform the mesh
+    trans = transform(turtle::MTurtle, scale)
+    mnew = deepcopy(m)
+    transform!(mnew, trans)
+    # Feed the mesh onto the turtle
+    nv = length(turtle.geoms.vertices)
+    append!(turtle.geoms.vertices, mnew.vertices)
+    append!(turtle.geoms.normals, mnew.normals)
+    append!(turtle.geoms.faces, (nv .+ face for face in mnew.faces)) 
+    push!(nvertices(turtle), nvertices(mnew))
+    push!(ntriangles(turtle), ntriangles(mnew))
+    # Move the turtle if needed
+    move && f!(turtle, length)
+    return nothing
+end

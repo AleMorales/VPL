@@ -42,6 +42,7 @@ using Test
 @testset "API/Geom/solid_frustum" begin include("api/geom/test_solid_frustum.jl") end
 @testset "API/Geom/hollow_cone" begin include("api/geom/test_hollow_cone.jl") end
 @testset "API/Geom/solid_cone" begin include("api/geom/test_solid_cone.jl") end
+@testset "API/Geom/transformations" begin include("api/geom/test_transformations.jl") end
 @testset "API/Geom/meshio" begin include("api/geom/test_meshio.jl") end
 
 
