@@ -26,7 +26,7 @@ end
 """
     rotatex!(m::Mesh, θ)
 
-Rotate a mesh `m` around the x axis by `θ` degrees
+Rotate a mesh `m` around the x axis by `θ` rad.
 """
 function rotatex!(m::Mesh, θ) 
     trans = LinearMap(RotX(θ))
@@ -36,7 +36,7 @@ end
 """
     rotatey!(m::Mesh, θ)
 
-Rotate a mesh `m` around the y axis by `θ` degrees
+Rotate a mesh `m` around the y axis by `θ` rad.
 """
 function rotatey!(m::Mesh, θ) 
     trans = LinearMap(RotY(θ))
@@ -46,7 +46,7 @@ end
 """
     rotatez!(m::Mesh, θ)
 
-Rotate a mesh `m` around the z axis by `θ` degrees
+Rotate a mesh `m` around the z axis by `θ` rad.
 """
 function rotatez!(m::Mesh, θ) 
     trans = LinearMap(RotZ(θ))
