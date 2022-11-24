@@ -16,7 +16,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        MTurtle, feedgeom!, head, up, arm, pos, geoms, 
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
        O, X, Y, Z,  Vec,
-       render, render!, RGB, GLTurtle, feedcolor!, GLScene, export_scene, add!
+       render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!
 
 # Abstract type for turtles
 abstract type Turtle end
@@ -133,6 +133,7 @@ const render = Render.render
 const render! = Render.render!
 const feedcolor! = Render.feedcolor!
 const RGB = Render.RGB
+const RGBA = Render.RGBA
 const GLTurtle = Render.GLTurtle
 const GLScene = Render.GLScene
 const export_scene = Render.export_scene
