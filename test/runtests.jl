@@ -28,6 +28,7 @@ using Test
 
 # Turtle geometry
 @testset "Core/Geom/Turtle" begin include("internal/geom/test_turtle.jl") end
+@testset "Core/Geom/Gravitropism" begin include("internal/geom/test_gravitropism.jl") end
 
 # Direct meshing and rendering of 3D primitives
 @testset "API/Geom/ellipse" begin include("api/geom/test_ellipse.jl") end
