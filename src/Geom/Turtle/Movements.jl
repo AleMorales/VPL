@@ -176,3 +176,76 @@ struct F{FT} <: Node
     dist::FT
 end
 feedgeom!(turtle::MTurtle, node::F) = f!(turtle, node.dist)
+
+
+# Taken from https://mathworld.wolfram.com/RodriguesRotationFormula.html
+# Returns the matrix for a rotation θ around vector ω
+function rodrigues(ω::Vec{FT}, cosθ::FT, sinθ::FT) where FT
+    @inbounds begin
+        ωx   = ω[1]
+        ωy   = ω[2]
+        ωz   = ω[3]
+        mat = SMatrix{3,3,FT}(cosθ + ωx*ωx*(1 - cosθ),     # 1,1
+                                ωx*ωy*(1 - cosθ) - ωz*sinθ,  # 1,2
+                                ωy*sinθ + ωx*ωz*(1 - cosθ),  # 1,3
+                                ωz*sinθ + ωx*ωy*(1 - cosθ),  # 2,1
+                                cosθ +  ωy*ωy*(1 - cosθ),    # 2,2
+                                -ωx*sinθ + ωy*ωz*(1 - cosθ), # 2,3
+                                -ωy*sinθ + ωx*ωz*(1 - cosθ), # 3,1
+                                ωx*sinθ + ωy*ωz*(1 - cosθ),  # 3,2
+                                cosθ + ωz*ωz*(1 - cosθ)      # 3,3
+                                )
+        LinearMap(mat)
+    end
+end
+
+"""
+    rv!(turtle, strength)
+    
+Rotates the turtle towards the Z axis. The angle of rotation is proportional
+to the cosine of the zenith angle of the turtle (i.e., angle between its head 
+and the vertical axis) with the absolute value of `strength` being the 
+proportion between the two. `strength` should vary between -1 and 1. If 
+`strength` is negative, the turtle rotates downwards (i.e., towards negative 
+values of Z axis), otherwise upwards.
+"""
+function rv!(turtle::MTurtle{FT}, strength::FT) where FT
+    @inbounds begin
+        # 1. Create the rotation vector orthogonal to the HZ plane
+        H = head(turtle)
+        #N = strength > FT(0) ? Z(FT) × H : (.-Z(FT)) × H
+        N = Z(FT) × H
+        sinθ₁ = norm(N) # Used below
+        N = N./sinθ₁
+        # 2. Compute the cosine and sine of the angle of rotation
+        # This is achieved by comparing the cos and sin before and 
+        # after the rotation (trick below is that the hypotenuse = 1).
+        # Also, look at the formula for cos and sin of difference of angles
+        cosθ₁ = H[3]
+        # Cos law for gravitropism to account for downward branches
+        # Notice how the sign of strength determines the new angle
+        cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
+        sinθ₂ = sqrt(FT(1) - cosθ₂^2)
+        # Compute the cos and sin of the angle of rotation
+        cosΔθ = cosθ₁*cosθ₂ + sinθ₁*sinθ₂
+        sinΔθ = sinθ₁*cosθ₂ - cosθ₁*sinθ₂
+        # 3. Create the affine transform with Rodrigues rotation matrix
+        trans = rodrigues(N, cosΔθ, sinΔθ)
+        # 4. Transform the turtle reference system (does not change norms)
+        nhead = trans(head(turtle))
+        narm  = trans(arm(turtle))
+        nup   = trans(up(turtle))
+        # Update the turtle to the new axes
+        update!(turtle, to = pos(turtle), head = nhead, arm = narm, up = nup)
+    end
+end
+
+"""
+    RV(strength)
+    
+Rotates the turtle towards the Z axis. See documentation for `rv!` for details.
+"""
+struct RV{FT} <: Node
+    strength::FT
+end
+feedgeom!(turtle::MTurtle, node::RV) = rv!(turtle, node.strength)

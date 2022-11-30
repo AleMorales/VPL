@@ -14,7 +14,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        Triangle!, Rectangle!, Trapezoid!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
        HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!, Mesh!,
        MTurtle, feedgeom!, head, up, arm, pos, geoms, 
-       T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, 
+       T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, RV, rv!, 
        O, X, Y, Z,  Vec,
        render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!
 
@@ -112,6 +112,8 @@ const RH        = Geom.RH
 const rh!       = Geom.rh!
 const F         = Geom.F
 const f!        = Geom.f!
+const RV         = Geom.RV
+const rv!        = Geom.rv!
 const feedgeom! = Geom.feedgeom!
 const MTurtle   = Geom.MTurtle
 const Vec       = Geom.Vec
