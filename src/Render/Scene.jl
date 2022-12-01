@@ -41,15 +41,16 @@ be used (`Float64`) but it is possible to generate a version with a different
 precision by specifying the corresponding type as in `GLScene(graphs, Float32)`.
 """
 # Process multiple graphs to create a scene
-function GLScene(graphs::Vector{<:Graph}, ::Type{FT} = Float64; parallel = false) where FT
+function GLScene(graphs::Vector{<:Graph}, ::Type{FT} = Float64; parallel = false,
+                 message = nothing) where FT
     scenes = Vector{GLScene}(undef, length(graphs))
     if parallel
         Threads.@threads for i in eachindex(graphs)
-            @inbounds scenes[i] = GLScene(graphs[i], FT)
+            @inbounds scenes[i] = GLScene(graphs[i], FT, message = message)
         end
     else
         for i in eachindex(graphs)
-            @inbounds scenes[i] = GLScene(graphs[i], FT)
+            @inbounds scenes[i] = GLScene(graphs[i], FT, message = message)
         end
     end
     GLScene(scenes)
