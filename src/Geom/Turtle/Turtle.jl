@@ -27,11 +27,11 @@ end
 
 Create a meshing turtle that can convert a `Graph` into a 3D mesh using 
 turtle operators, geometry primitives and methods of `feedgeom!()`. By default, 
-the meshing turtle will generate geometry primitives with single floating 
-precision (`Float32`) but it is possible to generate a version with higher 
-precision as in `MTurtle(Float64)`.
+the meshing turtle will generate geometry primitives with double floating 
+precision (`Float64`) but it is possible to generate a version with lower 
+precision as in `MTurtle(Float32)`.
 """
-function MTurtle(::Type{FT} = Float32) where FT 
+function MTurtle(::Type{FT} = Float64) where FT 
     MTurtle{FT}(TCoord{FT}(), Mesh(FT), Int[], Int[])
 end
 

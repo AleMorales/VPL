@@ -1,5 +1,6 @@
 using VPL
 using Test
+using LinearAlgebra
 
 let 
     # RA of 45° (upward gravitropism)

@@ -11,13 +11,16 @@ struct GLScene{C, FT}
 end
 
 """
-    GLScene(g)
+    GLScene(g, Float64)
 
-Create a 3D scene for rendering from a `Graph` object (`g`).
+Create a 3D scene for rendering from a `Graph` object (`g`). By default, double 
+floating precision will be used (`Float64`) but it is possible to generate a 
+version with a different precision by specifying the corresponding type as in 
+`GLScene(g, Float32)`.
 """
-function GLScene(g::Graph)
+function GLScene(g::Graph, ::Type{FT} = Float64) where FT
     # Retrieve the mesh of triangles
-    mt = Geom.MTurtle(Float64)
+    mt = Geom.MTurtle(FT)
     Geom.feedgeom!(mt, g);
     # Retrieve the colors of each primitive
     glt = GLTurtle()
@@ -29,21 +32,24 @@ function GLScene(g::Graph)
 end
 
 """
-    GLScene(graphs; parallel = false)
+    GLScene(graphs, Float64; parallel = false)
 
-Create a 3D scene for rendering from an array of `Graph` objects (`graphs`). The graphs may be processed serially (default)
-or in parallel using multithreading (`parallel = true`).
+Create a 3D scene for rendering from an array of `Graph` objects (`graphs`). 
+The graphs may be processed serially (default) or in parallel using 
+multithreading (`parallel = true`). By default, double floating precision will 
+be used (`Float64`) but it is possible to generate a version with a different 
+precision by specifying the corresponding type as in `GLScene(graphs, Float32)`.
 """
 # Process multiple graphs to create a scene
-function GLScene(graphs::Vector{<:Graph}; parallel = false)
+function GLScene(graphs::Vector{<:Graph}, ::Type{FT} = Float64; parallel = false) where FT
     scenes = Vector{GLScene}(undef, length(graphs))
     if parallel
         Threads.@threads for i in eachindex(graphs)
-            @inbounds scenes[i] = GLScene(graphs[i])
+            @inbounds scenes[i] = GLScene(graphs[i], FT)
         end
     else
         for i in eachindex(graphs)
-            @inbounds scenes[i] = GLScene(graphs[i])
+            @inbounds scenes[i] = GLScene(graphs[i], FT)
         end
     end
     GLScene(scenes)

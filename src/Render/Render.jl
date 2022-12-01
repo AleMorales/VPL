@@ -69,33 +69,44 @@ the edges of each triangle with black lines. Keyword arguments are passed to
 `Makie.mesh()`.
 """
 function render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    render(scene.mesh; color = scene.colors, normals = normals, wireframe = wireframe, kwargs...)
+    render(scene.mesh; color = scene.colors, normals = normals, 
+           wireframe = wireframe, kwargs...)
 end
 
 """
-    render(graph::Graph; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(graph::Graph, Float64; normals::Bool = false, wireframe::Bool = false, kwargs...)
 
 Render the 3D mesh associated to a `Graph` object. This will create a new 
 visualization (see Documentation for details). `normals = true` will draw arrows 
 in the direction of the normal vector for each triangle in the mesh, 
 `wireframe = true` will draw the edges of each triangle with black lines. 
-Keyword arguments are passed to `Makie.mesh()`.
+Keyword arguments are passed to `Makie.mesh()`. By default, double 
+floating precision will be used (`Float64`) but it is possible to generate a 
+version with a different precision by specifying the corresponding type as in 
+`render(graph, Float32)`.
 """
-function render(graph::Graph; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    render(GLScene(graph::Graph); normals = normals, wireframe = wireframe, kwargs...)
+function render(graph::Graph, ::Type{FT} = Float64; normals::Bool = false, 
+                wireframe::Bool = false, kwargs...) where FT
+    render(GLScene(graph::Graph, FT); normals = normals, wireframe = wireframe, 
+           kwargs...)
 end
 
 """
-    render(graphs::Vector{<:Graph}; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(graphs::Vector{<:Graph}, Float64; normals::Bool = false, wireframe::Bool = false, kwargs...)
 
 Render the 3D mesh associated to an array of `Graph` objects. This will create a 
 new visualization (see Documentation for details). `normals = true` will draw 
 arrows in the direction of the normal vector for each triangle in the mesh, 
 `wireframe = true` will draw the edges of each triangle with black lines. 
-Keyword arguments are passed to `Makie.mesh()`.
+Keyword arguments are passed to `Makie.mesh()`. By default, double 
+floating precision will be used (`Float64`) but it is possible to generate a 
+version with a different precision by specifying the corresponding type as in 
+`render(graphs, Float32)`.
 """
-function render(graphs::Vector{<:Graph}; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    render(GLScene(graphs); normals = normals, wireframe = wireframe, kwargs...)
+function render(graphs::Vector{<:Graph}, ::Type{FT} = Float64; 
+             normals::Bool = false, wireframe::Bool = false, kwargs...) where FT
+    render(GLScene(graphs, FT); normals = normals, wireframe = wireframe, 
+           kwargs...)
 end
 
 #######################
