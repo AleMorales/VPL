@@ -18,12 +18,12 @@ floating precision will be used (`Float64`) but it is possible to generate a
 version with a different precision by specifying the corresponding type as in 
 `GLScene(g, Float32)`.
 """
-function GLScene(g::Graph, ::Type{FT} = Float64) where FT
+function GLScene(g::Graph, ::Type{FT} = Float64; message = nothing) where FT
     # Retrieve the mesh of triangles
-    mt = Geom.MTurtle(FT)
+    mt = Geom.MTurtle(FT, message)
     Geom.feedgeom!(mt, g);
     # Retrieve the colors of each primitive
-    glt = GLTurtle()
+    glt = GLTurtle(message = message)
     feedcolor!(glt, g);
     # Extend the colors to match the number of triangles
     longcolors = vcat(fill.(colors(glt), Geom.nvertices(mt))...)

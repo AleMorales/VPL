@@ -9,7 +9,7 @@
 
 Translate a turtle to the new position `to` (a `Vec` object). 
 """
-function t!(turtle::MTurtle{FT}; to::Vec{FT} = O(FT)) where FT
+function t!(turtle::MTurtle{FT,UT}; to::Vec{FT} = O(FT)) where {FT,UT}
     update!(turtle, to = to, head = head(turtle), up = up(turtle), 
                     arm = arm(turtle))
 end
@@ -31,8 +31,8 @@ feedgeom!(turtle::MTurtle, node::T) = t!(turtle, to = node.to)
 Orient a turtle to a new direction by re-defining the local reference system.
 The arguments `head`, `up` and `arm` should be of type `Vec`.
 """
-function or!(turtle::MTurtle{FT}; head::Vec{FT} = Z(FT), up::Vec{FT} = X(FT), 
-             arm::Vec{FT} = Y(FT)) where FT
+function or!(turtle::MTurtle{FT,UT}; head::Vec{FT} = Z(FT), up::Vec{FT} = X(FT), 
+             arm::Vec{FT} = Y(FT)) where {FT,UT}
     update!(turtle, head = head, up = up, arm = arm, to = pos(turtle))
 end
 
@@ -56,8 +56,8 @@ feedgeom!(turtle::MTurtle, node::OR) =
 Set position and orientation of a turtle. The arguments `to`, `head`, `up` and 
 `arm` should be of type `Vec` and be passed as keyword arguments.
 """
-function set!(turtle::MTurtle{FT}; to::Vec{FT} = O(FT), head::Vec{FT} = Z(FT), 
-              up::Vec{FT} = X(FT), arm::Vec{FT} = Y(FT)) where FT
+function set!(turtle::MTurtle{FT,UT}; to::Vec{FT} = O(FT), head::Vec{FT} = Z(FT), 
+              up::Vec{FT} = X(FT), arm::Vec{FT} = Y(FT)) where {FT,UT}
     update!(turtle, head = head, up = up, arm = arm, to = to)
 end
 
@@ -82,7 +82,7 @@ feedgeom!(turtle::MTurtle, node::SET) =
 Rotates a turtle around up axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function ru!(turtle::MTurtle{FT}, angle::FT) where FT
+function ru!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -109,7 +109,7 @@ feedgeom!(turtle::MTurtle, node::RU) = ru!(turtle, node.angle)
 Rotates a turtle around arm axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function ra!(turtle::MTurtle{FT}, angle::FT) where FT
+function ra!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -136,7 +136,7 @@ feedgeom!(turtle::MTurtle, node::RA) = ra!(turtle, node.angle)
 Rotate turtle around head axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function rh!(turtle::MTurtle{FT}, angle::FT) where FT
+function rh!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -162,7 +162,7 @@ feedgeom!(turtle::MTurtle, node::RH) = rh!(turtle, node.angle)
 
 Move turtle forward a given distance.
 """
-function f!(turtle::MTurtle{FT}, dist::FT) where FT
+function f!(turtle::MTurtle{FT,UT}, dist::FT) where {FT,UT}
     to = pos(turtle) .+ head(turtle).*dist
     update!(turtle,  to = to, arm = arm(turtle), up = up(turtle), head = head(turtle))
 end
@@ -180,7 +180,7 @@ feedgeom!(turtle::MTurtle, node::F) = f!(turtle, node.dist)
 
 # Taken from https://mathworld.wolfram.com/RodriguesRotationFormula.html
 # Returns the matrix for a rotation θ around vector ω
-function rodrigues(ω::Vec{FT}, cosθ::FT, sinθ::FT) where FT
+function rodrigues(ω::Vec{FT}, cosθ::FT, sinθ::FT) where {FT}
     @inbounds begin
         ωx   = ω[1]
         ωy   = ω[2]
@@ -209,7 +209,7 @@ proportion between the two. `strength` should vary between -1 and 1. If
 `strength` is negative, the turtle rotates downwards (i.e., towards negative 
 values of Z axis), otherwise upwards.
 """
-function rv!(turtle::MTurtle{FT}, strength::FT) where FT
+function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
     @inbounds begin
         # 1. Create the rotation vector orthogonal to the HZ plane
         H = head(turtle)

@@ -40,12 +40,12 @@ let
     # Koch curve @ 32 bits
     L = 1f0
     axiom = sn.E32(L) + VPL.RU(120f0) + sn.E32(L) + VPL.RU(120f0) + sn.E32(L)
-    function Kochsnowflake(x)
+    function Kochsnowflake32(x)
         L = data(x).length
         sn.E32(L/3) + RU(-60f0) + sn.E32(L/3) + RU(120f0) + sn.E32(L/3) + 
             RU(-60f0) + sn.E32(L/3)
     end
-    rule = Rule(sn.E32, rhs = Kochsnowflake)
+    rule = Rule(sn.E32, rhs = Kochsnowflake32)
     Koch = Graph(axiom = axiom, rules = Tuple(rule))
     function VPL.feedgeom!(turtle::MTurtle, e::sn.E32)
        HollowCylinder!(turtle, length = e.length, width = e.length/10, 

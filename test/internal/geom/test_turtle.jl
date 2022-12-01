@@ -9,12 +9,12 @@ let
 
 # Create turtles with different floating point precisions
 t64 = G.MTurtle(Float64)
-@test t64 isa G.MTurtle{Float64}
+@test t64 isa G.MTurtle{Float64, Nothing}
 @test G.pos(t64) isa G.Vec{Float64}
 @test G.geoms(t64) isa G.Mesh{G.Vec{Float64}}
 
 t32 = G.MTurtle(Float32)
-@test t32 isa G.MTurtle{Float32}
+@test t32 isa G.MTurtle{Float32, Nothing}
 @test G.pos(t32) isa G.Vec{Float32}
 @test G.geoms(t32) isa G.Mesh{G.Vec{Float32}}
 
@@ -25,7 +25,7 @@ t32 = G.MTurtle(Float32)
 
 
 # Translation command
-function test_t(t::G.MTurtle{FT}) where FT
+function test_t(t::G.MTurtle{FT,UT}) where {FT,UT}
     to = G.Vec{FT}(1,1,1)
     nt = deepcopy(t)
     G.t!(nt, to = to)
@@ -39,7 +39,7 @@ test_t(G.MTurtle(Float64))
 test_t(G.MTurtle(Float32))
 
 # Orientation command
-function test_or(t::G.MTurtle{FT}) where FT
+function test_or(t::G.MTurtle{FT,UT}) where {FT,UT}
     arm = G.Vec{FT}(0.5,0.5,0)
     head = G.Vec{FT}(-0.5,0.5,0)
     up = G.Vec{FT}(0,0,1)
@@ -55,7 +55,7 @@ test_or(G.MTurtle(Float64))
 test_or(G.MTurtle(Float32))
 
 # Set command
-function test_set(t::G.MTurtle{FT}) where FT
+function test_set(t::G.MTurtle{FT,UT}) where {FT,UT}
     to = G.Vec{FT}(1,1,1)
     arm = G.Vec{FT}(0.5,0.5,0)
     head = G.Vec{FT}(-0.5,0.5,0)
@@ -72,7 +72,7 @@ test_set(G.MTurtle(Float64))
 test_set(G.MTurtle(Float32))
 
 # Rotation around "up" direction
-function test_ru(t::G.MTurtle{FT}) where FT
+function test_ru(t::G.MTurtle{FT,UT}) where {FT,UT}
     nt = deepcopy(t)
     G.ru!(nt, FT(90))
     @test G.pos(nt) == G.pos(t)
@@ -84,7 +84,7 @@ end
 test_ru(G.MTurtle(Float64))
 test_ru(G.MTurtle(Float32))
 
-function test_ru(t::G.MTurtle{FT}) where FT
+function test_ru2(t::G.MTurtle{FT,UT}) where {FT,UT}
     nt = deepcopy(t)
     G.ru!(nt, FT(180))
     @test G.pos(nt) == G.pos(t)
@@ -93,11 +93,11 @@ function test_ru(t::G.MTurtle{FT}) where FT
     @test G.up(nt) == G.up(t)
 end
 
-test_ru(G.MTurtle(Float64))
-test_ru(G.MTurtle(Float32))
+test_ru2(G.MTurtle(Float64))
+test_ru2(G.MTurtle(Float32))
 
 # Rotation around "arm" direction
-function test_ra(t::G.MTurtle{FT}, angle::FT) where FT
+function test_ra(t::G.MTurtle{FT,UT}, angle::FT) where {FT,UT}
     nt = deepcopy(t)
     G.ra!(nt, angle)
     @test G.pos(nt) == G.pos(t)
@@ -110,7 +110,7 @@ test_ra(G.MTurtle(Float64), 90.0)
 test_ra(G.MTurtle(Float32), 90f0)
 
 # Rotation around "head" direction
-function test_rh(t::G.MTurtle{FT}, angle::FT) where FT
+function test_rh(t::G.MTurtle{FT,UT}, angle::FT) where {FT,UT}
     nt = deepcopy(t)
     G.rh!(nt, angle)
     @test G.pos(nt) == G.pos(t)
@@ -124,7 +124,7 @@ test_rh(G.MTurtle(Float32), 90f0)
 
 
 # Move forward
-function test_f(t::G.MTurtle{FT}, dist::FT) where FT
+function test_f(t::G.MTurtle{FT,UT}, dist::FT) where {FT,UT}
     nt = deepcopy(t)
     G.f!(nt, dist)
     @test G.pos(nt) == G.Vec{FT}(0,0,1) 

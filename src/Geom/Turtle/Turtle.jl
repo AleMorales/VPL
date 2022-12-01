@@ -14,25 +14,27 @@ Base.@kwdef struct TCoord{FT}
 end
 
 
-mutable struct MTurtle{FT} <: Turtle
+mutable struct MTurtle{FT, UT} <: Turtle
     coords::TCoord{FT}
     geoms::Mesh{Vec{FT}}
     nvertices::Vector{Int}
     ntriangles::Vector{Int}
+    message::UT
 end
 
 
 """
-    MTurtle()
+    MTurtle(Float64, message)
 
 Create a meshing turtle that can convert a `Graph` into a 3D mesh using 
 turtle operators, geometry primitives and methods of `feedgeom!()`. By default, 
 the meshing turtle will generate geometry primitives with double floating 
 precision (`Float64`) but it is possible to generate a version with lower 
-precision as in `MTurtle(Float32)`.
+precision as in `MTurtle(Float32)`. The argument `message` is any user-defined
+object.
 """
-function MTurtle(::Type{FT} = Float64) where FT 
-    MTurtle{FT}(TCoord{FT}(), Mesh(FT), Int[], Int[])
+function MTurtle(::Type{FT} = Float64, message = nothing) where FT 
+    MTurtle{FT,typeof(message)}(TCoord{FT}(), Mesh(FT), Int[], Int[], message)
 end
 
 # Update coordinate system associated to a turtle

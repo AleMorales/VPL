@@ -74,39 +74,46 @@ function render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, 
 end
 
 """
-    render(graph::Graph, Float64; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(graph::Graph, Float64; normals::Bool = false, message = nothing,
+           wireframe::Bool = false, kwargs...)
 
 Render the 3D mesh associated to a `Graph` object. This will create a new 
 visualization (see Documentation for details). `normals = true` will draw arrows 
 in the direction of the normal vector for each triangle in the mesh, 
 `wireframe = true` will draw the edges of each triangle with black lines. 
-Keyword arguments are passed to `Makie.mesh()`. By default, double 
+Keyword arguments are passed to `Makie.mesh()`. The argument `message` is any
+user-defined object that will be stored in the turtles and hence available 
+within the `feedgeom!` and `feedcolor!` methods. By default, double 
 floating precision will be used (`Float64`) but it is possible to generate a 
 version with a different precision by specifying the corresponding type as in 
 `render(graph, Float32)`.
 """
 function render(graph::Graph, ::Type{FT} = Float64; normals::Bool = false, 
-                wireframe::Bool = false, kwargs...) where FT
-    render(GLScene(graph::Graph, FT); normals = normals, wireframe = wireframe, 
-           kwargs...)
+                wireframe::Bool = false, message = nothing, kwargs...) where FT
+    render(GLScene(graph::Graph, FT, message = message); normals = normals, 
+                   wireframe = wireframe, kwargs...)
 end
 
 """
-    render(graphs::Vector{<:Graph}, Float64; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(graphs::Vector{<:Graph}, Float64; normals::Bool = false, 
+           wireframe::Bool = false, messsage = nothing, kwargs...)
 
 Render the 3D mesh associated to an array of `Graph` objects. This will create a 
 new visualization (see Documentation for details). `normals = true` will draw 
 arrows in the direction of the normal vector for each triangle in the mesh, 
 `wireframe = true` will draw the edges of each triangle with black lines. 
-Keyword arguments are passed to `Makie.mesh()`. By default, double 
+Keyword arguments are passed to `Makie.mesh()`. The argument `message` is any
+user-defined object that will be stored in the turtles and hence available 
+within the `feedgeom!` and `feedcolor!` methods. By default, double 
 floating precision will be used (`Float64`) but it is possible to generate a 
 version with a different precision by specifying the corresponding type as in 
 `render(graphs, Float32)`.
 """
 function render(graphs::Vector{<:Graph}, ::Type{FT} = Float64; 
-             normals::Bool = false, wireframe::Bool = false, kwargs...) where FT
-    render(GLScene(graphs, FT); normals = normals, wireframe = wireframe, 
-           kwargs...)
+             normals::Bool = false, wireframe::Bool = false, message = nothing, 
+             kwargs...) where FT
+    render(GLScene(graphs, FT, message = message); normals = normals, 
+                   wireframe = wireframe, kwargs...)
 end
 
 #######################

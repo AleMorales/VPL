@@ -28,8 +28,8 @@ When `move = true`, the turtle will be moved forward by a distance equal to `len
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Ellipse!(turtle::MTurtle{FT}; length = one(FT), width = one(FT), 
-                  n = 20, move = false) where FT
+function Ellipse!(turtle::MTurtle{FT, UT}; length = one(FT), width = one(FT), 
+                  n = 20, move = false) where {FT, UT}
     push!(nvertices(turtle), n + 1) 
     push!(ntriangles(turtle), n) 
     trans = transform(turtle, (one(FT), width/FT(2), length/FT(2)))
@@ -61,8 +61,8 @@ When `move = true`, the turtle will be moved forward by a distance equal to `len
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Triangle!(turtle::MTurtle{FT}; length::FT = one(FT), width::FT = one(FT), 
-                    move = false) where FT
+function Triangle!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                    move = false) where {FT, UT}
     push!(nvertices(turtle), 3)
     push!(ntriangles(turtle), 1) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
@@ -94,8 +94,8 @@ When `move = true`, the turtle will be moved forward by a distance equal to `len
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Rectangle!(turtle::MTurtle{FT}; length::FT = one(FT), width::FT = one(FT), 
-                    move = false) where FT
+function Rectangle!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                    move = false) where {FT, UT}
     push!(nvertices(turtle), 4)
     push!(ntriangles(turtle), 2) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
@@ -129,8 +129,8 @@ When `move = true`, the turtle will be moved forward by a distance equal to `len
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Trapezoid!(turtle::MTurtle{FT}; length::FT = one(FT), width::FT = one(FT), 
-                   ratio::FT = one(FT), move = false) where FT
+function Trapezoid!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                   ratio::FT = one(FT), move = false) where {FT, UT}
     push!(nvertices(turtle), 4)
     push!(ntriangles(turtle), 2) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
@@ -164,9 +164,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCone!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function HollowCone!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                      width::FT = one(FT), height::FT = one(FT), n::Int = 20, 
-                     move = false) where FT
+                     move = false) where {FT, UT}
     push!(nvertices(turtle), n + 1) 
     push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
@@ -199,9 +199,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCube!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function HollowCube!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                      width::FT = one(FT), height::FT = one(FT), 
-                     move = false) where FT
+                     move = false) where {FT, UT}
     push!(nvertices(turtle), 8)
     push!(ntriangles(turtle), 8) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
@@ -235,9 +235,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCylinder!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function HollowCylinder!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                          width::FT = one(FT), height::FT = one(FT), 
-                         n::Int = 40, move = false) where FT
+                         n::Int = 40, move = false) where {FT, UT}
     @assert iseven(n)
     push!(nvertices(turtle), n)
     push!(ntriangles(turtle), n) 
@@ -272,10 +272,10 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowFrustum!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function HollowFrustum!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                         width::FT = one(FT), height::FT = one(FT), 
                         ratio::FT = one(FT), n::Int = 40, 
-                        move = false) where FT
+                        move = false) where {FT, UT}
     @assert iseven(n)
     push!(nvertices(turtle), n)
     push!(ntriangles(turtle), n) 
@@ -311,9 +311,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCone!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function SolidCone!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), n::Int = 40, 
-                    move = false) where FT
+                    move = false) where {FT, UT}
     @assert iseven(n)
     push!(nvertices(turtle), n/2 + 2)
     push!(ntriangles(turtle), n) 
@@ -347,9 +347,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCube!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function SolidCube!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), 
-                    move = false) where FT
+                    move = false) where {FT, UT}
     push!(nvertices(turtle), 8)
     push!(ntriangles(turtle), 12) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
@@ -383,9 +383,9 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCylinder!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function SolidCylinder!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                         width::FT = one(FT), height::FT = one(FT), 
-                        n::Int = 80, move = false) where FT
+                        n::Int = 80, move = false) where {FT, UT}
     @assert iseven(n)
     push!(nvertices(turtle), n/2 + 2)
     push!(ntriangles(turtle), n) 
@@ -420,10 +420,10 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidFrustum!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function SolidFrustum!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                        width::FT = one(FT), height::FT = one(FT), 
                        ratio::FT = one(FT), n::Int = 80, 
-                       move = false) where FT
+                       move = false) where {FT, UT}
     @assert iseven(n)
     push!(nvertices(turtle), n/2 + 2)
     push!(ntriangles(turtle), n) 
@@ -433,9 +433,9 @@ function SolidFrustum!(turtle::MTurtle{FT}; length::FT = one(FT),
     return nothing
 end
 
-function Ellipsoid!(turtle::MTurtle{FT}; length::FT = one(FT), 
+function Ellipsoid!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), 
-                    n::Int = 20, move = false) where FT
+                    n::Int = 20, move = false) where {FT, UT}
     @error "Ellipsoid not implemented yet"
     return nothing
 end
@@ -463,8 +463,8 @@ When `move = true`, the turtle will be moved forward by a distance equal to `hei
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Mesh!(turtle::MTurtle{FT}, m::Mesh; scale::Vec{FT} = Vec{FT}(1.0,1.0,1.0),
-               move = false) where FT
+function Mesh!(turtle::MTurtle{FT, UT}, m::Mesh; scale::Vec{FT} = Vec{FT}(1.0,1.0,1.0),
+               move = false) where {FT, UT}
     # Transform the mesh
     trans = transform(turtle::MTurtle, scale)
     mnew = deepcopy(m)

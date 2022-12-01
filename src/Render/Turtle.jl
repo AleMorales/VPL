@@ -1,14 +1,16 @@
 
 """
-    GLTurtle()
+    GLTurtle(colors, message)
 
 Create a `GLTurtle()` object that will parse a `Graph` object and store the colors
 associated to the different primitives. This type of turtle is automatically created
 by calls to `GLScene()` and `render()` but the user may want to separately construct the
-geometry and colors and manually combined them into a `GLScene` object for performance reasons.
+geometry and colors and manually combine them into a `GLScene` object for 
+performance reasons. The argument `message` is any user-defined object.
 """
-Base.@kwdef mutable struct GLTurtle{C <: Colorant} <: Turtle
+Base.@kwdef mutable struct GLTurtle{C <: Colorant, UT} <: Turtle
     colors::Vector{C} = RGB[]
+    message::UT = nothing
 end
 
 """

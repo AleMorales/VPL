@@ -18,7 +18,7 @@ using Test
 @testset "API/Core/Graph_4" begin include("api/core/test_graph_4.jl") end
 @testset "API/Core/Graph_5" begin include("api/core/test_graph_5.jl") end
 @testset "API/Core/Graph_6" begin include("api/core/test_graph_6.jl") end
-@testset "API/Core/Graph_6" begin include("api/core/test_graph_parallel.jl") end
+@testset "API/Core/Graph_parallel" begin include("api/core/test_graph_parallel.jl") end
 @testset "API/Core/Draw" begin include("api/core/test_draw_graph.jl") end
 
 
@@ -52,4 +52,5 @@ using Test
 ################################################################################
 
 @testset "API/render/snowflake" begin include("api/render/test_snowflakes.jl") end
+@testset "API/render/message" begin include("api/render/test_message.jl") end
 @testset "API/render/binary_tree" begin include("api/render/test_binarytree.jl") end
