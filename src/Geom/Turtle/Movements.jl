@@ -224,7 +224,8 @@ function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
         cosθ₁ = H[3]
         # Cos law for gravitropism to account for downward branches
         # Notice how the sign of strength determines the new angle
-        cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
+        #cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
+        cosθ₂ =  cosθ₁ + abs(sign(strength) -  cosθ₁)*strength
         sinθ₂ = sqrt(FT(1) - cosθ₂^2)
         # Compute the cos and sin of the angle of rotation
         cosΔθ = cosθ₁*cosθ₂ + sinθ₁*sinθ₂
