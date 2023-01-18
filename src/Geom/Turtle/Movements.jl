@@ -233,9 +233,9 @@ function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
         # 3. Create the affine transform with Rodrigues rotation matrix
         trans = rodrigues(N, cosΔθ, sinΔθ)
         # 4. Transform the turtle reference system (does not change norms)
-        nhead = trans(head(turtle))
-        narm  = trans(arm(turtle))
-        nup   = trans(up(turtle))
+        nhead = normalize(trans(head(turtle)))
+        narm  = normalize(trans(arm(turtle)))
+        nup   = normalize(trans(up(turtle)))
         # Update the turtle to the new axes
         update!(turtle, to = pos(turtle), head = nhead, arm = narm, up = nup)
     end
