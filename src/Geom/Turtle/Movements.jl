@@ -221,7 +221,7 @@ function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
         # This is achieved by comparing the cos and sin before and 
         # after the rotation (trick below is that the hypotenuse = 1).
         # Also, look at the formula for cos and sin of difference of angles
-        cosθ₁ = H[3]
+        cosθ₁ = clamp(H[3], -one(FT), one(FT))
         # Cos law for gravitropism to account for downward branches
         # Notice how the sign of strength determines the new angle
         #cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
