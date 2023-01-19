@@ -3,7 +3,7 @@ const G = VPL.Geom
 using Test
 import CoordinateTransformations
 import CoordinateTransformations: SDiagonal, LinearMap
-
+using LinearAlgebra
 
 let
 
@@ -40,9 +40,9 @@ test_t(G.MTurtle(Float32))
 
 # Orientation command
 function test_or(t::G.MTurtle{FT,UT}) where {FT,UT}
-    arm = G.Vec{FT}(0.5,0.5,0)
-    head = G.Vec{FT}(-0.5,0.5,0)
-    up = G.Vec{FT}(0,0,1)
+    arm = normalize(G.Vec{FT}(0.5,0.5,0))
+    head = normalize(G.Vec{FT}(-0.5,0.5,0))
+    up = normalize(G.Vec{FT}(0,0,1))
     nt = deepcopy(t)
     G.or!(nt, head = head, arm = arm, up = up)
     @test G.pos(nt)  == G.pos(t)
@@ -56,9 +56,9 @@ test_or(G.MTurtle(Float32))
 
 # Set command
 function test_set(t::G.MTurtle{FT,UT}) where {FT,UT}
-    to = G.Vec{FT}(1,1,1)
-    arm = G.Vec{FT}(0.5,0.5,0)
-    head = G.Vec{FT}(-0.5,0.5,0)
+    to = normalize(G.Vec{FT}(1,1,1))
+    arm = normalize(G.Vec{FT}(0.5,0.5,0))
+    head = normalize(G.Vec{FT}(-0.5,0.5,0))
     up = G.Vec{FT}(0,0,1)
     nt = deepcopy(t)
     G.set!(nt, to = to, head = head, arm = arm, up = up)

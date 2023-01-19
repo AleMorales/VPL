@@ -33,6 +33,9 @@ The arguments `head`, `up` and `arm` should be of type `Vec`.
 """
 function or!(turtle::MTurtle{FT,UT}; head::Vec{FT} = Z(FT), up::Vec{FT} = X(FT), 
              arm::Vec{FT} = Y(FT)) where {FT,UT}
+    @assert norm(head) ≈ one(FT)
+    @assert norm(up) ≈ one(FT)
+    @assert norm(arm) ≈ one(FT)
     update!(turtle, head = head, up = up, arm = arm, to = pos(turtle))
 end
 
@@ -58,6 +61,9 @@ Set position and orientation of a turtle. The arguments `to`, `head`, `up` and
 """
 function set!(turtle::MTurtle{FT,UT}; to::Vec{FT} = O(FT), head::Vec{FT} = Z(FT), 
               up::Vec{FT} = X(FT), arm::Vec{FT} = Y(FT)) where {FT,UT}
+    @assert norm(head) ≈ one(FT)
+    @assert norm(up) ≈ one(FT)
+    @assert norm(arm) ≈ one(FT)
     update!(turtle, head = head, up = up, arm = arm, to = to)
 end
 
@@ -86,8 +92,8 @@ function ru!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
-    h = head(turtle).*c .+ arm(turtle).*s
-    a = h × up(turtle)
+    h = normalize(head(turtle).*c .+ arm(turtle).*s)
+    a = normalize(h × up(turtle))
     update!(turtle, head = h, arm = a, to = pos(turtle), up = up(turtle))
 end
 
@@ -113,8 +119,8 @@ function ra!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
-    u = up(turtle).*c .+ head(turtle).*s
-    h = u × arm(turtle)
+    u = normalize(up(turtle).*c .+ head(turtle).*s)
+    h = normalize(u × arm(turtle))
     update!(turtle, head = h, up = u, to = pos(turtle), arm = arm(turtle))
 end
 
@@ -140,8 +146,8 @@ function rh!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
-    u = up(turtle).*c .+ arm(turtle).*s
-    a = head(turtle) × u
+    u = normalize(up(turtle).*c .+ arm(turtle).*s)
+    a = normalize(head(turtle) × u)
     update!(turtle, arm = a, up = u, to = pos(turtle), head = head(turtle))
 end
 
@@ -186,15 +192,15 @@ function rodrigues(ω::Vec{FT}, cosθ::FT, sinθ::FT) where {FT}
         ωy   = ω[2]
         ωz   = ω[3]
         mat = SMatrix{3,3,FT}(cosθ + ωx*ωx*(1 - cosθ),     # 1,1
-                                ωx*ωy*(1 - cosθ) - ωz*sinθ,  # 1,2
-                                ωy*sinθ + ωx*ωz*(1 - cosθ),  # 1,3
-                                ωz*sinθ + ωx*ωy*(1 - cosθ),  # 2,1
-                                cosθ +  ωy*ωy*(1 - cosθ),    # 2,2
-                                -ωx*sinθ + ωy*ωz*(1 - cosθ), # 2,3
-                                -ωy*sinθ + ωx*ωz*(1 - cosθ), # 3,1
-                                ωx*sinθ + ωy*ωz*(1 - cosθ),  # 3,2
-                                cosθ + ωz*ωz*(1 - cosθ)      # 3,3
-                                )
+                              ωx*ωy*(1 - cosθ) - ωz*sinθ,  # 1,2
+                              ωy*sinθ + ωx*ωz*(1 - cosθ),  # 1,3
+                              ωz*sinθ + ωx*ωy*(1 - cosθ),  # 2,1
+                              cosθ +  ωy*ωy*(1 - cosθ),    # 2,2
+                              -ωx*sinθ + ωy*ωz*(1 - cosθ), # 2,3
+                              -ωy*sinθ + ωx*ωz*(1 - cosθ), # 3,1
+                              ωx*sinθ + ωy*ωz*(1 - cosθ),  # 3,2
+                              cosθ + ωz*ωz*(1 - cosθ)      # 3,3
+                             )
         LinearMap(mat)
     end
 end
@@ -211,6 +217,7 @@ values of Z axis), otherwise upwards.
 """
 function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
     @inbounds begin
+        @assert norm(head(turtle)) ≈ one(FT)
         # 1. Create the rotation vector orthogonal to the HZ plane
         H = head(turtle)
         #N = strength > FT(0) ? Z(FT) × H : (.-Z(FT)) × H
@@ -221,7 +228,7 @@ function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
         # This is achieved by comparing the cos and sin before and 
         # after the rotation (trick below is that the hypotenuse = 1).
         # Also, look at the formula for cos and sin of difference of angles
-        cosθ₁ = clamp(H[3], -one(FT), one(FT))
+        cosθ₁ = H[3]
         # Cos law for gravitropism to account for downward branches
         # Notice how the sign of strength determines the new angle
         #cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
