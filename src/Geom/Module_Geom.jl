@@ -4,7 +4,7 @@ import StaticArrays: SVector, SMatrix
 import GeometryBasics
 import Base: ==, ≈, iterate, length, eltype, isapprox
 import FileIO
-import LinearAlgebra: ×, norm, normalize, Diagonal, cross
+import LinearAlgebra: ×, norm, normalize, Diagonal, cross, ⋅
 import CoordinateTransformations: SDiagonal, LinearMap, AffineMap, AbstractAffineMap, Translation
 import Rotations: RotX, RotY, RotZ
 import Unrolled: @unroll

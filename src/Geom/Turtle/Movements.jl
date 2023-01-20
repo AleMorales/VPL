@@ -217,34 +217,42 @@ values of Z axis), otherwise upwards.
 """
 function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
     @inbounds begin
-        @assert norm(head(turtle)) ≈ one(FT)
-        # 1. Create the rotation vector orthogonal to the HZ plane
+        # Check if head is already vertical
         H = head(turtle)
-        #N = strength > FT(0) ? Z(FT) × H : (.-Z(FT)) × H
-        N = Z(FT) × H
-        sinθ₁ = norm(N) # Used below
-        N = N./sinθ₁
-        # 2. Compute the cosine and sine of the angle of rotation
-        # This is achieved by comparing the cos and sin before and 
-        # after the rotation (trick below is that the hypotenuse = 1).
-        # Also, look at the formula for cos and sin of difference of angles
-        cosθ₁ = H[3]
-        # Cos law for gravitropism to account for downward branches
-        # Notice how the sign of strength determines the new angle
-        #cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
-        cosθ₂ =  cosθ₁ + abs(sign(strength) -  cosθ₁)*strength
-        sinθ₂ = sqrt(FT(1) - cosθ₂^2)
-        # Compute the cos and sin of the angle of rotation
-        cosΔθ = cosθ₁*cosθ₂ + sinθ₁*sinθ₂
-        sinΔθ = sinθ₁*cosθ₂ - cosθ₁*sinθ₂
-        # 3. Create the affine transform with Rodrigues rotation matrix
-        trans = rodrigues(N, cosΔθ, sinΔθ)
-        # 4. Transform the turtle reference system (does not change norms)
-        nhead = normalize(trans(head(turtle)))
-        narm  = normalize(trans(arm(turtle)))
-        nup   = normalize(trans(up(turtle)))
-        # Update the turtle to the new axes
-        update!(turtle, to = pos(turtle), head = nhead, arm = narm, up = nup)
+        vertical = H ⋅ Z(FT) ≈ one(FT)
+        if vertical
+            return nothing
+        # If not vertical, then apply rotation
+        else
+            nh = norm(head(turtle))
+            @assert isapprox(nh, one(FT), rtol = sqrt(eps(FT))) "The length of head(turtle) was $(nh)"
+            # 1. Create the rotation vector orthogonal to the HZ plane
+            #N = strength > FT(0) ? Z(FT) × H : (.-Z(FT)) × H
+            N = Z(FT) × H
+            sinθ₁ = norm(N) # Used below
+            N = N./sinθ₁
+            # 2. Compute the cosine and sine of the angle of rotation
+            # This is achieved by comparing the cos and sin before and 
+            # after the rotation (trick below is that the hypotenuse = 1).
+            # Also, look at the formula for cos and sin of difference of angles
+            cosθ₁ = H[3]
+            # Cos law for gravitropism to account for downward branches
+            # Notice how the sign of strength determines the new angle
+            #cosθ₂ =  cosθ₁ + (sign(strength)*FT(1) -  cosθ₁)*abs(strength)
+            cosθ₂ =  cosθ₁ + abs(sign(strength) -  cosθ₁)*strength
+            sinθ₂ = sqrt(FT(1) - cosθ₂^2)
+            # Compute the cos and sin of the angle of rotation
+            cosΔθ = cosθ₁*cosθ₂ + sinθ₁*sinθ₂
+            sinΔθ = sinθ₁*cosθ₂ - cosθ₁*sinθ₂
+            # 3. Create the affine transform with Rodrigues rotation matrix
+            trans = rodrigues(N, cosΔθ, sinΔθ)
+            # 4. Transform the turtle reference system (does not change norms)
+            nhead = normalize(trans(head(turtle)))
+            narm  = normalize(trans(arm(turtle)))
+            nup   = normalize(trans(up(turtle)))
+            # Update the turtle to the new axes
+            update!(turtle, to = pos(turtle), head = nhead, arm = narm, up = nup)
+        end
     end
 end
 
