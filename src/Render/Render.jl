@@ -37,8 +37,9 @@ function render(m::GeometryBasics.Mesh; color = :green, normals::Bool = false, w
     scene_additions!(m, normals, wireframe)
     fig
 end
-function render!(m::GeometryBasics.Mesh; color = :green, normals::Bool = false, wireframe::Bool = false, kwargs...)
-    Makie.mesh!(m, color = color, near = 0, figure = (resolution = resolution, show_axis = axes); kwargs...)
+function render!(m::GeometryBasics.Mesh; color = :green, normals::Bool = false, 
+                 wireframe::Bool = false, kwargs...)
+    Makie.mesh!(m, color = color, near = 0; kwargs...)
     scene_additions!(m, normals, wireframe)
 end
 

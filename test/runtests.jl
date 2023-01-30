@@ -54,3 +54,9 @@ using Test
 @testset "API/render/snowflake" begin include("api/render/test_snowflakes.jl") end
 @testset "API/render/message" begin include("api/render/test_message.jl") end
 @testset "API/render/binary_tree" begin include("api/render/test_binarytree.jl") end
+
+################################################################################
+########################## Test ray tracer #####################################
+################################################################################
+
+@testset "internal/raytracer/basics" begin include("internal/raytracer/test_raytracer.jl") end

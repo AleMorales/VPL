@@ -16,7 +16,11 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        MTurtle, feedgeom!, head, up, arm, pos, geoms, 
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, RV, rv!, 
        O, X, Y, Z,  Vec,
-       render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!
+       render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!,
+       RTScene, RayTracer, RTSettings, trace!, Naive,
+       Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
+       tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle,
+       materials, get_nw, FixedSource, reset!, power, BVH, SAH, AvgSplit
 
 # Abstract type for turtles
 abstract type Turtle end
@@ -140,5 +144,36 @@ const GLTurtle = Render.GLTurtle
 const GLScene = Render.GLScene
 const export_scene = Render.export_scene
 
+
+# RayTracer module
+include("RayTracer/Module_RayTracing.jl")
+import .RayTracing as RT
+const RTScene = RT.RTScene
+const RayTracer = RT.RayTracer
+const RTSettings = RT.RTSettings
+const trace! = RT.trace!
+const tau = RT.tau
+const rho = RT.rho
+const Lambertian = RT.Lambertian
+const Phong = RT.Phong
+const Sensor = RT.Sensor
+const Black = RT.Black
+const Naive = RT.Naive
+const Source = RT.Source
+const LambertianSource = RT.LambertianSource
+const PointSource = RT.PointSource
+const LineSource = RT.LineSource
+const AreaSource = RT.AreaSource
+const DirectionalSource = RT.DirectionalSource
+const feedmaterial! = RT.feedmaterial!
+const RTTurtle = RT.RTTurtle
+const materials = RT.materials
+const get_nw = RT.get_nw
+const FixedSource = RT.FixedSource
+const reset! = RT.reset!
+const power = RT.power
+const BVH = RT.BVH
+const SAH = RT.SAH
+const AvgSplit = RT.AvgSplit
 
 end # module
