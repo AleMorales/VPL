@@ -2,17 +2,22 @@
 # DirectionalSource
 
 """
-    DirectionalSource(box::AABB, θ, Φ, power, nrays)
-    DirectionalSource(scene::RTScene, θ, Φ, power, nrays)
+    DirectionalSource(box::AABB, θ, Φ, radiosity, nrays)
+    DirectionalSource(scene::RTScene, θ, Φ, radiosity, nrays)
 
 Create a Directional source (including geometry and angle components) by providing an axis-aligned
 bounding box (`box`) or an `RTScene` object (`scene`) as well as the zenith (`θ`) and azimuth (`Φ`)
-angles, the power per ray (as in `Source`) and the number of rays to be generated. See VPL
-documentation for details on irradiance sources.
+angles, the radiosity of the source and the number of rays to be generated. See VPL
+documentation for details on light sources.
 """
-DirectionalSource(box::AABB; θ, Φ, power, nrays) = Source(create_directional(box, θ, Φ), FixedSource(θ, Φ), power, nrays)
-DirectionalSource(scene::RTScene; θ, Φ, power, nrays) = Source(create_directional(AABB(scene), θ, Φ), FixedSource(θ, Φ), power, nrays)
-
+function DirectionalSource(box::AABB; θ, Φ, radiosity, nrays) 
+    dir_geom = create_directional(box, θ, Φ)
+    Source(dir_geom, FixedSource(θ, Φ), radiosity/nrays, nrays)
+end
+function DirectionalSource(scene::RTScene; θ, Φ, radiosity, nrays) 
+    box = AABB(scene)
+    DirectionalSource(box, θ = θ, Φ = Φ, radiosity = radiosity, nrays = nrays)
+end
 
 # Projection of the ellipsoid that bounds the scene
 struct Directional{FT} <: SourceGeometry
