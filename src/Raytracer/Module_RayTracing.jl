@@ -14,6 +14,7 @@ import CoordinateTransformations: compose, Translation, LinearMap, AbstractAffin
 import Rotations: RotX, RotY, RotZ
 import StatsBase: sample, Weights
 import ColorTypes: RGBA
+import Makie: scatter!, linesegments!
 
 # Internal dependencies
 import ..VPL.Render: render!
