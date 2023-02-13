@@ -12,7 +12,10 @@ documentation for details on light sources.
 """
 function DirectionalSource(box::AABB; θ, Φ, radiosity, nrays) 
     dir_geom = create_directional(box, θ, Φ)
-    Source(dir_geom, FixedSource(θ, Φ), radiosity/nrays, nrays)
+    # Radiosity is assumed to be project onto horizontal plane
+    # The code below ensures that we get the right irradiance onto the scene
+    power = radiosity*base_area(box)
+    Source(dir_geom, FixedSource(θ, Φ), power/nrays, nrays)
 end
 function DirectionalSource(scene::RTScene; θ, Φ, radiosity, nrays) 
     box = AABB(scene)
@@ -25,6 +28,8 @@ struct Directional{FT} <: SourceGeometry
     rx::Vec{FT}
     ry::Vec{FT}
 end
+
+area(d::Directional) = norm(d.rx)*norm(d.ry)*pi
 
 # Create geometry for a directional light source
 function create_directional(box::AABB{FT}, θ::FT, Φ::FT) where FT

@@ -135,3 +135,6 @@ end
 
 # Check if a box is actually a point 
 Base.isempty(box::AABB{FT}) where FT = box.min ≈ Vec{FT}(0,0,0) && box.max == Vec{FT}(0,0,0)
+
+# Base area of a box (plane XY)
+base_area(box::AABB) = (box.max[1] - box.min[1])*(box.max[2] - box.min[2])
