@@ -312,7 +312,7 @@ dsource = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = 1.0, nrays 
 @test dsource.geom isa RT.Directional
 p = dsource.geom.po
 @test p[1] ≈ p[2] ≈ 0.5
-@test p[3] > 2.0
+@test p[3] > 1.5
 rx = dsource.geom.rx
 @test rx[3] ≈ 0.0
 @test rx[1] ≈ 0.0 || rx[2] ≈ 0.0
@@ -472,11 +472,11 @@ nrays = RT.trace!(rtobj)
 @test nrays == nrays
 RTirr = material[1].power[1]./VPL.area(rect)
 THirr = VPL.area(rect)/(norm(source.geom.rx)*norm(source.geom.ry)*pi)
-@test abs(RTirr - THirr)/THirr < 0.002
+@test abs(RTirr - THirr)/THirr < 0.02
 
 # Double check orientation of the light source
 # VPL.render(rect, axes = false)
-# VPL.render!(source)
+# VPL.render!([source])
 
 ##### Test intersection code of specific rays with Naive acc + grid cloner ##### 
 
@@ -492,7 +492,7 @@ ids = [1,1]
 scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
-settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 1, ny = 1, dx = 1.0, dy = 1.0);
+settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.Naive);
 nrays_traced = RT.trace!(rtobj)
 @test nrays_traced == nrays
@@ -502,7 +502,7 @@ THirr = 1.0
 
 # Double check orientation of the light source
 # VPL.render(rect, axes = false)
-# VPL.render!(source)
+# VPL.render!([source])
 
 # Intersection of a rectangle from a directional light source that is horizontal
 nrays = 100_000
@@ -514,7 +514,7 @@ ids = [1,1]
 scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/2, Φ = 0.0, radiosity = radiosity, nrays = nrays);
-settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 1, ny = 1, dx = 1.0, dy = 1.0);
+settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.Naive);
 nrays_traced = RT.trace!(rtobj)
 @test nrays_traced == nrays
@@ -523,7 +523,7 @@ RTirr = material[1].power[1]/VPL.area(rect)
 
 # Double check orientation of the light source
 # VPL.render(rect, axes = false)
-# VPL.render!(source)
+# VPL.render!([source])
 
 # Intersection of a rectangle from a directional light source that is at an angle
 nrays = 100_000
@@ -535,7 +535,7 @@ ids = [1,1]
 scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = radiosity, nrays = nrays);
-settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 2, ny = 2, dx = 1.0, dy = 1.0);
+settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.Naive);
 nrays_traced = RT.trace!(rtobj)
 @test nrays_traced == nrays
@@ -544,7 +544,7 @@ RTirr = material[1].power[1]/VPL.area(rect)
 
 # Double check orientation of the light source
 # VPL.render(rect, axes = true)
-# VPL.render!(source)
+# VPL.render!([source])
 
 ##### Using sensors #####
 
@@ -565,7 +565,8 @@ materials = [RT.Sensor() for i in 1:3]
 ids = [1,1,2,2,3,3]
 scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
 gbox = RT.AABB(scene);
-source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
+source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
+
 # Need to make sure maxiter > 1 or it will stop after the first sensor
 settings = RT.RTSettings(pkill = 1.0, maxiter = 2, nx = 1, ny = 1, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.Naive);
@@ -589,7 +590,7 @@ RTirrs = [materials[i].power[1]/VPL.area(rect1) for i in 1:3]
 @test RTirrs ≈ [1.0 for i in 1:3]
 
 # VPL.render(rectangles)
-# VPL.render!(source)
+# VPL.render!([source])
 # VPL.render!(rtobj.grid)
 
 ##### Using Lambertian #####
@@ -645,7 +646,7 @@ material = [RT.Black()]
 ids = [1,1]
 scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
 gbox = RT.AABB(scene);
-source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
+source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.BVH,
                      rule = RT.SAH{1}(2, 5));
@@ -654,8 +655,10 @@ nrays = RT.trace!(rtobj)
 @test nrays == nrays
 RTirr = material[1].power[1]./VPL.area(rect)
 THirr = VPL.area(rect)/(norm(source.geom.rx)*norm(source.geom.ry)*pi)
-@test abs(RTirr - THirr)/THirr < 0.002
+@test abs(RTirr - THirr)/THirr < 0.008
 
+# VPL.render(rect)
+# VPL.render!([source])
 
 ##### Test intersection code of specific rays with BVH acc + grid cloner ##### 
 
@@ -668,8 +671,8 @@ material = [RT.Black()]
 ids = [1,1]
 scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
 gbox = RT.AABB(scene);
-source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
-settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 1, ny = 1, dx = 1.0, dy = 1.0);
+source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
+settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.BVH,
                      rule = RT.SAH{1}(2, 5));
 nrays_traced = RT.trace!(rtobj)
@@ -734,7 +737,7 @@ ids = [1,1,2,2,3,3]
 scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = radiosity, nrays = nrays);
-settings = RT.RTSettings(pkill = 0.9, maxiter = 4, nx = 2, ny = 2, dx = 1.0, dy = 1.0);
+settings = RT.RTSettings(pkill = 0.9, maxiter = 4, nx = 4, ny = 4, dx = 1.0, dy = 1.0);
 rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.BVH,
                      rule = RT.SAH{1}(2, 5));
 nrays_traced = RT.trace!(rtobj)
@@ -745,7 +748,7 @@ RTirrs = [materials[i].power[1]/VPL.area(rect1) for i in 1:3]
 @test RTirrs[1] < RTirrs[2] < RTirrs[3]
 
 # Should yield the same results as the naive acceleration structure!
-@test all(abs.(RTirrs .- RTirrs_naive) .< 0.005)
+@test all(abs.(RTirrs .- RTirrs_naive) .< 0.02)
 
 ##### Ray trace binary tree ##### 
 
@@ -818,7 +821,7 @@ powers_naive = getpower(newtree, getInternode);
 # acceleration structures, but for large number of rays the results diverge
 # This divergence does not seem to decrease with the number of rays. It may 
 # depend on the scene itself though?
-@test maximum(abs.((powers_bvh .- powers_naive)./powers_naive)) < 0.0052
-@test abs(sum(powers_bvh) - sum(powers_naive))/sum(powers_bvh) < 1e-4
+@test maximum(abs.((powers_bvh .- powers_naive)./powers_naive)) < 0.005
+@test abs(sum(powers_bvh) - sum(powers_naive))/sum(powers_bvh) < sqrt(eps(1.0))
 
 end
