@@ -41,7 +41,7 @@ function create_directional(box::AABB{FT}, θ::FT, Φ::FT) where FT
     n = r(Z(FT))
     # Translation
     d = Vec(Δx/2, Δy/2, Δz/2)
-    p = (box.max .+ box.min)./2
+    p = (box.max .+ box.min)./2 .+ Vec(FT(0), FT(0), Δz/2)
     t = Translation(p .+ n.*d .+ n)
     # Transformation
     trans = t ∘ r ∘ s

@@ -575,7 +575,8 @@ RTirrs = [materials[i].power[1]/VPL.area(rect1) for i in 1:3]
 @test RTirrs ≈ [1.0 for i in 1:3]
 
 # VPL.render(rectangles)
-# VPL.render!(source)
+# VPL.render!([source])
+# VPL.render!(rtobj.grid)
 
 # Intersection of a rectangle from a directional light source at an angle
 source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = radiosity, nrays = nrays);
