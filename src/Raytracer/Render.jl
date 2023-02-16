@@ -15,38 +15,42 @@ of the light source is rendered along with the normal vector at that point
 (representative of the direction at which rays are generated). In the current
 version, `point = true` is only possible for directional light sources.
 """
-function render!(sources::Vector{Source{G, A, nw}}; n = 20, alpha = 0.2, point = false, 
+function render!(sources::Vector{Source{G, A, nw}}; n = 20, alpha = 0.2, 
                  scale = 0.2) where {G <: Directional, A <: FixedSource, nw}
-    FT = eltype(sources[1].geom.rx)
-    if point
-        if all(isa.(getproperty.(sources, :geom), Directional))
-            # Compute center of each light source and the normal vectors scaled
-            origins = [source.geom.po for source in sources]
-            norms = [source.geom.po => source.geom.po .+ source.angle.dir.*scale for source in sources]
-            # Render the points and scaled normal vectors
-            scatter!(origins)
-            linesegments!(norms)
-        else
-            error("Point-based rendering of light sources only works for directional sources.")
-        end
-    else
-        # Create the mesh
-        N = length(sources)
-        lengths = [2norm(source.geom.rx) for source in sources]
-        widths = [2norm(source.geom.ry) for source in sources]
-        e = [Ellipse(length = lengths[i], width = widths[i], n = n) for i in 1:N]
-        for i in 1:N
-            translate!(e[i], Vec(zero(FT), zero(FT), .-lengths[i]./2))
-            rotate!(e[i], z = normalize(sources[i].geom.rx), 
-                          y = normalize(sources[i].geom.ry), 
-                          x = sources[i].angle.dir)
-            translate!(e[i], sources[i].geom.po)
-        end
-        # Add the mesh to an existing scene
-        render!(Mesh(e), color = RGBA(0.0,0.0,0.0,alpha), wireframe = true, normals = true, transparency = true)
-    end
+    FT = eltype(sources[1].geom.xmin)
+    # Compute point and arrow for each light source
+    temp = compute_dir_p.(sources)
+    origins, norms = Tuple(getindex.(temp,i) for i in 1:2)
+    # Render the points and scaled normal vectors
+    scatter!(origins)
+    linesegments!(norms)
+
 end
 
+# Compute a point to represent a directional light source
+function compute_dir_p(s)
+    # Point in the center of the AABB
+    p = Vec((s.geom.xmin + s.geom.xmax)/2, 
+            (s.geom.ymin + s.geom.ymax)/2,
+            s.geom.zmax) 
+    # Normal vector
+    n = s.angle.dir
+    # Scaling
+    Δx = s.geom.xmax - s.geom.xmin
+    Δy = s.geom.ymax - s.geom.ymin
+    s = max(Δx, Δy)
+    # Possible origin of source
+    point = p .- n.*s
+    # Arrow
+    arrow = point => point .+ n.*s./5
+    # Return the point and arrow
+    return point, arrow
+end
+
+
+function render!(sources::Source{G, A, nw}; kwargs...) where {G <: Directional, A <: FixedSource, nw}
+    render!([sources]; kwargs...)
+end
 
 """
     render!(grid::GridCloner; alpha = 0.2)

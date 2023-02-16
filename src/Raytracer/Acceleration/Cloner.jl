@@ -24,7 +24,13 @@ end
 # Create a grid cloner around an acceleration structure
 # Create (2*n + 1) clones in each x or y direction -> symmetry enforced by odd numbers
 # Create n in z direction (always go up)
-function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, nz = 0, dx = zero(FT), dy = zero(FT), dz = zero(FT)) where {FT}
+function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, nz = 0, 
+                   dx = nothing, dy = nothing, dz = nothing) where {FT}
+    # Note that nothing is a special case to signal that dx, dy and dz should
+    # be derived from the bounding box
+    dx == nothing && (dx = acc.gbox.max[1] - acc.gbox.min[1])
+    dy == nothing && (dy = acc.gbox.max[2] - acc.gbox.min[2])
+    dz == nothing && (dz = acc.gbox.max[3] - acc.gbox.min[3])
     # Special case when the global box is empty
     gbox = acc.gbox
     isempty(acc.gbox) || nx == ny == nz == 0 && (return GridCloner(GVector([TNODE(gbox, true, Vec{FT}(0,0,0))]), 1))
