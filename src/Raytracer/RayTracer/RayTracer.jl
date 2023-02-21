@@ -7,7 +7,7 @@
 
 """
     RTSettings(;parallel = false, pkill = 0.2, maxiter = 2, sampler = Random.Xoshiro(123456789),
-                nx = 0, ny = 0, nz = 0, dx = 0.0, dy = 0.0, dz = 0.0)
+                nx = 3, ny = 3, nz = 0, dx = 0.0, dy = 0.0, dz = 0.0)
 
 Settings for the ray tracer: `parallel` indicates if the raytracer will run on a single core or make use of
 multiple cores in the machine based on Julia's multithreading support. `pkill` is the probably that a ray is
@@ -24,8 +24,8 @@ Base.@kwdef struct RTSettings{RNG, dt<: Union{Real, Nothing}}
     pkill::Float64 = 0.2
     maxiter::Int = 2
     sampler::RNG = Random.Xoshiro(123456789)
-    nx::Int = 0
-    ny::Int = 0
+    nx::Int = 3
+    ny::Int = 3
     nz::Int = 0
     dx::dt = nothing
     dy::dt = nothing

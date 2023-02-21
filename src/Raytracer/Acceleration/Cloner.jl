@@ -24,7 +24,7 @@ end
 # Create a grid cloner around an acceleration structure
 # Create (2*n + 1) clones in each x or y direction -> symmetry enforced by odd numbers
 # Create n in z direction (always go up)
-function GridCloner(acc::Acceleration{FT}; nx = 0, ny = 0, nz = 0, 
+function GridCloner(acc::Acceleration{FT}; nx = 3, ny = 3, nz = 0, 
                    dx = nothing, dy = nothing, dz = nothing) where {FT}
     # Note that nothing is a special case to signal that dx, dy and dz should
     # be derived from the bounding box
