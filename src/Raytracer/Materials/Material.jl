@@ -42,5 +42,5 @@ end
 Extract the power stored inside a material.
 """
 function power(material::Material)
-    return SVector(Tuple(pow.value for pow in material.power))
+    return SVector(Tuple(pow for pow in material.power))
 end

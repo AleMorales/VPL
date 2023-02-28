@@ -38,7 +38,7 @@ module btree
 end
 import .btree
 
-let
+#let
 
 ##### Test Ray, Triangle and AABB ##### 
 
@@ -316,8 +316,8 @@ dsource = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = 1.0, nrays 
 # Lambertian material
 mat = RT.Lambertian(τ = 0.0, ρ = 0.3)
 @test mat isa RT.Material
-@test length(mat.power) == 1
-@test all(mat.power .== zeros(1))
+@test length(VPL.power(mat)) == 1
+@test all(VPL.power(mat) .== zeros(1))
 power = [1.0]
 mode, coef = RT.choose_outcome(mat, power, rng)
 @test coef == [0.3]
@@ -344,7 +344,7 @@ mode, coef = RT.choose_outcome(mat, power, rng)
 
 mat = RT.Lambertian(τ = (0.0, 0.0), ρ = (0.3, 0.3))
 @test mat isa RT.Material
-@test length(mat.power) == 2
+@test length(VPL.power(mat)) == 2
 @test all(mat.power .== zeros(2))
 power = [1.0, 1.0]
 mode, coef = RT.choose_outcome(mat, power, rng)
