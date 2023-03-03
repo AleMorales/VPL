@@ -17,7 +17,7 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, RV, rv!, 
        O, X, Y, Z,  Vec,
        render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!,
-       RTScene, RayTracer, RTSettings, trace!, Naive,
+       RTScene, RayTracer, RTSettings, trace!, Naive, accelerate,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
        tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle,
        materials, get_nw, FixedSource, reset!, power, BVH, SAH, AvgSplit
@@ -149,6 +149,7 @@ const export_scene = Render.export_scene
 include("RayTracer/Module_RayTracing.jl")
 import .RayTracing as RT
 const RTScene = RT.RTScene
+const accelerate = RT.accelerate
 const RayTracer = RT.RayTracer
 const RTSettings = RT.RTSettings
 const trace! = RT.trace!

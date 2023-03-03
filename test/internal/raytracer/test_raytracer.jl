@@ -38,7 +38,7 @@ module btree
 end
 import .btree
 
-#let
+let
 
 ##### Test Ray, Triangle and AABB ##### 
 
