@@ -18,7 +18,7 @@ import Makie: scatter!, linesegments!
 
 # Internal dependencies
 import ..VPL.Render: render!
-import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, Turtle, feedgeom!, 
+import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, Turtle, feed!, 
                    ntriangles, Ellipse, rotate!, translate!, scale, BBox,
                    Scene, vertices, mesh, faces, material_ids, materials
 import ..VPL.Core: Node, Graph, GraphNode, root, children

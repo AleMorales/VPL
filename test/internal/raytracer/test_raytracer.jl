@@ -405,7 +405,7 @@ function Kochsnowflake(x)
     VPL.RU(120.0) + sn.E64(L/3, RT.Black(1)) + VPL.RU(-60.0) + 
     sn.E64(L/3, RT.Black(1))
 end
-function VPL.feedgeom!(turtle::VPL.Turtle, e::sn.E64, vars)
+function VPL.feed!(turtle::VPL.Turtle, e::sn.E64, vars)
     VPL.HollowCylinder!(turtle, length = e.length, width = e.length/10, 
                     height = e.length/10, move = true, material = e.mat,
                     color = rand(RGB))
@@ -729,7 +729,7 @@ RTirrs = [materials[i].power[1]/VPL.area(rect1) for i in 1:3]
 
 ##### Ray trace binary tree ##### 
 
-function VPL.feedgeom!(turtle::VPL.Turtle, i::btree.Internode, vars)
+function VPL.feed!(turtle::VPL.Turtle, i::btree.Internode, vars)
     VPL.HollowCube!(turtle, length = i.length, height = i.length/10, 
                     width = i.length/10, move = true, color = VPL.RGB(0,1,0),
                     material = i.mat)
@@ -828,14 +828,13 @@ function Kochsnowflake(x)
     VPL.RU(120.0) + sn.E2(L/3, m()) + VPL.RU(-60.0) + 
     sn.E2(L/3, m())
 end
-function VPL.feedgeom!(turtle::VPL.Turtle, e::sn.E2, vars)
+function VPL.feed!(turtle::VPL.Turtle, e::sn.E2, vars)
     if turtle.message == "raytracer"
         VPL.HollowCube!(turtle, length = e.length, width = e.length/10, 
                     height = e.length/10, move = true, material = e.mat)
     elseif turtle.message == "render"
         powers = getindex.(VPL.power.(e.mat), 1)
         color = any(powers .> 0.0) ? RGB(1.0, 0.0, 0.0) : RGB(0.0, 0.0, 0.0)
-        @show color
         VPL.HollowCube!(turtle, length = e.length, width = e.length/10, 
                     height = e.length/10, move = true,
                     color = color)

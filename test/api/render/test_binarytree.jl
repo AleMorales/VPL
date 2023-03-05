@@ -20,7 +20,7 @@ end
 
 let 
     import .btree
-    function VPL.feedgeom!(turtle::Turtle, i::btree.Internode, vars)
+    function VPL.feed!(turtle::Turtle, i::btree.Internode, vars)
         # All vertices share the same color
         if turtle.message == :green
             HollowCube!(turtle, length = i.length, height = i.length/10, 

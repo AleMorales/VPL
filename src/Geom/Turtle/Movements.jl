@@ -22,7 +22,7 @@ Node that translates a turtle to the new position `to` (a `Vec` object).
 struct T{FT} <: Node
     to::Vec{FT}
 end
-feedgeom!(turtle::Turtle, node::T, vars) = t!(turtle, to = node.to)
+feed!(turtle::Turtle, node::T, vars) = t!(turtle, to = node.to)
 
 
 """
@@ -50,7 +50,7 @@ struct OR{FT} <: Node
     up::Vec{FT}
     arm::Vec{FT}
 end
-feedgeom!(turtle::Turtle, node::OR, vars) = 
+feed!(turtle::Turtle, node::OR, vars) = 
                      or!(turtle, head = node.head, up = node.up, arm = node.arm)
 
 """
@@ -78,7 +78,7 @@ Base.@kwdef struct SET{FT} <: Node
     up::Vec{FT}
     arm::Vec{FT}
 end
-feedgeom!(turtle::Turtle, node::SET, vars) = 
+feed!(turtle::Turtle, node::SET, vars) = 
       set!(turtle, to = node.to, head = node.head, up = node.up, arm = node.arm)
 
 
@@ -106,7 +106,7 @@ and the rotation is clockwise.
 struct RU{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::Turtle, node::RU, vars) = ru!(turtle, node.angle)
+feed!(turtle::Turtle, node::RU, vars) = ru!(turtle, node.angle)
   
   
 """
@@ -133,7 +133,7 @@ and the rotation is clockwise.
 struct RA{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::Turtle, node::RA, vars) = ra!(turtle, node.angle)
+feed!(turtle::Turtle, node::RA, vars) = ra!(turtle, node.angle)
   
   
 """
@@ -160,7 +160,7 @@ degrees and the rotation is clockwise.
 struct RH{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::Turtle, node::RH, vars) = rh!(turtle, node.angle)
+feed!(turtle::Turtle, node::RH, vars) = rh!(turtle, node.angle)
   
   
 """
@@ -181,7 +181,7 @@ Moves a turtle forward a given distance.
 struct F{FT} <: Node
     dist::FT
 end
-feedgeom!(turtle::Turtle, node::F, vars) = f!(turtle, node.dist)
+feed!(turtle::Turtle, node::F, vars) = f!(turtle, node.dist)
 
 
 # Taken from https://mathworld.wolfram.com/RodriguesRotationFormula.html
@@ -264,4 +264,4 @@ Rotates the turtle towards the Z axis. See documentation for `rv!` for details.
 struct RV{FT} <: Node
     strength::FT
 end
-feedgeom!(turtle::Turtle, node::RV, vars) = rv!(turtle, node.strength)
+feed!(turtle::Turtle, node::RV, vars) = rv!(turtle, node.strength)

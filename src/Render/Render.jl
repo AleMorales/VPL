@@ -84,7 +84,7 @@ in the direction of the normal vector for each triangle in the mesh,
 `wireframe = true` will draw the edges of each triangle with black lines. 
 Keyword arguments are passed to `Makie.mesh()`. The argument `message` is any
 user-defined object that will be stored in the turtles and hence available 
-within the `feedgeom!` and `feedcolor!` methods. By default, double 
+within the `feed!` and `feedcolor!` methods. By default, double 
 floating precision will be used (`Float64`) but it is possible to generate a 
 version with a different precision by specifying the corresponding type as in 
 `render(graph, Float32)`.
@@ -105,7 +105,7 @@ arrows in the direction of the normal vector for each triangle in the mesh,
 `wireframe = true` will draw the edges of each triangle with black lines. 
 Keyword arguments are passed to `Makie.mesh()`. The argument `message` is any
 user-defined object that will be stored in the turtles and hence available 
-within the `feedgeom!` and `feedcolor!` methods. By default, double 
+within the `feed!` and `feedcolor!` methods. By default, double 
 floating precision will be used (`Float64`) but it is possible to generate a 
 version with a different precision by specifying the corresponding type as in 
 `render(graphs, Float32)`.

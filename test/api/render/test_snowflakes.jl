@@ -24,7 +24,7 @@ let
     end
     rule = Rule(sn.E64, rhs = Kochsnowflake)
     Koch = Graph(axiom = axiom, rules = Tuple(rule))
-    function VPL.feedgeom!(turtle::Turtle, e::sn.E64, vars)
+    function VPL.feed!(turtle::Turtle, e::sn.E64, vars)
        HollowCylinder!(turtle, length = e.length, width = e.length/10, 
                        height = e.length/10, move = true,
                        color = RGB(rand(), rand(), rand()))
@@ -44,7 +44,7 @@ let
     end
     rule = Rule(sn.E32, rhs = Kochsnowflake32)
     Koch = Graph(axiom = axiom, rules = Tuple(rule))
-    function VPL.feedgeom!(turtle::Turtle, e::sn.E32, vars)
+    function VPL.feed!(turtle::Turtle, e::sn.E32, vars)
        HollowCylinder!(turtle, length = e.length, width = e.length/10, 
                        height = e.length/10, move = true,
                        color = RGB(rand(), rand(), rand()))

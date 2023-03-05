@@ -72,7 +72,7 @@ colors and materials associated to each primitive.
 function Scene(graph::Graph, ::Type{FT} = Float64; message = nothing) where FT
     # Retrieve the mesh of triangles
     turtle = Turtle(FT, message)
-    feedgeom!(turtle, graph);
+    feed!(turtle, graph);
     # Create the scene
     Scene(geoms(turtle), colors(turtle), material_ids(turtle), materials(turtle))
 end

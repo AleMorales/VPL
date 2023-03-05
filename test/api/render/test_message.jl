@@ -20,7 +20,7 @@ let
     end
     rule = Rule(sn.E, rhs = Kochsnowflake)
     Koch = Graph(axiom = axiom, rules = Tuple(rule))
-    function VPL.feedgeom!(turtle::Turtle, e::sn.E, vars)
+    function VPL.feed!(turtle::Turtle, e::sn.E, vars)
        if turtle.message == "Random cylinders" 
         HollowCylinder!(turtle, length = e.length, width = e.length/10, 
                         height = e.length/10, move = true,
