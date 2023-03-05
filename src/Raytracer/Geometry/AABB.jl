@@ -138,3 +138,22 @@ Base.isempty(box::AABB{FT}) where FT = box.min ≈ Vec{FT}(0,0,0) && box.max == 
 
 # Base area of a box (plane XY)
 base_area(box::AABB) = (box.max[1] - box.min[1])*(box.max[2] - box.min[2])
+
+# Fit a box to a 3D scene
+function AABB(scene::Scene)
+    xmin = Inf
+    ymin = Inf
+    zmin = Inf
+    xmax = -Inf
+    ymax = -Inf
+    zmax = -Inf
+    @inbounds for vertex in vertices(scene)
+        xmin = min(xmin, vertex[1])
+        ymin = min(ymin, vertex[2])
+        zmin = min(zmin, vertex[3])
+        xmax = max(xmax, vertex[1])
+        ymax = max(ymax, vertex[2])
+        zmax = max(zmax, vertex[3])
+    end
+    AABB(Vec(xmin, ymin, zmin), Vec(xmax, ymax, zmax))
+end

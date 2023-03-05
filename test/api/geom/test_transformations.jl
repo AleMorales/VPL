@@ -72,7 +72,7 @@ VPL.translate!(m4, VPL.Vec(0.0, 0.0, -2.0))
 @test all(m4.vertices .≈ m.vertices)
 
 # Transformation via a turtle
-t = VPL.MTurtle(Float64);
+t = VPL.Turtle(Float64);
 ru!(t, 45.0)
 ra!(t, 45.0)
 rh!(t, 45.0)

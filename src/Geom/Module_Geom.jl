@@ -8,8 +8,9 @@ import LinearAlgebra: ×, norm, normalize, Diagonal, cross, ⋅
 import CoordinateTransformations: SDiagonal, LinearMap, AffineMap, AbstractAffineMap, Translation
 import Rotations: RotX, RotY, RotZ
 import Unrolled: @unroll
-import ..VPL: Turtle
-import ..VPL.Core: Node, Graph, GraphNode, root, children
+import ColorTypes: Colorant
+import ..VPL: Material, add!
+import ..VPL.Core: Node, Graph, GraphNode, root, children, vars
 
 """
     Vec(x, y, z)
@@ -120,5 +121,5 @@ include("Turtle/Movements.jl")
 include("Turtle/Transformations.jl")
 include("Turtle/Primitives.jl")
 include("Turtle/Graphs.jl")
-
+include("Turtle/Scene.jl")
 end

@@ -59,12 +59,12 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct solid cone using a turtle
 sc = G.SolidCone(length = 2.0, width = 1.0, height = 1.0, n = 20);
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.SolidCone!(t; length = 2.0, width = 1.0, height = 1.0, n = 20, move = true) 
 @test G.geoms(t) == sc
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.SolidCone!(t; length = 2.0, width = 1.0, height = 1.0, n = 20, move = false);
 @test G.geoms(t) == sc
 @test G.pos(t) == G.Vec{Float64}(0,0,0)

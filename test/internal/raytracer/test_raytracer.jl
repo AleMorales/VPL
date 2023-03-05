@@ -16,6 +16,10 @@ module sn
         length::Float32
         mat::VPL.RayTracing.Black{1}
     end
+    struct E2 <: Node
+        length::Float64
+        mat::Vector{VPL.RayTracing.Black{1}}
+    end
 end
 import .sn
 
@@ -390,27 +394,6 @@ mat = RT.Sensor(3)
 @test all(mat.power .== zeros(3))
 
 
-##### Test manual construction of a scene ##### 
-r = VPL.Rectangle(length = 2.0, width = 2.0);
-ids = [1,1]
-mats = [RT.Sensor(1)]
-scene = RT.RTScene(mesh = r, ids = ids, materials = mats)
-scene1 = deepcopy(scene)
-@test scene isa RT.RTScene
-@test length(scene.triangles) == 2
-@test length(scene.materials) == 1
-@test scene.ids == [1,1]
-
-RT.add!(scene, mesh = r, material = RT.Sensor(1))
-@test length(scene.triangles) == 4
-@test scene.ids == [1,1,2,2]
-@test length(scene.materials) == 2
-
-scene2 = RT.RTScene([scene, scene1])
-@test length(scene2.triangles) == 6
-@test scene2.ids == [1,1,2,2,3,3]
-@test length(scene2.materials) == 3
-
 ##### Test turtle-based construction of a scene ##### 
 # Koch curve @ 64 bits
 L = 1.0
@@ -422,23 +405,20 @@ function Kochsnowflake(x)
     VPL.RU(120.0) + sn.E64(L/3, RT.Black(1)) + VPL.RU(-60.0) + 
     sn.E64(L/3, RT.Black(1))
 end
-function VPL.feedgeom!(turtle::VPL.MTurtle, e::sn.E64)
+function VPL.feedgeom!(turtle::VPL.Turtle, e::sn.E64, vars)
     VPL.HollowCylinder!(turtle, length = e.length, width = e.length/10, 
-                    height = e.length/10, move = true)
-    return nothing
-end
-function RT.feedmaterial!(turtle::RT.RTTurtle, e::sn.E64)
-    VPL.feedmaterial!(turtle, e.mat)
+                    height = e.length/10, move = true, material = e.mat,
+                    color = rand(RGB))
     return nothing
 end
 rule = VPL.Rule(sn.E64, rhs = Kochsnowflake)
 Koch = VPL.Graph(axiom = axiom, rules = Tuple(rule))
-scene = RT.RTScene(Koch)
-@test length(scene.materials) == 3
-@test eltype(scene.materials) == RT.Material # type erasure going on, problem is RTTurtle...
-@test length(scene.ids) == length(scene.triangles)
-@test maximum(scene.ids) == length(scene.materials)
-@test length(scene.triangles) == 120
+scene = RT.Scene(Koch)
+@test length(VPL.materials(scene)) == 3
+@test eltype(VPL.materials(scene)) == VPL.Material
+@test length(VPL.Geom.material_ids(scene)) == length(VPL.Geom.faces(scene))
+@test maximum(VPL.Geom.material_ids(scene)) == length(VPL.materials(scene))
+@test length(VPL.Geom.faces(scene)) == 120
 
 
 ##### Test intersection of specific rays with Naive acc ##### 
@@ -450,7 +430,7 @@ rect = VPL.Rectangle(length = 1.0, width = 1.0);
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = VPL.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1);
@@ -477,7 +457,7 @@ rect = VPL.Rectangle(length = 2.0, width = 1.0)
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = RT.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3);
@@ -499,7 +479,7 @@ rect = VPL.Rectangle(length = 2.0, width = 1.0)
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = RT.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/2, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
@@ -521,7 +501,7 @@ rect = VPL.Rectangle(length = 2.0, width = 1.0)
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = RT.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
@@ -554,7 +534,7 @@ VPL.translate!(rect3, 2.0*VPL.Z())
 rectangles = VPL.Mesh([rect1, rect2, rect3])
 materials = [RT.Sensor() for i in 1:3]
 ids = [1,1,2,2,3,3]
-scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
+scene = RT.Scene(mesh = rectangles, material_ids = ids, materials = materials);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 
@@ -605,7 +585,7 @@ VPL.translate!(rect3, 2.0*VPL.Z())
 rectangles = VPL.Mesh([rect1, rect2, rect3])
 materials = [RT.Lambertian(τ = 0.3, ρ = 0.3) for i in 1:3]
 ids = [1,1,2,2,3,3]
-scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
+scene = RT.Scene(mesh = rectangles, material_ids = ids, materials = materials);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 # Need to make sure maxiter > 1 or it will stop after the first sensor
@@ -642,7 +622,7 @@ rect = VPL.Rectangle(length = 1.0, width = 1.5)
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = RT.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1);
@@ -666,7 +646,7 @@ rect = VPL.Rectangle(length = 3.0, width = 1.0)
 VPL.rotatey!(rect, -π/2) # To put it in the XY plane
 material = [RT.Black()]
 ids = [1,1]
-scene = RT.RTScene(mesh = rect, ids = ids, materials = material);
+scene = RT.Scene(mesh = rect, material_ids = ids, materials = material);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(scene, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 1.0, maxiter = 1, nx = 3, ny = 3, dx = 1.0, dy = 1.0);
@@ -692,7 +672,7 @@ VPL.translate!(rect3, 2.0*VPL.Z())
 rectangles = VPL.Mesh([rect1, rect2, rect3])
 materials = [RT.Sensor() for i in 1:3]
 ids = [1,1,2,2,3,3]
-scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
+scene = RT.Scene(mesh = rectangles, material_ids = ids, materials = materials);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = 0.0, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 # Need to make sure maxiter > 1 or it will stop after the first sensor
@@ -731,7 +711,7 @@ VPL.translate!(rect3, 2.0*VPL.Z())
 rectangles = VPL.Mesh([rect1, rect2, rect3])
 materials = [RT.Lambertian(τ = 0.3, ρ = 0.3) for i in 1:3]
 ids = [1,1,2,2,3,3]
-scene = RT.RTScene(mesh = rectangles, ids = ids, materials = materials);
+scene = RT.Scene(mesh = rectangles, material_ids = ids, materials = materials);
 gbox = RT.AABB(scene);
 source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = radiosity, nrays = nrays);
 settings = RT.RTSettings(pkill = 0.9, maxiter = 4, nx = 4, ny = 4, dx = 1.0, dy = 1.0);
@@ -749,16 +729,10 @@ RTirrs = [materials[i].power[1]/VPL.area(rect1) for i in 1:3]
 
 ##### Ray trace binary tree ##### 
 
-function VPL.feedgeom!(turtle::VPL.MTurtle, i::btree.Internode)
-    VPL.HollowCube!(turtle, length = i.length, height = i.length/10, width = i.length/10, move = true)
-    return nothing
-end
-function VPL.feedcolor!(turtle::VPL.GLTurtle, i::btree.Internode)
-    VPL.feedcolor!(turtle, VPL.RGB(0,1,0))
-    return nothing
-end
-function RT.feedmaterial!(turtle::RT.RTTurtle, i::btree.Internode)
-    VPL.feedmaterial!(turtle, i.mat)
+function VPL.feedgeom!(turtle::VPL.Turtle, i::btree.Internode, vars)
+    VPL.HollowCube!(turtle, length = i.length, height = i.length/10, 
+                    width = i.length/10, move = true, color = VPL.RGB(0,1,0),
+                    material = i.mat)
     return nothing
 end
 rule = VPL.Rule(btree.Meristem, rhs = mer -> btree.Node() + 
@@ -797,13 +771,12 @@ newtree = simulate(tree, getInternode, 4)
 
 # Ray trace the tree with a single directional light source
 nrays = 1_000_000
-scene = RT.RTScene(newtree);
-gbox = RT.AABB(scene)
-source = RT.DirectionalSource(gbox, θ = π/4, Φ = 0.0, radiosity = 1.0, nrays = nrays);
+scene = RT.Scene(newtree);
+source = RT.DirectionalSource(scene, θ = π/4, Φ = 0.0, radiosity = 1.0, nrays = nrays);
 # Tracing with BVH acceleration structure
 settings = RT.RTSettings(pkill = 0.9, maxiter = 4, nx = 5, ny = 5, dx = 1.0, 
                          dy = 1.0, parallel = true);
-rtobj = RT.RayTracer(scene, [source], settings = settings, acceleration = RT.BVH,
+rtobj = RT.RayTracer(scene, source, settings = settings, acceleration = RT.BVH,
                      rule = RT.SAH{6}(5, 10));
 nrays_traced = RT.trace!(rtobj)
 powers_bvh = getpower(newtree, getInternode);
@@ -818,9 +791,8 @@ powers_naive = getpower(newtree, getInternode);
 # acceleration structures, but for large number of rays the results diverge
 # This divergence does not seem to decrease with the number of rays. It may 
 # depend on the scene itself though?
-@test maximum(abs.((powers_bvh .- powers_naive)./powers_naive)) < 0.005
+@test maximum(abs.((powers_bvh .- powers_naive)./(powers_naive .+ eps(FT)))) < 0.005
 @test abs(sum(powers_bvh) - sum(powers_naive))/sum(powers_bvh) < 1e-5
-
 
 
 # Simple test to make sure that rays are always generated from above the scene
@@ -831,7 +803,7 @@ r2 = deepcopy(r)
 VPL.translate!(r2, VPL.Vec(0.0, 0.0, -1.0))
 materials = [VPL.Black(), VPL.Black()]
 ids = [1,1, 2, 2]
-scene = VPL.RTScene(mesh = VPL.Mesh([r,r2]), ids = ids, materials = materials)
+scene = VPL.Scene(mesh = VPL.Mesh([r,r2]), material_ids = ids, materials = materials)
 sources = RT.DirectionalSource(scene, θ = π/2*0.99, Φ = 0.0, radiosity = 1.0, nrays = nrays);
 power_out = sources.power*sources.nrays               
 #VPL.render(VPL.Mesh([r,r2]))
@@ -842,5 +814,59 @@ nrays_traced = VPL.trace!(rtobj)
 @test materials[1].power[1]/power_out[1] ≈ 1.0
 @test materials[2].power[1]/power_out[1] ≈ 0.0
 
+# Simple test of having multiple materials per geometry
+r = VPL.Rectangle(length = 2.0, width = 1.0) 
+VPL.rotatey!(r, -π/2) # To put it in the XY plane
+VPL.translate!(r, VPL.Vec(1.0,0.5, 0.0))
+L = 1.0
+m() = [RT.Black(1) for i in 1:8] # Number of triangles in the hollow cube
+axiom = sn.E2(L, m()) + VPL.RU(120.0) + sn.E2(L, m()) + 
+        VPL.RU(120.0) + sn.E2(L, m())
+function Kochsnowflake(x)
+    L = data(x).length
+    sn.E2(L/3, m()) + VPL.RU(-60.0) + sn.E2(L/3, m()) + 
+    VPL.RU(120.0) + sn.E2(L/3, m()) + VPL.RU(-60.0) + 
+    sn.E2(L/3, m())
+end
+function VPL.feedgeom!(turtle::VPL.Turtle, e::sn.E2, vars)
+    if turtle.message == "raytracer"
+        VPL.HollowCube!(turtle, length = e.length, width = e.length/10, 
+                    height = e.length/10, move = true, material = e.mat)
+    elseif turtle.message == "render"
+        powers = getindex.(VPL.power.(e.mat), 1)
+        color = any(powers .> 0.0) ? RGB(1.0, 0.0, 0.0) : RGB(0.0, 0.0, 0.0)
+        @show color
+        VPL.HollowCube!(turtle, length = e.length, width = e.length/10, 
+                    height = e.length/10, move = true,
+                    color = color)
+    end
+    return nothing
+end
+rule = VPL.Rule(sn.E2, rhs = Kochsnowflake)
+Koch = VPL.Graph(axiom = axiom, rules = Tuple(rule))
+scene = RT.Scene(Koch, message = "raytracer")
+VPL.add!(scene, mesh = r, material = RT.Black(1), color = RGB(0.5, 0.5, 0.0))
+@test all(VPL.Geom.material_ids(scene) .== vcat(collect(1:24), [25, 25]))
+sources = RT.DirectionalSource(scene, θ = π/4, Φ = 0.0, radiosity = 1.0, nrays = nrays);
+settings = VPL.RTSettings(parallel = true)
+rtobj = VPL.RayTracer(scene, sources, settings = settings);
+nrays_traced = VPL.trace!(rtobj)
+@test length(filter(x -> x.power[1] > 0.0, scene.materials)) == 5 # only 4 faces are seen (+ soil)
+scene = RT.Scene(Koch, message = "render")
+VPL.add!(scene, mesh = r, material = RT.Black(1), color = RGB(0.5, 0.5, 0.0))
+render(scene)
+render!(sources)
+
+scene = RT.Scene(Koch, message = "raytracer")
+VPL.add!(scene, mesh = r, material = RT.Black(1), color = RGB(0.5, 0.5, 0.0))
+sources = RT.DirectionalSource(scene, θ = π/4, Φ = π/2, radiosity = 1.0, nrays = nrays);
+settings = VPL.RTSettings(parallel = true)
+rtobj = VPL.RayTracer(scene, sources, settings = settings);
+nrays_traced = VPL.trace!(rtobj)
+@test length(filter(x -> x.power[1] > 0.0, scene.materials)) == 17 # 8 faces seen (+ soil)
+scene = RT.Scene(Koch, message = "render")
+VPL.add!(scene, mesh = r, material = RT.Black(1), color = RGB(0.5, 0.5, 0.0))
+render(scene)
+render!(sources)
 
 end

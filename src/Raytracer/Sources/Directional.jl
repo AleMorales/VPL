@@ -3,10 +3,10 @@
 
 """
     DirectionalSource(box::AABB, θ, Φ, radiosity, nrays)
-    DirectionalSource(scene::RTScene, θ, Φ, radiosity, nrays)
+    DirectionalSource(scene::Scene, θ, Φ, radiosity, nrays)
 
 Create a Directional source (including geometry and angle components) by providing an axis-aligned
-bounding box (`box`) or an `RTScene` object (`scene`) as well as the zenith (`θ`) and azimuth (`Φ`)
+bounding box (`box`) or an `Scene` object (`scene`) as well as the zenith (`θ`) and azimuth (`Φ`)
 angles, the radiosity of the source and the number of rays to be generated. 
 Directional sources may generate incorrect results in the absence of a grid cloner
 that extendes the scenes. This is because the rays are generated from the upper
@@ -19,7 +19,7 @@ function DirectionalSource(box::AABB; θ, Φ, radiosity, nrays)
     power = radiosity*area(dir_geom)# base_area(box) -> from earlier version
     Source(dir_geom, FixedSource(θ, Φ), power/nrays, nrays)
 end
-function DirectionalSource(scene::RTScene; θ, Φ, radiosity, nrays) 
+function DirectionalSource(scene::Scene; θ, Φ, radiosity, nrays) 
     box = AABB(scene)
     DirectionalSource(box, θ = θ, Φ = Φ, radiosity = radiosity, nrays = nrays)
 end
@@ -52,7 +52,7 @@ end
 function generate_point(d::Directional{FT}, rng) where FT
     x = d.xmin + rand(rng, FT)*(d.xmax - d.xmin)
     y = d.ymin + rand(rng, FT)*(d.ymax - d.ymin)
-    Vec(x, y, d.zmax + eps(FT))
+    Vec(x, y, d.zmax + 5eps(FT))
 end
 
 # # Create geometry for a directional light source

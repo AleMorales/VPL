@@ -58,12 +58,12 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct solid cylinder using a turtle
 sc = VPL.SolidCylinder(length = 2.0, width = 1.0, height = 1.0, n = 40);
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 VPL.SolidCylinder!(t; length = 2.0, width = 1.0, height = 1.0, n = 40, move = true) 
 @test VPL.geoms(t) == sc
 @test VPL.pos(t) == VPL.Vec{Float64}(0,0,2)
 
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 VPL.SolidCylinder!(t; length = 2.0, width = 1.0, height = 1.0, n = 40, move = false);
 @test VPL.geoms(t) == sc
 @test VPL.pos(t) == VPL.Vec{Float64}(0,0,0)

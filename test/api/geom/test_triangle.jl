@@ -59,12 +59,12 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct triangles using a turtle
 r = VPL.Triangle(length = 2.0, width = 2.0);
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 VPL.Triangle!(t; length = 2.0, width = 2.0, move = true) 
 @test VPL.geoms(t) == r
 @test VPL.pos(t) == VPL.Vec{Float64}(0,0,2)
 
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 VPL.Triangle!(t; length = 2.0, width = 2.0, move = false);
 @test VPL.geoms(t) == r
 @test VPL.pos(t) == VPL.Vec{Float64}(0,0,0)

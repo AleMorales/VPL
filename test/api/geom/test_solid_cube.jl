@@ -58,16 +58,14 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct solid cube using a turtle
 sc = G.SolidCube(length = 1.0, width = 1.0, height = 1.0);
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.SolidCube!(t; length = 1.0, width = 1.0, height = 1.0, move = true) 
 @test G.geoms(t) == sc
 @test G.pos(t) == G.Vec{Float64}(0,0,1)
 
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.SolidCube!(t; length = 1.0, width = 1.0, height = 1.0, move = false);
 @test G.geoms(t) == sc
 @test G.pos(t) == G.Vec{Float64}(0,0,0)
-
-
 
 end

@@ -4,7 +4,7 @@ using LinearAlgebra
 
 let 
     # RA of 45° (upward gravitropism)
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 ra!(t, 45.0)
 tb = head(t)
 rv!(t, 0.5)
@@ -21,7 +21,7 @@ cosαa = ta ⋅ Z()
 @test abs(up(t) ⋅ arm(t)) < eps(Float64)
 
 # RA of 45° (downward gravitropism)
-t = VPL.MTurtle(Float64)
+t = VPL.Turtle(Float64)
 ra!(t, 45.0)
 tb = head(t)
 rv!(t, -0.5)
@@ -39,7 +39,7 @@ cosαa = ta ⋅ Z()
 
 
 # RA of 120° (i.e., what if it is pointing downwards?)
-t = MTurtle(Float64)
+t = Turtle(Float64)
 ra!(t, 120.0)
 tb = head(t)
 rv!(t, 0.5)
@@ -56,7 +56,7 @@ cosαa = ta ⋅ Z()
 @test abs(up(t) ⋅ arm(t)) < eps(Float64)
 
 # RA of 120° (i.e., what if it is pointing downwards? -> moving downwards)
-t = MTurtle(Float64)
+t = Turtle(Float64)
 ra!(t, 120.0)
 tb = head(t)
 rv!(t, -0.5)
@@ -73,7 +73,7 @@ cosαa = ta ⋅ Z()
 @test abs(up(t) ⋅ arm(t)) < eps(Float64)
 
 # RA of 45°, RU of -25°, RH of 10°
-t = MTurtle(Float64)
+t = Turtle(Float64)
 ra!(t, 45.0)
 ru!(t, -25.0)
 rh!(t, 10.0)
@@ -92,7 +92,7 @@ cosαa = ta ⋅ Z()
 
 
 # RA of 45°, RU of -25°, RH of 10° (downwards)
-t = MTurtle(Float64)
+t = Turtle(Float64)
 ra!(t, 45.0)
 ru!(t, -25.0)
 rh!(t, 10.0)

@@ -18,10 +18,11 @@ import Makie: scatter!, linesegments!
 
 # Internal dependencies
 import ..VPL.Render: render!
-import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, MTurtle, feedgeom!, 
-                   ntriangles, Ellipse, rotate!, translate!, scale, BBox
+import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, Turtle, feedgeom!, 
+                   ntriangles, Ellipse, rotate!, translate!, scale, BBox,
+                   Scene, vertices, mesh, faces, material_ids, materials
 import ..VPL.Core: Node, Graph, GraphNode, root, children
-import ..VPL: Turtle, add!
+import ..VPL: Turtle, add!, Material
 
 # Helpers and auxilliary functions
 include("utils.jl")
@@ -34,9 +35,6 @@ include("Geometry/AABB.jl")
 # Materials
 include("Materials/Material.jl")
 
-# Scenes
-include("RayTracer/RTSCene.jl")
-
 # Acceleration structures
 include("Acceleration/Acceleration.jl")
 
@@ -44,7 +42,6 @@ include("Acceleration/Acceleration.jl")
 include("Sources/Source.jl")
 
 # RayTracer
-include("RayTracer/Turtle.jl")
 include("RayTracer/RayTracer.jl")
 
 
