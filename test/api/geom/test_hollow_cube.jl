@@ -58,12 +58,12 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct hollow cones using a turtle
 hc = G.HollowCube(length = 2.0, width = 1.0, height = 1.0);
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.HollowCube!(t; length = 2.0, width = 1.0, height = 1.0, move = true) 
 @test G.geoms(t) == hc
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.HollowCube!(t; length = 2.0, width = 1.0, height = 1.0, move = false);
 @test G.geoms(t) == hc
 @test G.pos(t) == G.Vec{Float64}(0,0,0)

@@ -33,7 +33,16 @@ end
 Create a vector of ray tracing `Triangle` objects from a `Mesh` object.
 """
 function Triangle(mesh::Mesh)
-    [Triangle(mesh.vertices[face]...) for face in mesh.faces]
+    [Triangle(vertices(mesh)[face]...) for face in faces(mesh)]
+end
+
+"""
+    Triangle(mesh)
+
+Create a vector of ray tracing `Triangle` objects from a `Scene` object.
+"""
+function Triangle(scene::Scene)
+    Triangle(mesh(scene))
 end
 
 # Moller-Trumbore intersection test with early exits

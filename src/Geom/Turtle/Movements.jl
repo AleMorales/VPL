@@ -9,7 +9,7 @@
 
 Translate a turtle to the new position `to` (a `Vec` object). 
 """
-function t!(turtle::MTurtle{FT,UT}; to::Vec{FT} = O(FT)) where {FT,UT}
+function t!(turtle::Turtle{FT,UT}; to::Vec{FT} = O(FT)) where {FT,UT}
     update!(turtle, to = to, head = head(turtle), up = up(turtle), 
                     arm = arm(turtle))
 end
@@ -22,7 +22,7 @@ Node that translates a turtle to the new position `to` (a `Vec` object).
 struct T{FT} <: Node
     to::Vec{FT}
 end
-feedgeom!(turtle::MTurtle, node::T) = t!(turtle, to = node.to)
+feedgeom!(turtle::Turtle, node::T, vars) = t!(turtle, to = node.to)
 
 
 """
@@ -31,7 +31,7 @@ feedgeom!(turtle::MTurtle, node::T) = t!(turtle, to = node.to)
 Orient a turtle to a new direction by re-defining the local reference system.
 The arguments `head`, `up` and `arm` should be of type `Vec`.
 """
-function or!(turtle::MTurtle{FT,UT}; head::Vec{FT} = Z(FT), up::Vec{FT} = X(FT), 
+function or!(turtle::Turtle{FT,UT}; head::Vec{FT} = Z(FT), up::Vec{FT} = X(FT), 
              arm::Vec{FT} = Y(FT)) where {FT,UT}
     @assert norm(head) ≈ one(FT)
     @assert norm(up) ≈ one(FT)
@@ -50,7 +50,7 @@ struct OR{FT} <: Node
     up::Vec{FT}
     arm::Vec{FT}
 end
-feedgeom!(turtle::MTurtle, node::OR) = 
+feedgeom!(turtle::Turtle, node::OR, vars) = 
                      or!(turtle, head = node.head, up = node.up, arm = node.arm)
 
 """
@@ -59,7 +59,7 @@ feedgeom!(turtle::MTurtle, node::OR) =
 Set position and orientation of a turtle. The arguments `to`, `head`, `up` and 
 `arm` should be of type `Vec` and be passed as keyword arguments.
 """
-function set!(turtle::MTurtle{FT,UT}; to::Vec{FT} = O(FT), head::Vec{FT} = Z(FT), 
+function set!(turtle::Turtle{FT,UT}; to::Vec{FT} = O(FT), head::Vec{FT} = Z(FT), 
               up::Vec{FT} = X(FT), arm::Vec{FT} = Y(FT)) where {FT,UT}
     @assert norm(head) ≈ one(FT)
     @assert norm(up) ≈ one(FT)
@@ -78,7 +78,7 @@ Base.@kwdef struct SET{FT} <: Node
     up::Vec{FT}
     arm::Vec{FT}
 end
-feedgeom!(turtle::MTurtle, node::SET) = 
+feedgeom!(turtle::Turtle, node::SET, vars) = 
       set!(turtle, to = node.to, head = node.head, up = node.up, arm = node.arm)
 
 
@@ -88,7 +88,7 @@ feedgeom!(turtle::MTurtle, node::SET) =
 Rotates a turtle around up axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function ru!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
+function ru!(turtle::Turtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -106,7 +106,7 @@ and the rotation is clockwise.
 struct RU{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::MTurtle, node::RU) = ru!(turtle, node.angle)
+feedgeom!(turtle::Turtle, node::RU, vars) = ru!(turtle, node.angle)
   
   
 """
@@ -115,7 +115,7 @@ feedgeom!(turtle::MTurtle, node::RU) = ru!(turtle, node.angle)
 Rotates a turtle around arm axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function ra!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
+function ra!(turtle::Turtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -133,7 +133,7 @@ and the rotation is clockwise.
 struct RA{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::MTurtle, node::RA) = ra!(turtle, node.angle)
+feedgeom!(turtle::Turtle, node::RA, vars) = ra!(turtle, node.angle)
   
   
 """
@@ -142,7 +142,7 @@ feedgeom!(turtle::MTurtle, node::RA) = ra!(turtle, node.angle)
 Rotate turtle around head axis. Angle must be in hexadecimal degrees and the 
 rotation is clockwise.
 """
-function rh!(turtle::MTurtle{FT,UT}, angle::FT) where {FT,UT}
+function rh!(turtle::Turtle{FT,UT}, angle::FT) where {FT,UT}
     angle *= FT(pi)/FT(180)
     c = cos(angle)
     s = sin(angle)
@@ -160,7 +160,7 @@ degrees and the rotation is clockwise.
 struct RH{FT} <: Node
     angle::FT
 end
-feedgeom!(turtle::MTurtle, node::RH) = rh!(turtle, node.angle)
+feedgeom!(turtle::Turtle, node::RH, vars) = rh!(turtle, node.angle)
   
   
 """
@@ -168,7 +168,7 @@ feedgeom!(turtle::MTurtle, node::RH) = rh!(turtle, node.angle)
 
 Move turtle forward a given distance.
 """
-function f!(turtle::MTurtle{FT,UT}, dist::FT) where {FT,UT}
+function f!(turtle::Turtle{FT,UT}, dist::FT) where {FT,UT}
     to = pos(turtle) .+ head(turtle).*dist
     update!(turtle,  to = to, arm = arm(turtle), up = up(turtle), head = head(turtle))
 end
@@ -181,7 +181,7 @@ Moves a turtle forward a given distance.
 struct F{FT} <: Node
     dist::FT
 end
-feedgeom!(turtle::MTurtle, node::F) = f!(turtle, node.dist)
+feedgeom!(turtle::Turtle, node::F, vars) = f!(turtle, node.dist)
 
 
 # Taken from https://mathworld.wolfram.com/RodriguesRotationFormula.html
@@ -215,7 +215,7 @@ proportion between the two. `strength` should vary between -1 and 1. If
 `strength` is negative, the turtle rotates downwards (i.e., towards negative 
 values of Z axis), otherwise upwards.
 """
-function rv!(turtle::MTurtle{FT,UT}, strength::FT) where {FT,UT}
+function rv!(turtle::Turtle{FT,UT}, strength::FT) where {FT,UT}
     @inbounds begin
         # Check if head is already vertical
         H = head(turtle)
@@ -264,4 +264,4 @@ Rotates the turtle towards the Z axis. See documentation for `rv!` for details.
 struct RV{FT} <: Node
     strength::FT
 end
-feedgeom!(turtle::MTurtle, node::RV) = rv!(turtle, node.strength)
+feedgeom!(turtle::Turtle, node::RV, vars) = rv!(turtle, node.strength)

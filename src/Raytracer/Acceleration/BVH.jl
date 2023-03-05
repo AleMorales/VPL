@@ -22,11 +22,6 @@ function BoxedTriangles(tris::Vector{<:Triangle}, ids::Vector{Int})
     BoxedTriangles(wrap(tris)..., tris, ids)
 end
 
-# Constructor from RTScene
-function BoxedTriangles(scene::RTScene)
-    BoxedTriangles(scene.triangles, scene.ids)
-end
-
 # Compute the AABBs and the center for each triangle
 function wrap(tris::Vector{Triangle{FT}}) where FT
     #@inbounds begin

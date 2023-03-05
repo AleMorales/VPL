@@ -57,12 +57,12 @@ VPL.render(m2, wireframe = true, normals = true)
 
 # Construct ellipses using a turtle
 e = G.Ellipse(length = 2.0, width = 2.0, n = 10);
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.Ellipse!(t; length = 2.0, width = 2.0, n = 10, move = true) 
 @test G.geoms(t) == e
 @test G.pos(t) == G.Vec{Float64}(0,0,2)
 
-t = G.MTurtle(Float64)
+t = G.Turtle(Float64)
 G.Ellipse!(t; length = 2.0, width = 2.0, n = 10, move = false);
 @test G.geoms(t) == e
 @test G.pos(t) == G.Vec{Float64}(0,0,0)

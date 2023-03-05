@@ -10,7 +10,6 @@
 # Intersection should contain the local reference system as unit vectors (e1, e2, n)
 # To avoid type instability propagating throughout the code, all these functions
 # should return tuples of the same type
-abstract type Material end
 
 # Implementations of different types of materials
 include("Lambertian.jl")

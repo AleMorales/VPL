@@ -53,12 +53,12 @@ function rotate(x::Vec{FT}, y::Vec{FT}, z::Vec{FT}) where FT
 end
 
 # Calculate rotation matrix to go from reference turtle to current turtle.
-function rot(turtle::MTurtle)
+function rot(turtle::Turtle)
     rotate(up(turtle), arm(turtle), head(turtle))
 end
   
 # Create an affine map based on turtle position, orientation
-function transform(turtle::MTurtle)
+function transform(turtle::Turtle)
     r = rot(turtle)
     t = translate(pos(turtle)...)
     t ∘ r
@@ -66,7 +66,7 @@ end
 
 # Create a transform based on turtle position, orientation and
 # user-provided scaling factors for each axis.
-function transform(turtle::MTurtle, scales)
+function transform(turtle::Turtle, scales)
     s = scale(scales...)
     r = rot(turtle)
     t = translate(pos(turtle)...)

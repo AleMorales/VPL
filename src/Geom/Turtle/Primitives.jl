@@ -5,7 +5,8 @@
 # All primitives allow for optionally moving the turtle forward to update its position
 
 """
-    Ellipse!(turtle; length = 1.0, width = 1.0, n = 20, move = false)
+    Ellipse!(turtle; length = 1.0, width = 1.0, n = 20, move = false,
+             material = nothing, color = nothing)
 
 Generate an ellipse in front of a turtle and feed it to a turtle.
 
@@ -15,6 +16,8 @@ Generate an ellipse in front of a turtle and feed it to a turtle.
 - `width`: Width of the ellipse. 
 - `n`: Number of triangles of the mesh approximating the ellipse (an integer). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A triangle mesh will be generated with `n` triangles that approximates an ellipse.
@@ -25,21 +28,31 @@ the orthogonal axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `length`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Ellipse!(turtle::MTurtle{FT, UT}; length = one(FT), width = one(FT), 
-                  n = 20, move = false) where {FT, UT}
-    push!(nvertices(turtle), n + 1) 
-    push!(ntriangles(turtle), n) 
+function Ellipse!(turtle::Turtle{FT, UT}; length = one(FT), width = one(FT), 
+                  n = 20, move = false, material = nothing, 
+                  color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), n + 1) 
+    #push!(ntriangles(turtle), n) 
+    # Generate the ellipse and add it to the turtle
     trans = transform(turtle, (one(FT), width/FT(2), length/FT(2)))
-    Ellipse!(turtle.geoms, trans; n = n)
+    Ellipse!(geoms(turtle), trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n + 1) 
     return nothing
 end
 
 """
-    Triangle!(turtle; length = 1.0, width = 1.0, move = false)
+    Triangle!(turtle; length = 1.0, width = 1.0, move = false,
+              material = nothing, color = nothing)
 
 Generate a triangle in front of the turtle and feed it to a turtle.
 
@@ -48,6 +61,8 @@ Generate a triangle in front of the turtle and feed it to a turtle.
 - `length`: Length of the triangle. 
 - `width`: Width of the triangle. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A triangle mesh will be generated representing the triangle.
@@ -58,21 +73,30 @@ the orthogonal axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `length`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Triangle!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
-                    move = false) where {FT, UT}
-    push!(nvertices(turtle), 3)
-    push!(ntriangles(turtle), 1) 
+function Triangle!(turtle::Turtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                    move = false, material = nothing, 
+                    color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), 3)
+    #push!(ntriangles(turtle), 1) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
-    Triangle!(turtle.geoms, trans)
+    Triangle!(geoms(turtle), trans)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, 1)
+    update_color!(turtle, color, 3) 
     return nothing
 end
 
 """
-    Rectangle!(turtle; length = 1.0, width = 1.0, move = false)
+    Rectangle!(turtle; length = 1.0, width = 1.0, move = false,
+               material = nothing, color = nothing)
 
 Generate a rectangle in front of the turtle and feed it to a turtle.
 
@@ -81,6 +105,8 @@ Generate a rectangle in front of the turtle and feed it to a turtle.
 - `length`: Length of the rectangle. 
 - `width`: Width of the rectangle. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A triangle mesh will be generated representing the rectangle.
@@ -91,22 +117,31 @@ the orthogonal axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `length`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Rectangle!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
-                    move = false) where {FT, UT}
-    push!(nvertices(turtle), 4)
-    push!(ntriangles(turtle), 2) 
+function Rectangle!(turtle::Turtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                    move = false, material = nothing, 
+                    color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), 4)
+    #push!(ntriangles(turtle), 2) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
-    Rectangle!(turtle.geoms, trans)
+    Rectangle!(geoms(turtle), trans)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, 2)
+    update_color!(turtle, color, 4) 
     return nothing
 end
 
 
 """
-    Trapezoid!(turtle; length = 1.0, width = 1.0, ratio = 1.0, move = false)
+    Trapezoid!(turtle; length = 1.0, width = 1.0, ratio = 1.0, move = false,
+    material = nothing, color = nothing)
 
 Generate a trapezoid in front of the turtle and feed it to a turtle.
 
@@ -116,6 +151,8 @@ Generate a trapezoid in front of the turtle and feed it to a turtle.
 - `width`: Width of the base of the trapezoid. 
 - `ratio`: Ratio between the width of the top and base of the trapezoid.
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A triangle mesh will be generated representing the trapezoid.
@@ -126,21 +163,30 @@ the orthogonal axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `length`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Trapezoid!(turtle::MTurtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
-                   ratio::FT = one(FT), move = false) where {FT, UT}
-    push!(nvertices(turtle), 4)
-    push!(ntriangles(turtle), 2) 
+function Trapezoid!(turtle::Turtle{FT, UT}; length::FT = one(FT), width::FT = one(FT), 
+                   ratio::FT = one(FT), move = false, material = nothing, 
+                   color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), 4)
+    #push!(ntriangles(turtle), 2) 
     trans = transform(turtle, (one(FT), width/FT(2), length))
-    Trapezoid!(turtle.geoms, trans, ratio)
+    Trapezoid!(geoms(turtle), trans, ratio)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, 2)
+    update_color!(turtle, color, 4) 
     return nothing
 end
 
 """
-    HollowCone!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 20, move = false)
+    HollowCone!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 20, move = false,
+    material = nothing, color = nothing)
 
 Generate a hollow cone in front of the turtle and feed it to a turtle.
 
@@ -151,6 +197,8 @@ Generate a hollow cone in front of the turtle and feed it to a turtle.
 - `height`: Height of the hollow cone. 
 - `n`: Number of triangles in the mesh. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the hollow cone.
@@ -161,22 +209,31 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCone!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function HollowCone!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                      width::FT = one(FT), height::FT = one(FT), n::Int = 20, 
-                     move = false) where {FT, UT}
-    push!(nvertices(turtle), n + 1) 
-    push!(ntriangles(turtle), n) 
+                     move = false, material = nothing, 
+                     color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), n + 1) 
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    HollowCone!(turtle.geoms, trans; n = n)
+    HollowCone!(geoms(turtle), trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n + 1)     
     return nothing
 end
 
 """
-    HollowCube!(turtle; length = 1.0, width = 1.0, height = 1.0, move = false)
+    HollowCube!(turtle; length = 1.0, width = 1.0, height = 1.0, move = false,
+    material = nothing, color = nothing)
 
 Generate a hollow cube in front of the turtle and feed it to a turtle.
 
@@ -186,6 +243,8 @@ Generate a hollow cube in front of the turtle and feed it to a turtle.
 - `width`: Width of the rectangle at the base of the hollow cube. 
 - `height`: Height of the hollow cube. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated of a hollow cube.
@@ -196,22 +255,31 @@ and `height` is associated to the head axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCube!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function HollowCube!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                      width::FT = one(FT), height::FT = one(FT), 
-                     move = false) where {FT, UT}
-    push!(nvertices(turtle), 8)
-    push!(ntriangles(turtle), 8) 
+                     move = false, material = nothing, 
+                     color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), 8)
+    #push!(ntriangles(turtle), 8) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    HollowCube!(turtle.geoms, trans)
+    HollowCube!(geoms(turtle), trans)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, 8)
+    update_color!(turtle, color, 8)     
     return nothing
 end
 
 """
-    HollowCylinder!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false)
+    HollowCylinder!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false,
+    material = nothing, color = nothing)
 
 Generate a hollow cylinder in front of the turtle and feed it to a turtle.
 
@@ -222,6 +290,8 @@ Generate a hollow cylinder in front of the turtle and feed it to a turtle.
 - `height`: Height of the hollow cylinder. 
 - `n`: Number of triangles in the mesh (must be even). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the hollow cylinder.
@@ -232,23 +302,32 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowCylinder!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function HollowCylinder!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                          width::FT = one(FT), height::FT = one(FT), 
-                         n::Int = 40, move = false) where {FT, UT}
+                         n::Int = 40, move = false, material = nothing, 
+                         color = nothing) where {FT, UT}
     @assert iseven(n)
-    push!(nvertices(turtle), n)
-    push!(ntriangles(turtle), n) 
+    #push!(nvertices(turtle), n)
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    HollowCylinder!(turtle.geoms, trans; n = n)
+    HollowCylinder!(geoms(turtle), trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n)     
     return nothing
 end
 
 """
-    HollowFrustum!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false)
+    HollowFrustum!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false,
+    material = nothing, color = nothing)
 
 Generate a hollow frustum in front of the turtle and feed it to a turtle.
 
@@ -259,6 +338,8 @@ Generate a hollow frustum in front of the turtle and feed it to a turtle.
 - `height`: Height of the hollow frustum. 
 - `n`: Number of triangles in the mesh (must be even). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the hollow frustum.
@@ -269,25 +350,34 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function HollowFrustum!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function HollowFrustum!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                         width::FT = one(FT), height::FT = one(FT), 
                         ratio::FT = one(FT), n::Int = 40, 
-                        move = false) where {FT, UT}
+                        move = false, material = nothing, 
+                        color = nothing) where {FT, UT}
     @assert iseven(n)
-    push!(nvertices(turtle), n)
-    push!(ntriangles(turtle), n) 
+    #push!(nvertices(turtle), n)
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    HollowFrustum!(turtle.geoms, ratio, trans; n = n)
+    HollowFrustum!(geoms(turtle), ratio, trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n)     
     return nothing
 end
 
 
 """
-    SolidCone!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false)
+    SolidCone!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 40, move = false,
+    material = nothing, color = nothing)
 
 Generate a solid frustum in front of the turtle and feed it to a turtle.
 
@@ -298,6 +388,8 @@ Generate a solid frustum in front of the turtle and feed it to a turtle.
 - `height`: Height of the solid cone. 
 - `n`: Number of triangles in the mesh (must be even). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the solid cone.
@@ -308,23 +400,32 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCone!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function SolidCone!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), n::Int = 40, 
-                    move = false) where {FT, UT}
+                    move = false, material = nothing, 
+                    color = nothing) where {FT, UT}
     @assert iseven(n)
-    push!(nvertices(turtle), n/2 + 2)
-    push!(ntriangles(turtle), n) 
+    #push!(nvertices(turtle), n/2 + 2)
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    SolidCone!(turtle.geoms, trans; n = n)
+    SolidCone!(geoms(turtle), trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n/2 + 2)     
     return nothing
 end
 
 """
-    SolidCube!(turtle; length = 1.0, width = 1.0, height = 1.0, move = false)
+    SolidCube!(turtle; length = 1.0, width = 1.0, height = 1.0, move = false,
+    material = nothing, color = nothing)
 
 Generate a solid cube in front of the turtle and feed it to a turtle.
 
@@ -334,6 +435,8 @@ Generate a solid cube in front of the turtle and feed it to a turtle.
 - `width`: Width of the rectangle at the base of the solid cube. 
 - `height`: Height of the solid cube. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`).  
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated of a solid cube.
@@ -344,22 +447,31 @@ and `height` is associated to the head axis.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCube!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function SolidCube!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), 
-                    move = false) where {FT, UT}
-    push!(nvertices(turtle), 8)
-    push!(ntriangles(turtle), 12) 
+                    move = false, material = nothing, 
+                    color = nothing) where {FT, UT}
+    #push!(nvertices(turtle), 8)
+    #push!(ntriangles(turtle), 12) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    SolidCube!(turtle.geoms, trans)
+    SolidCube!(geoms(turtle), trans)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, 12)
+    update_color!(turtle, color, 8)     
     return nothing
 end
 
 """
-    SolidCylinder!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 80, move = false)
+    SolidCylinder!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 80, move = false,
+    material = nothing, color = nothing)
 
 Generate a solid cylinder in front of the turtle and feed it to a turtle.
 
@@ -370,6 +482,8 @@ Generate a solid cylinder in front of the turtle and feed it to a turtle.
 - `height`: Height of the solid cylinder. 
 - `n`: Number of triangles in the mesh (must be even). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the solid cylinder.
@@ -380,23 +494,32 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidCylinder!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function SolidCylinder!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                         width::FT = one(FT), height::FT = one(FT), 
-                        n::Int = 80, move = false) where {FT, UT}
+                        n::Int = 80, move = false, material = nothing, 
+                        color = nothing) where {FT, UT}
     @assert iseven(n)
-    push!(nvertices(turtle), n/2 + 2)
-    push!(ntriangles(turtle), n) 
+    #push!(nvertices(turtle), n/2 + 2)
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    SolidCylinder!(turtle.geoms, trans; n = n)
+    SolidCylinder!(geoms(turtle), trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n/2 + 2)     
     return nothing
 end
 
 """
-    SolidFrustum!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 80, move = false)
+    SolidFrustum!(turtle; length = 1.0, width = 1.0, height = 1.0, n = 80, move = false,
+    material = nothing, color = nothing)
 
 Generate a solid frustum in front of the turtle and feed it to a turtle.
 
@@ -407,6 +530,8 @@ Generate a solid frustum in front of the turtle and feed it to a turtle.
 - `height`: Height of the solid frustum. 
 - `n`: Number of triangles in the mesh (must be even). 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A mesh will be generated with n triangles that approximate the solid frustum.
@@ -417,23 +542,31 @@ defined by the arm and up axes of the turtle, centered at the head axis. The
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function SolidFrustum!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function SolidFrustum!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                        width::FT = one(FT), height::FT = one(FT), 
                        ratio::FT = one(FT), n::Int = 80, 
-                       move = false) where {FT, UT}
+                       move = false, material = nothing, 
+                       color = nothing) where {FT, UT}
     @assert iseven(n)
-    push!(nvertices(turtle), n/2 + 2)
-    push!(ntriangles(turtle), n) 
+    #push!(nvertices(turtle), n/2 + 2)
+    #push!(ntriangles(turtle), n) 
     trans = transform(turtle, (height/FT(2), width/FT(2), length))
-    SolidFrustum!(turtle.geoms, ratio, trans; n = n)
+    SolidFrustum!(geoms(turtle), ratio, trans; n = n)
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, n)
+    update_color!(turtle, color, n/2 + 2)     
     return nothing
 end
 
-function Ellipsoid!(turtle::MTurtle{FT, UT}; length::FT = one(FT), 
+function Ellipsoid!(turtle::Turtle{FT, UT}; length::FT = one(FT), 
                     width::FT = one(FT), height::FT = one(FT), 
                     n::Int = 20, move = false) where {FT, UT}
     @error "Ellipsoid not implemented yet"
@@ -442,7 +575,8 @@ end
 
 
 """
-    Mesh!(turtle, m::Mesh; scale = Vec(1.0, 1.0, 1.0), move = false)
+    Mesh!(turtle, m::Mesh; scale = Vec(1.0, 1.0, 1.0), move = false,
+    material = nothing, color = nothing)
 
 Feed a pre-existing mesh to a turtle after scaling.
 
@@ -451,6 +585,8 @@ Feed a pre-existing mesh to a turtle after scaling.
 - `m`: The pre-existing unscaled mesh in standard position and orientation. 
 - `scale`: Vector with scaling factors for the x, y and z axes. 
 - `move`: Whether to move the turtle forward or not (`true` or `false`). 
+- `material`: The material object for the ray tracer (optional).
+- `color`: The color of the ellipse for rendering (optional).
 
 ## Details
 A pre-existing mesh will be scaled (acccording to `scale`), rotate so that it is
@@ -460,23 +596,30 @@ to any transformation.
 
 When `move = true`, the turtle will be moved forward by a distance equal to `height`.
 
+The material object must inherit from `Material` (see ray tracing documentation 
+for detail) and the color can be any type that inherits from `Colorant` (from 
+ColorTypes.jl).
+
 ## Return
 Returns `nothing` but modifies the `turtle` as a side effect.
 """
-function Mesh!(turtle::MTurtle{FT, UT}, m::Mesh; scale::Vec{FT} = Vec{FT}(1.0,1.0,1.0),
-               move = false) where {FT, UT}
+function Mesh!(turtle::Turtle{FT, UT}, m::Mesh; scale::Vec{FT} = Vec{FT}(1.0,1.0,1.0),
+               move = false, material = nothing, 
+               color = nothing) where {FT, UT}
     # Transform the mesh
-    trans = transform(turtle::MTurtle, scale)
+    trans = transform(turtle::Turtle, scale)
     mnew = deepcopy(m)
     transform!(mnew, trans)
     # Feed the mesh onto the turtle
-    nv = length(turtle.geoms.vertices)
-    append!(turtle.geoms.vertices, mnew.vertices)
-    append!(turtle.geoms.normals, mnew.normals)
-    append!(turtle.geoms.faces, (nv .+ face for face in mnew.faces)) 
-    push!(nvertices(turtle), nvertices(mnew))
-    push!(ntriangles(turtle), ntriangles(mnew))
-    # Move the turtle if needed
+    nv = nvertices(geoms(turtle))
+    append!(vertices(geoms(turtle)), vertices(mnew))
+    append!(normals(geoms(turtle)), normals(mnew))
+    append!(faces(turtle), (nv .+ face for face in mnew.faces)) 
+    #push!(nvertices(turtle), nvertices(mnew))
+    #push!(ntriangles(turtle), ntriangles(mnew))
     move && f!(turtle, length)
+    # Materials and colors
+    update_material!(turtle, material, ntriangles(mnew))
+    update_color!(turtle, color, nvertices(mnew))     
     return nothing
 end

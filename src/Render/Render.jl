@@ -7,7 +7,7 @@
     render(m::Mesh; kwargs...)
 
 Render a mesh. This will create a new visualization (see Documentation for 
-details). Keyword arguments are passed to the `render(scene::GLScene)` method 
+details). Keyword arguments are passed to the `render(scene::Geom.Scene)` method 
 and any unmatched keywords will be passed along to `Makie.mesh()`.
 """
 function render(m::Geom.Mesh; kwargs...)
@@ -19,7 +19,7 @@ end
 
 Add a mesh to the visualization currently active. This will create a new 
 visualization (see Documentation for details). Keyword arguments are passed to 
-the `render!(scene::GLScene)` method and any unmatched keywords will be passed 
+the `render!(scene::Geom.Scene)` method and any unmatched keywords will be passed 
 along to `Makie.mesh!()`.
 """
 function render!(m::Geom.Mesh; kwargs...)
@@ -61,16 +61,16 @@ end
 ##################
 
 """
-    render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(scene::Geom.Scene; normals::Bool = false, wireframe::Bool = false, kwargs...)
 
-Render a `GLScene` object. This will create a new visualization (see 
+Render a `Geom.Scene` object. This will create a new visualization (see 
 Documentation for details). `normals = true` will draw arrows in the direction 
 of the normal vector for each triangle in the mesh, `wireframe = true` will draw 
 the edges of each triangle with black lines. Keyword arguments are passed to 
 `Makie.mesh()`.
 """
-function render(scene::GLScene; normals::Bool = false, wireframe::Bool = false, kwargs...)
-    render(scene.mesh; color = scene.colors, normals = normals, 
+function render(scene::Geom.Scene; normals::Bool = false, wireframe::Bool = false, kwargs...)
+    render(Geom.mesh(scene); color = Geom.colors(scene), normals = normals, 
            wireframe = wireframe, kwargs...)
 end
 
@@ -91,7 +91,7 @@ version with a different precision by specifying the corresponding type as in
 """
 function render(graph::Graph, ::Type{FT} = Float64; normals::Bool = false, 
                 wireframe::Bool = false, message = nothing, kwargs...) where FT
-    render(GLScene(graph::Graph, FT, message = message); normals = normals, 
+    render(Geom.Scene(graph::Graph, FT, message = message); normals = normals, 
                    wireframe = wireframe, kwargs...)
 end
 
@@ -113,7 +113,7 @@ version with a different precision by specifying the corresponding type as in
 function render(graphs::Vector{<:Graph}, ::Type{FT} = Float64; 
              normals::Bool = false, wireframe::Bool = false, message = nothing, 
              kwargs...) where FT
-    render(GLScene(graphs, FT, message = message); normals = normals, 
+    render(Geom.Scene(graphs, FT, message = message); normals = normals, 
                    wireframe = wireframe, kwargs...)
 end
 

@@ -20,12 +20,17 @@ end
 
 let 
     import .btree
-    function VPL.feedgeom!(turtle::MTurtle, i::btree.Internode)
-        HollowCube!(turtle, length = i.length, height = i.length/10, width = i.length/10, move = true)
-        return nothing
-    end
-    function VPL.feedcolor!(turtle::GLTurtle, i::btree.Internode)
-        feedcolor!(turtle, RGB(0,1,0))
+    function VPL.feedgeom!(turtle::Turtle, i::btree.Internode, vars)
+        # All vertices share the same color
+        if turtle.message == :green
+            HollowCube!(turtle, length = i.length, height = i.length/10, 
+            width = i.length/10, move = true, color = RGB(0,1,0))
+        # Each vertex has a different color
+        else
+            HollowCube!(turtle, length = i.length, height = i.length/10, 
+            width = i.length/10, move = true, 
+            color = rand(RGB, 8))
+        end
         return nothing
     end
     rule = Rule(btree.Meristem, rhs = mer -> btree.Node() + 
@@ -51,5 +56,6 @@ let
         return new_tree
     end
     newtree = simulate(tree, getInternode, 2)
-    render(newtree)
+    render(newtree, message = :green)
+    render(newtree, message = :all)
 end

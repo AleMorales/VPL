@@ -7,6 +7,26 @@ struct Mesh{VT}
     faces::Vector{Face}
 end
 
+# Accessor functions
+"""
+    ntriangles(mesh)
+
+Extract the number of triangles in a mesh.
+"""
+ntriangles(mesh::Mesh) = length(mesh.faces)
+
+"""
+    nvertices(mesh)
+
+The number of vertices in a mesh.
+"""
+nvertices(mesh::Mesh) = length(mesh.vertices)
+
+vertices(mesh::Mesh) = mesh.vertices
+normals(mesh::Mesh)  = mesh.normals
+faces(mesh::Mesh)    = mesh.faces
+
+
 """
     Mesh()
 
@@ -34,21 +54,6 @@ function Mesh(nt, nv = nt*3, ::Type{FT} = Float64) where FT <: AbstractFloat
     faces = Face[]; sizehint!(verts, nv)
     Mesh(verts, norms, faces)
 end
-
-"""
-    ntriangles(mesh)
-
-Extract the number of triangles in a mesh.
-"""
-ntriangles(mesh::Mesh) = length(mesh.faces)
-
-"""
-    nvertices(mesh)
-
-The number of vertices in a mesh.
-"""
-nvertices(mesh::Mesh) = length(mesh.vertices)
-
 
 # Merge multiple meshes into a single one
 function Mesh(meshes::Vector{Mesh{VT}}) where VT

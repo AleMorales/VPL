@@ -13,17 +13,19 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        HollowCone, SolidCone, SolidCube, HollowCube, SolidFrustum, HollowFrustum,
        Triangle!, Rectangle!, Trapezoid!, Ellipse!, Ellipsoid!, HollowCylinder!, SolidCylinder!,
        HollowCone!, SolidCone!, SolidCube!, HollowCube!, SolidFrustum!, HollowFrustum!, Mesh!,
-       MTurtle, feedgeom!, head, up, arm, pos, geoms, 
+       Turtle, feedgeom!, head, up, arm, pos, geoms, materials, colors, mesh, Scene,
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, RV, rv!, 
        O, X, Y, Z,  Vec,
-       render, render!, RGB, RGBA, GLTurtle, feedcolor!, GLScene, export_scene, add!,
-       RTScene, RayTracer, RTSettings, trace!, Naive, accelerate,
+       render, render!, RGB, RGBA, export_scene, add!,
+       RayTracer, RTSettings, trace!, Naive, accelerate,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
-       tau, rho, Lambertian, Phong, Sensor, Black, feedmaterial!, RTTurtle,
-       materials, get_nw, FixedSource, reset!, power, BVH, SAH, AvgSplit
+       tau, rho, Lambertian, Phong, Sensor, Black,
+       get_nw, FixedSource, reset!, power, BVH, SAH, AvgSplit
 
 # Abstract type for turtles
-abstract type Turtle end
+abstract type Material end
+
+#abstract type Turtle end
 
 # Function to be overloaded by other modules
 add!() = error("Method of add! not implemented")
@@ -116,10 +118,13 @@ const RH        = Geom.RH
 const rh!       = Geom.rh!
 const F         = Geom.F
 const f!        = Geom.f!
-const RV         = Geom.RV
-const rv!        = Geom.rv!
+const RV        = Geom.RV
+const rv!       = Geom.rv!
 const feedgeom! = Geom.feedgeom!
-const MTurtle   = Geom.MTurtle
+const Turtle    = Geom.Turtle
+const materials = Geom.materials
+const colors    = Geom.colors
+const Scene     = Geom.Scene
 const Vec       = Geom.Vec
 const O         = Geom.O
 const X         = Geom.X
@@ -137,18 +142,14 @@ include("Render/Module_Render.jl")
 import .Render
 const render = Render.render
 const render! = Render.render!
-const feedcolor! = Render.feedcolor!
 const RGB = Render.RGB
 const RGBA = Render.RGBA
-const GLTurtle = Render.GLTurtle
-const GLScene = Render.GLScene
 const export_scene = Render.export_scene
 
 
 # RayTracer module
 include("RayTracer/Module_RayTracing.jl")
 import .RayTracing as RT
-const RTScene = RT.RTScene
 const accelerate = RT.accelerate
 const RayTracer = RT.RayTracer
 const RTSettings = RT.RTSettings
@@ -166,9 +167,6 @@ const PointSource = RT.PointSource
 const LineSource = RT.LineSource
 const AreaSource = RT.AreaSource
 const DirectionalSource = RT.DirectionalSource
-const feedmaterial! = RT.feedmaterial!
-const RTTurtle = RT.RTTurtle
-const materials = RT.materials
 const get_nw = RT.get_nw
 const FixedSource = RT.FixedSource
 const reset! = RT.reset!
