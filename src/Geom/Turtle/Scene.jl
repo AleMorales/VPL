@@ -115,7 +115,7 @@ function Scene(scenes::Vector{<:Scene})
     @inbounds allmaterial_ids = scenes[1].material_ids
     if length(scenes) > 1
         for i in 2:length(scenes)
-            @inbounds append!(allmaterial_ids, material_ids[end] .+ scenes[i].material_ids)
+            @inbounds append!(allmaterial_ids, allmaterial_ids[end] .+ scenes[i].material_ids)
         end
     end
     Scene(allmesh, allcolors, allmaterial_ids, allmaterials)

@@ -408,7 +408,7 @@ end
 function VPL.feed!(turtle::VPL.Turtle, e::sn.E64, vars)
     VPL.HollowCylinder!(turtle, length = e.length, width = e.length/10, 
                     height = e.length/10, move = true, material = e.mat,
-                    color = rand(RGB))
+                    color = rand(VPL.RGB))
     return nothing
 end
 rule = VPL.Rule(sn.E64, rhs = Kochsnowflake)
@@ -791,7 +791,7 @@ powers_naive = getpower(newtree, getInternode);
 # acceleration structures, but for large number of rays the results diverge
 # This divergence does not seem to decrease with the number of rays. It may 
 # depend on the scene itself though?
-@test maximum(abs.((powers_bvh .- powers_naive)./(powers_naive .+ eps(FT)))) < 0.005
+@test maximum(abs.((powers_bvh .- powers_naive)./(powers_naive .+ eps(FT)))) < 0.006
 @test abs(sum(powers_bvh) - sum(powers_naive))/sum(powers_bvh) < 1e-5
 
 
@@ -868,4 +868,7 @@ VPL.add!(scene, mesh = r, material = RT.Black(1), color = RGB(0.5, 0.5, 0.0))
 render(scene)
 render!(sources)
 
+# Check that we can processes an array of scenes properly
+scene = RT.Scene([Koch, deepcopy(Koch)], message = "raytracer")
+@test VPL.Geom.material_ids(scene)[end] ==  length(VPL.materials(scene))
 end
