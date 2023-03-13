@@ -16,7 +16,6 @@ end
 function Scene(;mesh = Mesh(Float64), colors = Colorant[], material_ids = Int[], 
                 materials = Material[])
     scene = Scene(mesh, Colorant[], Int[], Material[])
-    append!(scene.colors, colors)
     if colors isa Colorant 
         push!(scene.colors, colors) 
     else
@@ -112,7 +111,13 @@ function Scene(scenes::Vector{<:Scene})
     allmesh = Mesh(mesh.(scenes))
     allcolors = vcat(colors.(scenes)...)
     allmaterials = vcat(materials.(scenes)...)
-    allmaterial_ids = vcat(material_ids.(scenes)...)
+    #allmaterial_ids = vcat(material_ids.(scenes)...)
+    @inbounds allmaterial_ids = scenes[1].material_ids
+    if length(scenes) > 1
+        for i in 2:length(scenes)
+            @inbounds append!(allmaterial_ids, material_ids[end] .+ scenes[i].material_ids)
+        end
+    end
     Scene(allmesh, allcolors, allmaterial_ids, allmaterials)
 end
 
