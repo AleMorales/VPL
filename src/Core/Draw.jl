@@ -103,7 +103,7 @@ function draw(g::StaticGraph; force = false, backend = "native", inline = false,
     # Make it look prettier
     GM.hidedecorations!(ax);
     GM.hidespines!(ax);
-    ax.aspect = GM.DataAspect()
+    #ax.aspect = GM.DataAspect()
 
     # This forces the display of the figure (may be needed in some environments)
     force && display(f)
