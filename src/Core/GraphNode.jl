@@ -64,16 +64,16 @@ function hasDescendent(node::GraphNode, g::Graph, condition, maxlevel::Int,
                        level::Int = 1)
     for child in children(node, g)
         if condition(Context(g, child))
-            return true
+            return true, level
         else
             if level <= maxlevel
-                if hasDescendent(child, g, condition, maxlevel, level + 1)
-                    return true
+                if hasDescendent(child, g, condition, maxlevel, level + 1)[1]
+                    return true, level + 1
                 end
             end
         end
     end
-    return false
+    return false, 0
 end
 
 

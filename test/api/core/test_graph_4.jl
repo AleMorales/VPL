@@ -17,7 +17,7 @@ end
 # Cell transfer bottom to top
 
 function transferUp(context)
-    if hasDescendent(context, condition = x -> data(x) isa GT.CCell)
+    if hasDescendent(context, condition = x -> data(x) isa GT.CCell)[1]
         return (true, (descendent(context, condition = x -> data(x) isa GT.CCell), ))
     else
         return (false, ())
