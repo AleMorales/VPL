@@ -11,7 +11,7 @@ c = VPL.HollowCone(length = 2.0, width = 1.0, height = 1.0, n = 10);
 @test VPL.nvertices(c) == 11
 @test VPL.ntriangles(c) == 10
 @test length(c.normals) == 10
-VPL.render(c, wireframe = true, normals = true)
+#VPL.render(c, wireframe = true, normals = true)
 
 # Check that it works for different floating point precisions
 c = VPL.HollowCone(length = 2f0, width = 1f0, height = 1f0, n = 10);
@@ -20,7 +20,7 @@ c = VPL.HollowCone(length = 2f0, width = 1f0, height = 1f0, n = 10);
 @test VPL.nvertices(c) == 11
 @test VPL.ntriangles(c) == 10
 @test length(c.normals) == 10
-VPL.render(c, wireframe = true, normals = true)
+#VPL.render(c, wireframe = true, normals = true)
 
 # Merging two meshes
 c = VPL.HollowCone(length = 2.0, width = 1.0, height = 1.0, n = 10);
@@ -34,7 +34,7 @@ m = foo();
 @test VPL.nvertices(m) == VPL.nvertices(c) + VPL.nvertices(c2)
 @test VPL.ntriangles(m) == VPL.ntriangles(c) + VPL.ntriangles(c2)
 @test abs(VPL.area(m) - (VPL.area(c) + VPL.area(c2))) < 9e-16
-VPL.render(m, wireframe = true, normals = true)
+#VPL.render(m, wireframe = true, normals = true)
 
 # Create a hollow cone using affine maps
 scale = LinearMap(SDiagonal(0.1,0.05,3.0));
@@ -54,7 +54,7 @@ m2 = foo2();
 @test m2.vertices == m.vertices
 @test m2.normals == m.normals
 @test m2.faces == m.faces
-VPL.render(m2, wireframe = true, normals = true)
+#VPL.render(m2, wireframe = true, normals = true)
 
 
 # Construct hollow cones using a turtle

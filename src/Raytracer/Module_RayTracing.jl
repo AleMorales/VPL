@@ -13,11 +13,11 @@ import Unrolled: @unroll
 import CoordinateTransformations: compose, Translation, LinearMap, AbstractAffineMap
 import Rotations: RotX, RotY, RotZ
 import StatsBase: sample, Weights
-import ColorTypes: RGBA
-import Makie: scatter!, linesegments!
+import ColorTypes: RGBA, RGB
+#import Makie: scatter!, linesegments!
 
 # Internal dependencies
-import ..VPL.Render: render!
+# import ..VPL.Render: render!
 import ..VPL.Geom: Vec, O, X, Y, Z, geoms, Mesh, areas, Turtle, feed!, 
                    ntriangles, Ellipse, rotate!, translate!, scale, BBox,
                    Scene, vertices, mesh, faces, material_ids, materials
@@ -46,7 +46,7 @@ include("RayTracer/RayTracer.jl")
 
 
 # 3D rendering of elements in the ray tracer
-include("Render.jl")
+# include("Render.jl")
 
 
 end # end module

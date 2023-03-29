@@ -10,7 +10,7 @@ c = VPL.SolidCube(length = 1.0, width = 1.0, height = 1.0);
 @test VPL.area(c) == 6.0
 @test VPL.nvertices(c) == 8
 @test VPL.ntriangles(c) == 12
-VPL.render(c, wireframe = true, normals = true)
+#VPL.render(c, wireframe = true, normals = true)
 
 # Check that it works at lower precision
 c = VPL.SolidCube(length = 1f0, width = 1f0, height = 1f0);
@@ -18,7 +18,7 @@ c = VPL.SolidCube(length = 1f0, width = 1f0, height = 1f0);
 @test VPL.area(c) == 6f0
 @test VPL.nvertices(c) == 8
 @test VPL.ntriangles(c) == 12
-VPL.render(c, wireframe = true, normals = true)
+#VPL.render(c, wireframe = true, normals = true)
 
 
 # Mergin two meshes
@@ -32,7 +32,7 @@ m = foo();
 @test VPL.nvertices(m) == VPL.nvertices(c) + VPL.nvertices(c2)
 @test VPL.ntriangles(m) == VPL.ntriangles(c) + VPL.ntriangles(c2)
 @test VPL.area(m) == VPL.area(c) + VPL.area(c2)
-VPL.render(m, wireframe = true, normals = true)
+#VPL.render(m, wireframe = true, normals = true)
 
 # Create a box using affine maps
 scale = LinearMap(SDiagonal(3.0/2, 0.5/2, 0.5));
@@ -54,7 +54,7 @@ m2 = foo2();
 @test m2.vertices == m.vertices
 @test m2.normals == m.normals
 @test m2.faces == m.faces
-VPL.render(m2, wireframe = true, normals = true)
+#VPL.render(m2, wireframe = true, normals = true)
 
 # Construct solid cube using a turtle
 sc = G.SolidCube(length = 1.0, width = 1.0, height = 1.0);

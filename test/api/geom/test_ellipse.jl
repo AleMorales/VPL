@@ -12,13 +12,13 @@ e = VPL.Ellipse(length = 2.0, width = 2.0, n = 10);
 @test VPL.nvertices(e) == 11
 @test VPL.ntriangles(e) == 10
 @test all(e.normals[1] .== [1.0, 0.0, 0.0])
-VPL.render(e, wireframe = true, normals = true)
+#VPL.render(e, wireframe = true, normals = true)
 
 # Check a different precision works
 e = VPL.Ellipse(length = 2f0, width = 2f0, n = 10);
 @test e isa VPL.Mesh
 @test abs(VPL.area(e)/Float32(pi) - 1f0) < 0.13f0
-VPL.render(e, wireframe = true, normals = true)
+#VPL.render(e, wireframe = true, normals = true)
 
 # Mergin two meshes
 e = VPL.Ellipse(length = 2.0, width = 2.0, n = 10);
@@ -32,7 +32,7 @@ m = foo();
 @test VPL.nvertices(m) == VPL.nvertices(e) + VPL.nvertices(e2)
 @test VPL.ntriangles(m) == VPL.ntriangles(e) + VPL.ntriangles(e2)
 @test abs(VPL.area(m) - (VPL.area(e) + VPL.area(e2))) < 3e-15
-VPL.render(m, wireframe = true, normals = true)
+#VPL.render(m, wireframe = true, normals = true)
 
 # Create a ellipse using affine maps
 scale = LinearMap(SDiagonal(1.0, 0.05, 1.5));
@@ -52,7 +52,7 @@ m2 = foo2();
 @test m2.vertices == m.vertices
 @test m2.normals == m.normals
 @test m2.faces == m.faces
-VPL.render(m2, wireframe = true, normals = true)
+#VPL.render(m2, wireframe = true, normals = true)
 
 
 # Construct ellipses using a turtle

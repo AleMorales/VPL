@@ -2,11 +2,14 @@
 
 module VPL
 
+import ColorTypes: RGB, RGBA # Do we really need to do this?
+
 # Functions and data structures export by VPL
 export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        data, hasParent, hasAncestor, ancestor, isRoot,
        hasChildren, hasDescendent, children, descendent, isLeaf,
-       traverse, traverseDFS, traverseBFS, draw, export_graph, calculate_resolution,
+       traverse, traverseDFS, traverseBFS,
+       #draw, export_graph, calculate_resolution, node_label
        area, areas, ntriangles, nvertices, loadmesh, savemesh, 
        scale!, rotatex!, rotatey!, rotatez!, rotate!, translate!,
        Mesh, Triangle, Rectangle, Trapezoid, BBox, Ellipse, Ellipsoid, HollowCylinder, SolidCylinder,
@@ -16,7 +19,8 @@ export Node, Graph, Rule, Query, rewrite!, apply, vars, rules, graph,
        Turtle, feed!, head, up, arm, pos, geoms, materials, colors, mesh, Scene,
        T, t!, OR, or!, SET, set!, RU, ru!, RA, ra!, RH, rh!, F, f!, RV, rv!, 
        O, X, Y, Z,  Vec,
-       render, render!, RGB, RGBA, export_scene, add!,
+    #    render, render!, RGB, RGBA, export_scene, 
+        add!, RGB, RGBA,
        RayTracer, RTSettings, trace!, Naive, accelerate,
        Source, LambertianSource, DirectionalSource, PointSource, LineSource, AreaSource,
        tau, rho, Lambertian, Phong, Sensor, Black,
@@ -55,10 +59,10 @@ const isLeaf = Core.isLeaf
 const traverse = Core.traverse
 const traverseDFS = Core.traverseDFS
 const traverseBFS = Core.traverseBFS
-const draw = Core.draw
-const export_graph = Core.export_graph
-const calculate_resolution = Core.calculate_resolution
-const node_label = Core.node_label
+#const draw = Core.draw
+#const export_graph = Core.export_graph
+#const calculate_resolution = Core.calculate_resolution
+#const node_label = Core.node_label
 
 # Geom module
 include("Geom/Module_Geom.jl")
@@ -137,14 +141,14 @@ const pos       = Geom.pos
 const geoms     = Geom.geoms
 
 
-# Render module
-include("Render/Module_Render.jl")
-import .Render
-const render = Render.render
-const render! = Render.render!
-const RGB = Render.RGB
-const RGBA = Render.RGBA
-const export_scene = Render.export_scene
+# # Render module
+# include("Render/Module_Render.jl")
+# import .Render
+# const render = Render.render
+# const render! = Render.render!
+# const RGB = Render.RGB
+# const RGBA = Render.RGBA
+# const export_scene = Render.export_scene
 
 
 # RayTracer module
