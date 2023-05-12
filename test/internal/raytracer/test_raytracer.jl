@@ -4,6 +4,7 @@ using Test
 import LinearAlgebra: ⋅, norm
 import Random
 using StaticArrays
+import ColorTypes: RGB, RGBA
 
 # Modules needed to test ray tracing of graphs
 module sn

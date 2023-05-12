@@ -247,19 +247,20 @@ function trace!(r::Ray{FT}, rt::RayTracer, materials, tnodestack::Vector{Int}, t
     while true
         # Check intersection against scene
         hit, intersection, disp = intersect(r, rt.scene.grid, rt.scene.acc, tnodestack, tdstack, nodestack, dstack)
-        !hit && (return iteration)
+        !hit && (return iteration)#(@show loops; return iteration)
         material = materials[intersection.id]
         # Interaction with surface material
         interaction = calculate_interaction(material, power, r, intersection, rng)
         absorb_power!(material, power, interaction)
         # Russian roulette
-        roulette!(power, rt.settings, iteration, rng) && (return iteration)
+        roulette!(power, rt.settings, iteration, rng) && (return iteration)#(@show loops; return iteration)
         # Generate new ray
         r = generate_ray(material, r, disp, intersection, interaction, rng)
         # Increase iteration counter (unless it is a sensor-like material)
-        if interaction.mode != :sensor
+        # TODO: if sensors do not increase iteration counter the ray tracer seems to "get stuck" in some cases
+        #if interaction.mode != :sensor
             iteration += 1
-        end
+        #end
     end
     return iteration
 end
